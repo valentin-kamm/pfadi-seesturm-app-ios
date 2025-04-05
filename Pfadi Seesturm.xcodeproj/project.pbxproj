@@ -355,7 +355,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Replace these with the correct plist filenames\nDEBUG_PLIST=\"GoogleService-Info-Debug.plist\"\nRELEASE_PLIST=\"GoogleService-Info-Release.plist\"\n\nif [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Using Debug GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/FirebaseConfig/${DEBUG_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nelse\n    echo \"Using Release GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/FirebaseConfig/${RELEASE_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nfi\n";
+			shellScript = "# Replace these with the correct plist filenames\nDEBUG_PLIST=\"GoogleService-Info-Debug.plist\"\nRELEASE_PLIST=\"GoogleService-Info-Release.plist\"\n\nif [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Using Debug GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/aautil/firebaseConfig/${DEBUG_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nelse\n    echo \"Using Release GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/aautil/firebaseConfig/${RELEASE_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nfi\n";
 		};
 		A7B3D3722D20744A00E40FD6 /* Firebase Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -549,7 +549,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_ASSET_PATHS = "\"Pfadi Seesturm/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -563,7 +563,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -589,7 +589,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Pfadi Seesturm/Pfadi Seesturm.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 20;
-				DEVELOPMENT_ASSET_PATHS = "\"Pfadi Seesturm/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -603,7 +603,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
