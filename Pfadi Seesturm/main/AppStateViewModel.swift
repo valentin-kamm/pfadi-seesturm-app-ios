@@ -1,5 +1,5 @@
 //
-//  AppNavigationState.swift
+//  AppStateViewModel.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 04.12.2024.
@@ -7,81 +7,64 @@
 
 import SwiftUI
 
-class AppStateViewModel: StateManager<AppState> {
+@MainActor
+class AppStateViewModel: ObservableObject {
+    
+    @Published var authState: SeesturmAuthState = .signedOut(state: .idle)
+    @Published var selectedTab: AppMainTab = .home
+    @Published var tabNavigationPaths: [AppMainTab: NavigationPath] = [
+        .home: NavigationPath(),
+        .aktuell: NavigationPath(),
+        .anlässe: NavigationPath(),
+        .mehr: NavigationPath(),
+        .account: NavigationPath()
+    ]
+    @Published var showAppVersionCheckOverlay: Bool = false
     
     private let authService: AuthService
     private let leiterbereichService: LeiterbereichService
-    private let universalLinksHandler: UniversalLinksHandler
+    private let schoepflialarmService: SchoepflialarmService
+    private let fcmService: FCMService
+    private let wordpressApi: WordpressApi
     
     init(
         authService: AuthService,
         leiterbereichService: LeiterbereichService,
-        universalLinksHandler: UniversalLinksHandler
+        schoepflialarmService: SchoepflialarmService,
+        fcmService: FCMService,
+        wordpressApi: WordpressApi
     ) {
         self.authService = authService
         self.leiterbereichService = leiterbereichService
-        self.universalLinksHandler = universalLinksHandler
-        super.init(initialState: AppState())
+        self.schoepflialarmService = schoepflialarmService
+        self.fcmService = fcmService
+        self.wordpressApi = wordpressApi
+        
+        runOnAppStart()
+    }
+    
+    private func runOnAppStart() {
         
         Task {
-            await reauthenticate()
+            async let reauthResult: Void = await reauthenticateOnAppStart()
+            async let versionCheckResult: Void = await checkMinimumRequiredAppBuild()
+            
+            let (_, _) = await (reauthResult, versionCheckResult)
         }
     }
     
-    // binding for changing tabs
-    var selectedTabBinding: Binding<AppMainTab> {
+    func path(for tab: AppMainTab) -> Binding<NavigationPath> {
         Binding(
-            get: { self.state.selectedTab },
-            set: { newTab in
-                self.changeTab(newTab: newTab)
-            }
+            get: { self.tabNavigationPaths[tab] ?? NavigationPath() },
+            set: { self.tabNavigationPaths[tab] = $0 }
         )
     }
-    var homeNavigationPathBinding: Binding<NavigationPath> {
-        Binding(
-            get: { self.state.tabNavigationPaths[.home]! },
-            set: { newPath in
-                self.setNavigationPath(tab: .home, path: newPath)
-            }
-        )
-    }
-    var aktuellNavigationPathBinding: Binding<NavigationPath> {
-        Binding(
-            get: { self.state.tabNavigationPaths[.aktuell]! },
-            set: { newPath in
-                self.setNavigationPath(tab: .aktuell, path: newPath)
-            }
-        )
-    }
-    var anlaesseNavigationPathBinding: Binding<NavigationPath> {
-        Binding(
-            get: { self.state.tabNavigationPaths[.anlässe]! },
-            set: { newPath in
-                self.setNavigationPath(tab: .anlässe, path: newPath)
-            }
-        )
-    }
-    var mehrNavigationPathBinding: Binding<NavigationPath> {
-        Binding(
-            get: { self.state.tabNavigationPaths[.mehr]! },
-            set: { newPath in
-                self.setNavigationPath(tab: .mehr, path: newPath)
-            }
-        )
-    }
-    var accountNavigationPathBinding: Binding<NavigationPath> {
-        Binding(
-            get: { self.state.tabNavigationPaths[.account]! },
-            set: { newPath in
-                self.setNavigationPath(tab: .account, path: newPath)
-            }
-        )
-    }
-    func authErrorSnackbarBinding(user: FirebaseHitobitoUser, viewModel: LeiterbereichViewModel) -> Binding<Bool> {
+    
+    func signOutErrorSnackbarBinding(user: FirebaseHitobitoUser) -> Binding<Bool> {
         return Binding(
             get: {
-                switch self.state.authState {
-                case .signedInWithHitobito(_, let state, _):
+                switch self.authState {
+                case .signedInWithHitobito(_, let state):
                     switch state {
                     case .error(_, _):
                         return true
@@ -93,13 +76,14 @@ class AppStateViewModel: StateManager<AppState> {
                 }
             },
             set: { _ in
-                self.changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .idle, leiterbereichViewMode: viewModel))
+                self.changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .idle))
             }
         )
     }
-    var authErrorSnackbarMessage: String {
-        switch self.state.authState {
-        case .signedInWithHitobito(_, let state, _):
+    
+    var signOutErrorSnackbarMessage: String {
+        switch self.authState {
+        case .signedInWithHitobito(_, let state):
             switch state {
             case .error(_, let message):
                 return message
@@ -110,49 +94,28 @@ class AppStateViewModel: StateManager<AppState> {
             return "Ein unbekannter Fehler ist aufgetreten."
         }
     }
-    var deleteAccountButtonLoading: Bool {
-        switch self.state.authState {
-        case .signedInWithHitobito(_, let state, _):
-            switch state {
-            case .loading(_):
-                return true
-            default:
-                return false
-            }
-        default:
-            return false
-        }
-    }
     
-    // reauthenticate when restarting the app
-    private func reauthenticate() async {
+    private func reauthenticateOnAppStart() async {
+        
         changeAuthState(newAuthState: .signedOut(state: .loading(action: ())))
-        let result = await authService.reauthenticate()
+        let result = await authService.reauthenticateOnAppStart()
+        
         switch result {
         case .success(let user):
-            let viewModel = LeiterbereichViewModel(
-                service: leiterbereichService,
-                calendar: .termineLeitungsteam,
-                userId: user.userId
-            )
-            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .idle, leiterbereichViewMode: viewModel))
+            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .idle))
         case .error(_):
             changeAuthState(newAuthState: .signedOut(state: .idle))
         }
     }
     
-    // start auth flow
     func authenticate() async {
+        
         changeAuthState(newAuthState: .signedOut(state: .loading(action: ())))
         let result = await authService.authenticate()
+        
         switch result {
         case .success(let user):
-            let viewModel = LeiterbereichViewModel(
-                service: leiterbereichService,
-                calendar: .termineLeitungsteam,
-                userId: user.userId
-            )
-            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .idle, leiterbereichViewMode: viewModel))
+            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .idle))
         case .error(let error):
             switch error {
             case .cancelled:
@@ -163,63 +126,79 @@ class AppStateViewModel: StateManager<AppState> {
         }
     }
     
-    func signOut(user: FirebaseHitobitoUser, viewModel: LeiterbereichViewModel) {
-        changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .loading(action: ()), leiterbereichViewMode: viewModel))
-        let result = authService.signOut(user: user)
+    func signOut(user: FirebaseHitobitoUser) async {
+        
+        changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .loading(action: ())))
+        let result = await authService.signOut(user: user)
+        
         switch result {
         case .error(let e):
-            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .error(action: (), message: e.defaultMessage), leiterbereichViewMode: viewModel))
+            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .error(action: (), message: e.defaultMessage)))
         case .success(_):
             changeAuthState(newAuthState: .signedOut(state: .idle))
         }
     }
     
-    func deleteAccount(user: FirebaseHitobitoUser, viewModel: LeiterbereichViewModel) async {
-        changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .loading(action: ()), leiterbereichViewMode: viewModel))
-        let result = await authService.deleteUser(user: user)
+    func deleteAccount(user: FirebaseHitobitoUser) async {
+        
+        changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .loading(action: ())))
+        let result = await authService.deleteAccount(user: user)
+        
         switch result {
         case .error(let e):
-            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .error(action: (), message: e.defaultMessage), leiterbereichViewMode: viewModel))
+            changeAuthState(newAuthState: .signedInWithHitobito(user: user, state: .error(action: (), message: e.defaultMessage)))
         case .success(_):
             changeAuthState(newAuthState: .signedOut(state: .idle))
         }
     }
     
-    // perform navigation from universal link
     func navigate(from url: URL) {
-        if url.isOauthCallback {
-            authService.resumeExternalUserAgentFlow(url: url)
-        }
-        if let (tab, path) = universalLinksHandler.getNavigationDestinationFromUniversalLink(url: url) {
+        if let universalLink = SeesturmUniversalLink(url: url) {
+            if case .oauthCallback = universalLink {
+                authService.resumeExternalUserAgentFlow(url: url)
+            }
+            let tab = universalLink.navigationDestination.0
+            let path = universalLink.navigationDestination.1
             setNavigationPath(tab: tab, path: path)
             changeTab(newTab: tab)
         }
     }
     
-    // functions to navigate
     func changeTab(newTab: AppMainTab) {
-        updateState { oldState in
-            oldState.selectedTab = newTab
+        withAnimation {
+            selectedTab = newTab
         }
     }
-    private func setNavigationPath(tab: AppMainTab, path: NavigationPath) {
-        updateState { oldState in
-            oldState.tabNavigationPaths[tab] = path
+    func setNavigationPath(tab: AppMainTab, path: NavigationPath) {
+        withAnimation {
+            tabNavigationPaths[tab] = path
         }
     }
     func appendToNavigationPath(tab: AppMainTab, destination: any Hashable) {
-        updateState { oldState in
-            oldState.tabNavigationPaths[tab]?.append(destination)
+        withAnimation {
+            tabNavigationPaths[tab]?.append(destination)
         }
     }
     
     // function to change auth state
-    private func changeAuthState(newAuthState: AuthState) {
-        updateState { oldState in
-            oldState.authState = newAuthState
+    private func changeAuthState(newAuthState: SeesturmAuthState) {
+        withAnimation {
+            authState = newAuthState
         }
     }
     func resetAuthState() {
         changeAuthState(newAuthState: .signedOut(state: .idle))
+    }
+    
+    private func checkMinimumRequiredAppBuild() async {
+        
+        let minimimRequiredBuildResult = try? await wordpressApi.getMinimumRequiredAppBuild()
+        let currentBuildResult = (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String).flatMap(Int.init)
+        
+        if let minRequiredBuild = minimimRequiredBuildResult, let currentBuild = currentBuildResult, currentBuild < minRequiredBuild.ios {
+            withAnimation {
+                showAppVersionCheckOverlay = true
+            }
+        }
     }
 }

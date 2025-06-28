@@ -10,22 +10,29 @@ import SwiftData
 
 struct MainTabView : View {
     
-    // view model for navigation
-    @EnvironmentObject var appState: AppStateViewModel
-    
-    @Environment(\.modelContext) var modelContext: ModelContext
-    
-    // selected appearance
-    @AppStorage("theme") var selectedTheme: String = "system"
-    
-    // di modules
+    @EnvironmentObject private var appState: AppStateViewModel
+    @Environment(\.modelContext) private var modelContext: ModelContext
+    @AppStorage("theme") private var selectedTheme: String = "system"
     @Environment(\.wordpressModule) private var wordpressModule: WordpressModule
+    @Environment(\.accountModule) private var accountModule: AccountModule
+    @Environment(\.fcmModule) private var fcmModule: FCMModule
+    
+    private var appearance: ColorScheme? {
+        switch selectedTheme {
+        case "hell":
+            return .light
+        case "dunkel":
+            return .dark
+        default:
+            return .none
+        }
+    }
             
     var body: some View {
-        TabView(selection: appState.selectedTabBinding) {
+        TabView(selection: $appState.selectedTab) {
+            
             HomeView(
                 viewModel: HomeViewModel(
-                    modelContext: modelContext,
                     calendar: .termine,
                     naechsteAktivitaetService: wordpressModule.naechsteAktivitaetService,
                     aktuellService: wordpressModule.aktuellService,
@@ -37,12 +44,13 @@ struct MainTabView : View {
             .tabItem {
                 VStack {
                     Image("LogoTabbar")
-                        .renderingMode(appState.state.selectedTab == .home ? .original : .template)
+                        .renderingMode(appState.selectedTab == .home ? .original : .template)
                     Text("Home")
                 }
             }
             .tag(AppMainTab.home)
             .toolbarBackground(.bar, for: .tabBar)
+            
             AktuellView(
                 viewModel: AktuellViewModel(
                     service: wordpressModule.aktuellService
@@ -53,8 +61,9 @@ struct MainTabView : View {
             }
             .tag(AppMainTab.aktuell)
             .toolbarBackground(.bar, for: .tabBar)
-            TermineView(
-                viewModel: TermineViewModel(
+            
+            AnlaesseView(
+                viewModel: AnlaesseViewModel(
                     service: wordpressModule.anlaesseService,
                     calendar: .termine
                 ),
@@ -65,9 +74,11 @@ struct MainTabView : View {
             }
             .tag(AppMainTab.anlässe)
             .toolbarBackground(.bar, for: .tabBar)
+            
             MehrView(
-                viewModel: PfadijahreViewModel(
-                    service: wordpressModule.photosService
+                viewModel: GalleriesViewModel(
+                    service: wordpressModule.photosService,
+                    type: .pfadijahre
                 )
             )
             .tabItem {
@@ -75,8 +86,36 @@ struct MainTabView : View {
             }
             .tag(AppMainTab.mehr)
             .toolbarBackground(.bar, for: .tabBar)
+            
             AccountView(
-                calendar: .termineLeitungsteam
+                authState: appState.authState,
+                leiterbereich: { user in
+                    let viewModel = LeiterbereichViewModel(
+                        leiterbereichService: accountModule.leiterbereichService,
+                        schoepflialarmService: accountModule.schoepflialarmService,
+                        fcmService: fcmModule.fcmService,
+                        user: user,
+                        calendar: .termineLeitungsteam
+                    )
+                    return LeiterbereichView(
+                        viewModel: viewModel,
+                        user: user,
+                        calendar: .termineLeitungsteam
+                    )
+                    .accountNavigationDestinations(
+                        wordpressModule: wordpressModule,
+                        accountModule: accountModule,
+                        calendar: .termineLeitungsteam,
+                        leiterbereichViewModel: viewModel
+                    )
+                },
+                path: appState.path(for: .account),
+                onAuthenticate: {
+                    await appState.authenticate()
+                },
+                onResetAuthState: {
+                    appState.resetAuthState()
+                }
             )
             .tabItem {
                 Label("Account", systemImage: "person.crop.circle")
@@ -89,20 +128,8 @@ struct MainTabView : View {
         // -> always return nil for this case
         .preferredColorScheme(
             !(ProcessInfo.processInfo.operatingSystemVersion.majorVersion == 18 && ProcessInfo.processInfo.operatingSystemVersion.minorVersion == 0) ?
-            getAppearance(selectedTheme: selectedTheme)
+            appearance
             : .none
         )
-    }
-    
-    // function to return the appearance depending on the app storage value
-    private func getAppearance(selectedTheme: String) -> ColorScheme? {
-        switch selectedTheme {
-        case "hell":
-            return .light
-        case "dunkel":
-            return .dark
-        default:
-            return .none
-        }
     }
 }

@@ -28,7 +28,6 @@
 		A7D5C02D2D1A9DD700377D0F /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C02C2D1A9DD700377D0F /* FirebaseFirestoreCombine-Community */; };
 		A7D5C02F2D1A9DD700377D0F /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C02E2D1A9DD700377D0F /* FirebaseFunctions */; };
 		A7D5C0312D1A9DD700377D0F /* FirebaseFunctionsCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0302D1A9DD700377D0F /* FirebaseFunctionsCombine-Community */; };
-		A7D5C0332D1A9DD700377D0F /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0322D1A9DD700377D0F /* FirebaseInAppMessaging-Beta */; };
 		A7D5C0352D1A9DD700377D0F /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0342D1A9DD700377D0F /* FirebaseInstallations */; };
 		A7D5C0372D1A9DD700377D0F /* FirebaseMLModelDownloader in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0362D1A9DD700377D0F /* FirebaseMLModelDownloader */; };
 		A7D5C0392D1A9DD700377D0F /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0382D1A9DD700377D0F /* FirebaseMessaging */; };
@@ -97,7 +96,6 @@
 				A7D5C0152D1A9DD700377D0F /* FirebaseAnalytics in Frameworks */,
 				A7D5C02B2D1A9DD700377D0F /* FirebaseFirestore in Frameworks */,
 				A7D5C0252D1A9DD700377D0F /* FirebaseCrashlytics in Frameworks */,
-				A7D5C0332D1A9DD700377D0F /* FirebaseInAppMessaging-Beta in Frameworks */,
 				A7D5C0372D1A9DD700377D0F /* FirebaseMLModelDownloader in Frameworks */,
 				A7D5C0172D1A9DD700377D0F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				A72F3F572D21D56F00B46CD4 /* InfomaniakRichHTMLEditor in Frameworks */,
@@ -200,7 +198,6 @@
 				A7D5C02C2D1A9DD700377D0F /* FirebaseFirestoreCombine-Community */,
 				A7D5C02E2D1A9DD700377D0F /* FirebaseFunctions */,
 				A7D5C0302D1A9DD700377D0F /* FirebaseFunctionsCombine-Community */,
-				A7D5C0322D1A9DD700377D0F /* FirebaseInAppMessaging-Beta */,
 				A7D5C0342D1A9DD700377D0F /* FirebaseInstallations */,
 				A7D5C0362D1A9DD700377D0F /* FirebaseMLModelDownloader */,
 				A7D5C0382D1A9DD700377D0F /* FirebaseMessaging */,
@@ -269,7 +266,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					A7099AE82CA991CE00314440 = {
 						CreatedOnToolsVersion = 16.0;
@@ -355,7 +352,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Replace these with the correct plist filenames\nDEBUG_PLIST=\"GoogleService-Info-Debug.plist\"\nRELEASE_PLIST=\"GoogleService-Info-Release.plist\"\n\nif [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Using Debug GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/aautil/firebaseConfig/${DEBUG_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nelse\n    echo \"Using Release GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/aautil/firebaseConfig/${RELEASE_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nfi\n";
+			shellScript = "# Replace these with the correct plist filenames\nDEBUG_PLIST=\"GoogleService-Info-Debug.plist\"\nRELEASE_PLIST=\"GoogleService-Info-Release.plist\"\n\nif [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Using Debug GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/util/firebaseConfig/${DEBUG_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nelse\n    echo \"Using Release GoogleService-Info.plist\"\n    cp \"${PROJECT_DIR}/Pfadi Seesturm/util/firebaseConfig/${RELEASE_PLIST}\" \\\n       \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nfi\n";
 		};
 		A7B3D3722D20744A00E40FD6 /* Firebase Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -456,6 +453,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -519,6 +517,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -550,7 +549,6 @@
 				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -563,7 +561,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -590,7 +588,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -603,7 +600,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -627,7 +624,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
@@ -646,7 +642,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
@@ -664,7 +659,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.seesturm.Pfadi-SeesturmUITests";
@@ -681,7 +675,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 59Q8LQSZVR;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ch.seesturm.Pfadi-SeesturmUITests";
@@ -877,11 +870,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A7D5C0132D1A9DD700377D0F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFunctionsCombine-Community";
-		};
-		A7D5C0322D1A9DD700377D0F /* FirebaseInAppMessaging-Beta */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A7D5C0132D1A9DD700377D0F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseInAppMessaging-Beta";
 		};
 		A7D5C0342D1A9DD700377D0F /* FirebaseInstallations */ = {
 			isa = XCSwiftPackageProductDependency;
