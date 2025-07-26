@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct SchoepflialarmReaction: Identifiable {
+struct SchoepflialarmReaction: Identifiable, Hashable {
     let id: String
     let created: Date
     let modified: Date

@@ -53,6 +53,10 @@ class FirestoreRepositoryImpl: FirestoreRepository {
         return try await api.readDocument(document: documentReference(for: document))
     }
     
+    func readCollection<T: FirestoreDto>(collection: SeesturmFirestoreCollection) async throws -> [T] {
+        return try await api.readCollection(collection: collectionReference(for: collection))
+    }
+    
     func deleteDocument(document: SeesturmFirestoreDocument) async throws {
         try await api.deleteDocument(document: documentReference(for: document))
     }

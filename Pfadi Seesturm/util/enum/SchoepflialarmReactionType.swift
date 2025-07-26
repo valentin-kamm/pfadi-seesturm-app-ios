@@ -65,4 +65,15 @@ enum SchoepflialarmReactionType: String, CaseIterable, Identifiable {
             .primary
         }
     }
+    
+    var onReactionColor: Color {
+        switch self {
+        case .coming:
+            .white
+        case .notComing:
+            .white
+        case .alreadyThere:
+            .customBackground
+        }
+    }
 }

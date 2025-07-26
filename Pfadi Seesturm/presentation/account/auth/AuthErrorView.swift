@@ -22,31 +22,30 @@ struct AuthErrorView: View {
     
     var body: some View {
         CustomCardView(shadowColor: .seesturmGreenCardViewShadowColor) {
-            VStack(alignment: .center, spacing: 16) {
-                Image(systemName: "person.crop.circle.badge.exclamationmark")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundStyle(Color.SEESTURM_RED)
-                Text("Beim Anmelden ist ein Fehler aufgetreten")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity)
-                    .multilineTextAlignment(.center)
-                Text(message)
-                    .font(.caption)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.bottom, 8)
-                SeesturmButton(
-                    type: .primary,
-                    action: .sync(action: onResetAuthState),
-                    title: "Zurück"
-                )
-            }
-            .padding()
-            .padding(.vertical, 8)
+            ContentUnavailableView(
+                label: {
+                    Label("Beim Anmelden ist ein Fehler aufgetreten", systemImage: "person.crop.circle.badge.exclamationmark")
+                },
+                description: {
+                    Text(message)
+                },
+                actions: {
+                    SeesturmButton(
+                        type: .primary,
+                        action: .sync(action: onResetAuthState),
+                        title: "Zurück"
+                    )
+                }
+            )
+            .fixedSize(horizontal: false, vertical: true)
         }
         .padding()
     }
+}
+
+#Preview {
+    AuthErrorView(
+        message: "Schwerer Fehler",
+        onResetAuthState: {}
+    )
 }

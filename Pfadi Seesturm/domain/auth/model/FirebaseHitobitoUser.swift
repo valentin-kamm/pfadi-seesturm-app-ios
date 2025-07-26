@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct FirebaseHitobitoUser: Codable, Hashable {
+struct FirebaseHitobitoUser: Codable, Hashable, Identifiable {
     let userId: String
     let vorname: String?
     let nachname: String?
@@ -19,6 +19,10 @@ struct FirebaseHitobitoUser: Codable, Hashable {
     let modified: Date
     let modifiedFormatted: String
     var fcmToken: String?
+    
+    var id: String {
+        userId
+    }
     
     var displayNameShort: String {
         pfadiname ?? vorname ?? "Unbekannter Benutzer"

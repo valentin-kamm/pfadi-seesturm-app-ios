@@ -22,12 +22,10 @@ class LeitungsteamViewModel {
         self.service = service
     }
     
-    func fetchLeitungsteam(isPullToRefresh: Bool) async {
+    func fetchLeitungsteam() async {
         
-        if !isPullToRefresh {
-            withAnimation {
-                leitungsteamState = .loading(subState: .loading)
-            }
+        withAnimation {
+            leitungsteamState = .loading(subState: .loading)
         }
         
         let result = await service.getLeitungsteam()

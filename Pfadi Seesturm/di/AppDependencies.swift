@@ -74,6 +74,7 @@ final class AppDependencies {
 
 private func configureFirebase() {
     
-    FirebaseApp.configure()
+    FirebaseConfiguration.shared.setLoggerLevel(.debug)
     AppCheck.setAppCheckProviderFactory(SeesturmAppCheckProviderFactory())
+    FirebaseApp.configure()
 }

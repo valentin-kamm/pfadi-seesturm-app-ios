@@ -22,15 +22,12 @@ struct LeitungsteamView: View {
         LeitungsteamContentView(
             leitungsteamState: viewModel.leitungsteamState,
             onRetry: {
-                await viewModel.fetchLeitungsteam(isPullToRefresh: false)
+                await viewModel.fetchLeitungsteam()
             }
         )
-        .refreshable {
-            await viewModel.fetchLeitungsteam(isPullToRefresh: true)
-        }
         .task {
             if viewModel.leitungsteamState.taskShouldRun {
-                await viewModel.fetchLeitungsteam(isPullToRefresh: false)
+                await viewModel.fetchLeitungsteam()
             }
         }
     }
@@ -58,20 +55,15 @@ private struct LeitungsteamContentView: View {
                 Section {
                     ForEach(1..<10) { index in
                         LeitungsteamLoadingCell()
-                            .padding(.bottom)
-                            .padding(.top, index == 0 ? 16 : 0)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
+                            .padding(.vertical, 8)
                     }
                 } header: {
                     Text("Abteilungsleitung")
-                        .frame(height: 45, alignment: .leading)
-                                .font(.title3)
-                                .fontWeight(.bold)
-                                .padding(.vertical, 8)
-                                .redacted(reason: .placeholder)
-                                .loadingBlinking()
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .padding(.vertical, 16)
+                        .redacted(reason: .placeholder)
+                        .loadingBlinking()
                 }
             case .error(let message):
                 ErrorCardView(
@@ -88,11 +80,7 @@ private struct LeitungsteamContentView: View {
                         let members = leitungsteam.filter { $0.teamName == selectedStufe}.first?.members ?? []
                         ForEach(Array(members.enumerated()), id: \.element.id) { index, member in
                             LeitungsteamCell(member: member)
-                                .padding(.bottom)
-                                .padding(.top, index == 0 ? 16 : 0)
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets())
-                                .listRowBackground(Color.clear)
+                                .padding(.vertical, 8)
                         }
                     }
                 } header: {
@@ -116,16 +104,16 @@ private struct LeitungsteamContentView: View {
                                         selectedStufe = teamName.item
                                     }
                                 },
-                                title: "Stufen"
+                                title: "Stufe"
                             )
                         }
                     }
-                    .frame(height: 45, alignment: .leading)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 16)
+                    .textCase(nil)
                 }
             }
         }
-        .listStyle(PlainListStyle())
+        .dynamicListStyle(isListPlain: leitungsteamState.isError)
         .background(Color.customBackground)
         .scrollDisabled(leitungsteamState.scrollingDisabled)
         .navigationTitle("Leitungsteam")

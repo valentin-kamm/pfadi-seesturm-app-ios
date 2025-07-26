@@ -28,8 +28,7 @@ struct AktuellLoadingCardView: View {
         }
         .frame(maxWidth: .infinity)
         .padding([.horizontal, .bottom])
-    }
-    
+    }    
 }
 
 #Preview {

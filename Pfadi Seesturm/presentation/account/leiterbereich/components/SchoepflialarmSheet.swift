@@ -93,8 +93,6 @@ struct SchoepflialarmSheet: View {
                         switch schoepflialarmResult {
                         case .loading(_):
                             Section {
-                                EmptyView()
-                            } header: {
                                 VStack(alignment: .leading, spacing: 16) {
                                     HStack(alignment: .center, spacing: 16) {
                                         Circle()
@@ -122,9 +120,7 @@ struct SchoepflialarmSheet: View {
                                         .loadingBlinking()
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.vertical, 8)
                             }
-                            
                             ForEach(SchoepflialarmReactionType.allCases.sorted { $0.sortingOrder < $1.sortingOrder }) { reactionType in
                                 
                                 Section {
@@ -152,8 +148,7 @@ struct SchoepflialarmSheet: View {
                             .padding(.top)
                         case .success(let schoepflialarm):
                             Section {
-                                EmptyView()
-                            } header: {
+                                
                                 VStack(alignment: .leading, spacing: 16) {
                                     HStack(alignment: .center, spacing: 16) {
                                         CircleProfilePictureView(
@@ -181,9 +176,7 @@ struct SchoepflialarmSheet: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.vertical, 8)
                             }
-                            .textCase(nil)
                             
                             ForEach(SchoepflialarmReactionType.allCases.sorted { $0.sortingOrder < $1.sortingOrder }) { reactionType in
                                 
@@ -242,7 +235,7 @@ struct SchoepflialarmSheet: View {
                                             title: nil,
                                             icon: .system(name: reactionType.systemImageName),
                                             colors: .custom(
-                                                contentColor: .white,
+                                                contentColor: reactionType.onReactionColor,
                                                 buttonColor: reactionType.color
                                             ),
                                             isLoading: isReactionButtonLoading(reactionType),

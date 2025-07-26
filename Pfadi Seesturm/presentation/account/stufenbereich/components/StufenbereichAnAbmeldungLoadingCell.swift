@@ -12,13 +12,13 @@ struct StufenbereichAnAbmeldungLoadingCell: View {
     var body: some View {
         CustomCardView(shadowColor: .seesturmGreenCardViewShadowColor) {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .top, spacing: 16) {
+                HStack(alignment: .center, spacing: 16) {
                     Text(Constants.PLACEHOLDER_TEXT)
                         .multilineTextAlignment(.leading)
-                        .font(.callout)
+                        .font(.title)
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .lineLimit(2)
+                        .lineLimit(1)
                         .redacted(reason: .placeholder)
                         .loadingBlinking()
                     Circle()

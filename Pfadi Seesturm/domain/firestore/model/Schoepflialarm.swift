@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Schoepflialarm {
+struct Schoepflialarm: Hashable {
     let id: String
     let created: Date
     let modified: Date

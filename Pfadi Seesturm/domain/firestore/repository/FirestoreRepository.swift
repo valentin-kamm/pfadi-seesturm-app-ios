@@ -11,6 +11,7 @@ protocol FirestoreRepository {
     func insertDocument<T: FirestoreDto>(object: T, collection: SeesturmFirestoreCollection) async throws
     func upsertDocument<T: FirestoreDto>(object: T, document: SeesturmFirestoreDocument) async throws
     func readDocument<T: FirestoreDto>(document: SeesturmFirestoreDocument) async throws -> T
+    func readCollection<T: FirestoreDto>(collection: SeesturmFirestoreCollection) async throws -> [T]
     func deleteDocument(document: SeesturmFirestoreDocument) async throws
     func deleteDocuments(documents: [SeesturmFirestoreDocument]) async throws
     func deleteAllDocuments(in collection: SeesturmFirestoreCollection) async throws

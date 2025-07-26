@@ -113,22 +113,22 @@ class HomeViewModel {
     
     private func fetchNecessaryAktivitaeten(for stufen: Set<SeesturmStufe>, isPullToRefresh: Bool) async {
         
-        let stufenToLoad = stufen.filter { !naechsteAktivitaetState.keys.contains($0) }
+        //let stufenToLoad = stufen.filter { !naechsteAktivitaetState.keys.contains($0) }
+        // load aktivitäten for stufen where
+            // no entry exists in naechsteAktivitaetState OR
+            // taskShouldRun of the corresponding entry is true
+        let stufenToLoad = stufen.filter { stufe in
+            guard let uiState = naechsteAktivitaetState[stufe] else {
+                return true
+            }
+            return uiState.taskShouldRun
+        }
         
         var tasks: [() async -> Void] = []
         
         for stufe in stufenToLoad {
-            if let stufenState = naechsteAktivitaetState[stufe] {
-                if stufenState.taskShouldRun {
-                    tasks.append {
-                        await self.fetchAktivitaet(for: stufe, isPullToRefresh: isPullToRefresh)
-                    }
-                }
-            }
-            else {
-                tasks.append {
-                    await self.fetchAktivitaet(for: stufe, isPullToRefresh: isPullToRefresh)
-                }
+            tasks.append {
+                await self.fetchAktivitaet(for: stufe, isPullToRefresh: isPullToRefresh)
             }
         }
         await withTaskGroup(of: Void.self) { group in

@@ -64,9 +64,9 @@ struct CircleProfilePictureView: View {
             .foregroundStyle(isLoading ? Color.clear : Color.SEESTURM_GREEN)
             
             if isLoading {
-                ProgressView()
-                    .tint(Color.SEESTURM_GREEN)
-                    .id(UUID())
+                SeesturmProgressView(
+                    color: Color.SEESTURM_GREEN
+                )
             }
         }
         .frame(width: size, height: size)

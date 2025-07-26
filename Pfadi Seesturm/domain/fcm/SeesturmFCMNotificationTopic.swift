@@ -66,7 +66,9 @@ enum SeesturmFCMNotificationTopic: String, Identifiable, Codable, Equatable {
         if let topic = SeesturmFCMNotificationTopic(rawValue: topicString) {
             self = topic
         }
-        throw PfadiSeesturmError.unknownNotificationTopic(message: "Die Push-Nachricht kann keinen Thema zugeordnet werden.")
+        else {
+            throw PfadiSeesturmError.unknownNotificationTopic(message: "Die Push-Nachricht kann keinen Thema zugeordnet werden.")
+        }
     }
     
     func navigationDestination(customKey: String?) -> (AppMainTab, NavigationPath)? {

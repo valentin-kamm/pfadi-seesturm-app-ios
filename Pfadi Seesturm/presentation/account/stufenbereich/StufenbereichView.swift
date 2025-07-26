@@ -174,66 +174,7 @@ private struct StufenbereichContentView: View {
     var body: some View {
         List {
             Section {
-                switch abmeldungenState {
-                case .loading(_):
-                    ForEach(0..<6) { index in
-                        StufenbereichAnAbmeldungLoadingCell()
-                            .padding(.top, index == 0 ? 16 : 0)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
-                    }
-                case .error(let message):
-                    ErrorCardView(
-                        errorDescription: message,
-                        action: .async(action: onGetAktivitaetenRetry)
-                    )
-                    .padding(.top)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
-                case .success(let data):
-                    let aktivitaeten = data.filter { $0.event.end >= selectedDate.wrappedValue }.sorted { $0.event.start > $1.event.start }
-                    if aktivitaeten.isEmpty {
-                        Text("Keine Daten vorhanden")
-                            .padding(.horizontal)
-                            .padding(.vertical, 75)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(Color.secondary)
-                    }
-                    else {
-                        ForEach(Array(aktivitaeten.enumerated()), id: \.element.event.id) { index, event in
-                            StufenbereichAnAbmeldungCell(
-                                aktivitaet: event,
-                                stufe: stufe,
-                                selectedAktivitaetInteraction: selectedAktivitaetInteraction,
-                                isBearbeitenButtonLoading: isEditButtonLoading(event),
-                                onSendPushNotification: {
-                                    onSendPushNotification(event)
-                                },
-                                onDeleteAnAbmeldungen: {
-                                    onDeleteAnAbmeldungenForAktivitaet(event)
-                                },
-                                onEditAktivitaet: {
-                                    onEditAktivitaet(event)
-                                },
-                                displayNavigationDestination: AccountNavigationDestination.displayAktivitaet(
-                                    stufe: stufe,
-                                    aktivitaet: event.event,
-                                    type: .display
-                                )
-                            )
-                            .padding(.top, index == 0 ? 16 : 0)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
-                        }
-                    }
-                }
+                
             } header: {
                 VStack(alignment: .trailing, spacing: 8) {
                     DatePicker(
@@ -263,6 +204,83 @@ private struct StufenbereichContentView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical)
             }
+            switch abmeldungenState {
+            case .loading(_):
+                ForEach(0..<6) { index in
+                    StufenbereichAnAbmeldungLoadingCell()
+                        .padding(.top, index == 0 ? 16 : 0)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                }
+            case .error(let message):
+                ErrorCardView(
+                    errorDescription: message,
+                    action: .async(action: onGetAktivitaetenRetry)
+                )
+                .padding(.top)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            case .success(let data):
+                let aktivitaeten = data.filter { $0.event.end >= selectedDate.wrappedValue }.sorted { $0.event.start > $1.event.start }
+                if aktivitaeten.isEmpty {
+                    Text("Keine Daten vorhanden")
+                        .padding(.horizontal)
+                        .padding(.vertical, 75)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(Color.secondary)
+                }
+                else {
+                    ForEach(aktivitaeten.groupesByMonthAndYear, id: \.0) { startDate, events in
+                        let title = DateTimeUtil.shared.formatDate(
+                            date: startDate,
+                            format: "MMMM yyyy",
+                            timeZone: TimeZone(identifier: "Europe/Zurich")!,
+                            type: .absolute
+                        )
+                        Section {
+                            ForEach(Array(events.enumerated()), id: \.element.event.id) { index, event in
+                                StufenbereichAnAbmeldungCell(
+                                    aktivitaet: event,
+                                    stufe: stufe,
+                                    selectedAktivitaetInteraction: selectedAktivitaetInteraction,
+                                    isBearbeitenButtonLoading: isEditButtonLoading(event),
+                                    onSendPushNotification: {
+                                        onSendPushNotification(event)
+                                    },
+                                    onDeleteAnAbmeldungen: {
+                                        onDeleteAnAbmeldungenForAktivitaet(event)
+                                    },
+                                    onEditAktivitaet: {
+                                        onEditAktivitaet(event)
+                                    },
+                                    displayNavigationDestination: AccountNavigationDestination.displayAktivitaet(
+                                        stufe: stufe,
+                                        aktivitaet: event.event,
+                                        type: .display
+                                    )
+                                )
+                                .padding(.top, index == 0 ? 16 : 0)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets())
+                                .listRowBackground(Color.clear)
+                            }
+                        } header: {
+                            Text(title)
+                                .font(.callout)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(Color.secondary)
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+            }
         }
         .navigationTitle(stufe.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -272,12 +290,12 @@ private struct StufenbereichContentView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if abmeldungenState.isSuccess {
-                    switch deleteAllAbmeldungenState {
-                    case .loading(_):
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .id(UUID())
-                    default:
+                    if deleteAllAbmeldungenState.isLoading {
+                        SeesturmProgressView(
+                            color: .SEESTURM_GREEN
+                        )
+                    }
+                    else {
                         Button {
                             withAnimation {
                                 showDeleteAllAbmeldungenConfirmationDialog.wrappedValue = true
@@ -367,7 +385,7 @@ private struct StufenbereichContentView: View {
                     anAbmeldungen: [DummyData.abmeldung3]
                 )
             ]),
-            deleteAllAbmeldungenState: .idle,
+            deleteAllAbmeldungenState: .loading(action: ()),
             onGetAktivitaetenRetry: {},
             selectedDate: .constant(DummyData.oldDate),
             selectedAktivitaetInteraction: .constant(.abmelden),

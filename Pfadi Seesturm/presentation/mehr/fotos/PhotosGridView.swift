@@ -46,6 +46,8 @@ private struct PhotosGridContentView: View {
     private let navigationTitle: String
     private let onRetry: () async -> Void
     
+    @State private var selectedPhoto: WordpressPhoto? = nil
+    
     init(
         photosState: UiState<[WordpressPhoto]>,
         screenWidth: CGFloat,
@@ -99,30 +101,44 @@ private struct PhotosGridContentView: View {
                 }
                 else {
                     LazyVGrid(columns: columns, spacing: 2) {
-                        ForEach(Array(images.enumerated()), id: \.element.id) { index, image in
-                            NavigationLink(value: MehrNavigationDestination.photosSlider(photos: images, selectedIndex: index)) {
-                                PhotoGalleryCell(
-                                    size: cellWidth,
-                                    thumbnailUrl: image.thumbnailUrl
-                                )
-                            }
-                        }
-                        /*
                         ForEach(images) { image in
-                            
+                            PhotoGalleryCell(
+                                size: cellWidth,
+                                thumbnailUrl: image.thumbnailUrl
+                            )
                             .onTapGesture {
-                                let selectedImageIndex = images.firstIndex(where: { $0.id == image.id }) ?? 0
-                                onTap(selectedImageIndex)
+                                withAnimation {
+                                    selectedPhoto = image
+                                }
                             }
                         }
-                         */
                     }
                 }
             }
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .scrollDisabled(photosState.scrollingDisabled)
+        .scrollDisabled(photosState.scrollingDisabled || selectedPhoto != nil)
+        .fullScreenCover(item: $selectedPhoto) { photo in
+            if case .success(let photos) = photosState, let index = photos.firstIndex(of: photo) {
+                NavigationStack(path: .constant(NavigationPath())) {
+                    PhotoSliderView(
+                        images: photos,
+                        initialImageIndex: index
+                    )
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Schliessen") {
+                                withAnimation {
+                                    selectedPhoto = nil
+                                }
+                            }
+                        }
+                    }
+                }
+                .ignoresSafeArea()
+            }
+        }
     }
 }
 

@@ -28,9 +28,11 @@ struct MehrView: View {
             MehrContentView(
                 pfadijahreState: viewModel.galleryState
             )
-            .task {
+            .onAppear {
                 if viewModel.galleryState.taskShouldRun {
-                    await viewModel.fetchGalleries(isPullToRefresh: false)
+                    Task {
+                        await viewModel.fetchGalleries(isPullToRefresh: false)
+                    }
                 }
             }
             .mehrNavigationDestinations(
@@ -67,7 +69,7 @@ private struct MehrContentView: View {
     var body: some View {
         Form {
             Section {
-                NavigationLink(value: MehrNavigationDestination.pfadijahre(forceReload: false)) {
+                NavigationLink(value: MehrNavigationDestination.pfadijahre) {
                     HStack {
                         Image(systemName: "photo.on.rectangle")
                             .frame(width: 24, height: 24)

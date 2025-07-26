@@ -62,7 +62,10 @@ struct TemplateListView: View {
                 .listRowBackground(Color.clear)
             case .success(let data):
                 if case .edit(_, let onDelete, let editState, let deleteState) = mode, !editState.isLoading, !deleteState.isLoading {
-                    ForEach(data.sorted { $0.created > $1.created }) { template in
+                    
+                    let sortedTemplates = data.sorted { $0.created > $1.created }
+                    
+                    ForEach(sortedTemplates) { template in
                         ZStack {
                             RichText(html: template.description)
                                 .transition(.none)
@@ -81,11 +84,11 @@ struct TemplateListView: View {
                         }
                     }
                     .onDelete { indexSet in
-                        deleteItems(indexSet, data, onDelete)
+                        deleteItems(indexSet, sortedTemplates, onDelete)
                     }
                 }
                 else {
-                    ForEach(data) { template in
+                    ForEach(data.sorted { $0.created > $1.created }) { template in
                         ZStack {
                             RichText(html: template.description)
                                 .transition(.none)

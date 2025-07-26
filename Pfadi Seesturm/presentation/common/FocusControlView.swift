@@ -30,8 +30,11 @@ struct FocusControlView<F: FocusControlItem, Content: View>: View {
                     Spacer()
                 }
             }
+            /*
+             This gesture breaks button functionality, so for now we only have the toolbar to dismiss the keyboard
             .onTapGesture {
                 focusedField = nil
             }
+             */
     }
 }

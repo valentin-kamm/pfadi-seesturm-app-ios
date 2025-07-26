@@ -172,150 +172,172 @@ private struct AktivitaetBearbeitenContentView: View {
         self.onShowTemplatesSheet = onShowTemplatesSheet
     }
     
+    private enum AktivitaetBearbeitenFormFields: String, FocusControlItem {
+        case treffpunkt
+        case titel
+        case beschreibung
+        var id: AktivitaetBearbeitenFormFields { self }
+    }
+    
     var body: some View {
-        List {
-            switch aktivitaetState {
-            case .loading(_):
-                Section {
-                    Text(Constants.PLACEHOLDER_TEXT)
-                        .lineLimit(1)
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                    Text(Constants.PLACEHOLDER_TEXT)
-                        .lineLimit(1)
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                } header: {
-                    Text("Zeit")
-                        .redacted(reason: .placeholder)
-                } footer: {
-                    Text("Zeiten in MEZ/MESZ (CH-Zeit)")
-                        .redacted(reason: .placeholder)
-                }
-                Section {
-                    Text("Treffpunkt")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                } footer: {
-                    Text("Treffpunkt am Anfang der Aktivität")
-                        .redacted(reason: .placeholder)
-                }
-                Section {
-                    Text("Titel")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                    Text(Constants.PLACEHOLDER_TEXT)
-                        .lineLimit(5)
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                    Text("Vorlage einfügen")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                } header: {
-                    Text("Beschreibung")
-                        .redacted(reason: .placeholder)
-                }
-                Section {
-                    Text("Vorschau")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                    Text("Push-Nachricht senden")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                } header: {
-                    Text("Veröffentlichen")
-                        .redacted(reason: .placeholder)
-                }
-            case .error(let message):
-                ErrorCardView(
-                    errorDescription: message,
-                    action: .async(action: onReadAktivitaetRetry)
-                )
-                .padding(.top)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
-            case .success(_):
-                Section {
-                    DatePicker("Start", selection: start, displayedComponents: [.date, .hourAndMinute])
-                        .datePickerStyle(.compact)
-                        .disabled(publishAktivitaetState.isLoading)
-                        .tint(Color.SEESTURM_GREEN)
-                    DatePicker("Ende", selection: end, displayedComponents: [.date, .hourAndMinute])
-                        .datePickerStyle(.compact)
-                        .disabled(publishAktivitaetState.isLoading)
-                        .tint(Color.SEESTURM_GREEN)
-                    
-                } header: {
-                    Text("Zeit")
-                } footer: {
-                    Text("Zeiten in MEZ/MESZ (CH-Zeit)")
-                }
-                
-                Section {
-                    HStack(spacing: 16) {
+        FocusControlView(allFields: AktivitaetBearbeitenFormFields.allCases) { focused in
+            List {
+                switch aktivitaetState {
+                case .loading(_):
+                    Section {
+                        Text(Constants.PLACEHOLDER_TEXT)
+                            .lineLimit(1)
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                        Text(Constants.PLACEHOLDER_TEXT)
+                            .lineLimit(1)
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                    } header: {
+                        Text("Zeit")
+                            .redacted(reason: .placeholder)
+                    } footer: {
+                        Text("Zeiten in MEZ/MESZ (CH-Zeit)")
+                            .redacted(reason: .placeholder)
+                    }
+                    Section {
                         Text("Treffpunkt")
-                        TextField("Ort", text: location)
-                            .multilineTextAlignment(.trailing)
-                            .textFieldStyle(.roundedBorder)
-                            .disabled(publishAktivitaetState.isLoading)
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                    } footer: {
+                        Text("Treffpunkt am Anfang der Aktivität")
+                            .redacted(reason: .placeholder)
                     }
-                } footer: {
-                    Text("Treffpunkt am Anfang der Aktivität")
-                }
-                
-                Section {
-                    HStack(spacing: 16) {
+                    Section {
                         Text("Titel")
-                        TextField(stufe.aktivitaetDescription, text: title)
-                            .multilineTextAlignment(.trailing)
-                            .textFieldStyle(.roundedBorder)
-                            .disabled(publishAktivitaetState.isLoading)
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                        Text(Constants.PLACEHOLDER_TEXT)
+                            .lineLimit(5)
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                        Text("Vorlage einfügen")
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                    } header: {
+                        Text("Beschreibung")
+                            .redacted(reason: .placeholder)
                     }
-                    SeesturmHTMLEditor(
-                        html: description,
-                        scrollable: true,
-                        disabled: publishAktivitaetState.isLoading
+                    Section {
+                        Text("Vorschau")
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                        Text("Push-Nachricht senden")
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                    } header: {
+                        Text("Veröffentlichen")
+                            .redacted(reason: .placeholder)
+                    }
+                case .error(let message):
+                    ErrorCardView(
+                        errorDescription: message,
+                        action: .async(action: onReadAktivitaetRetry)
                     )
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 150)
-                    Button("Vorlage einfügen") {
-                        onShowTemplatesSheet()
-                    }
-                    .foregroundStyle(Color.primary)
-                    .disabled(publishAktivitaetState.isLoading)
-                } header: {
-                    Text("Beschreibung")
-                }
-                
-                Section {
-                    if aktivitaetForPreview != nil {
-                        Button("Vorschau") {
-                            onShowPreviewSheet()
-                        }
-                        .foregroundStyle(Color.primary)
-                        .disabled(publishAktivitaetState.isLoading)
-                    }
-                    Toggle("Push-Nachricht senden", isOn: sendPushNotification)
-                        .tint(stufe.highContrastColor)
-                        .disabled(publishAktivitaetState.isLoading)
-                } header: {
-                    Text(mode.buttonTitle)
-                }
-                
-                Section {
-                    SeesturmButton(
-                        type: .primary,
-                        action: .sync(action: onSubmit),
-                        title: mode.buttonTitle,
-                        colors: .custom(contentColor: .white, buttonColor: stufe.highContrastColor),
-                        isLoading: publishAktivitaetState.isLoading,
-                        disabled: publishAktivitaetState.isLoading
-                    )
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
+                case .success(_):
+                    Section {
+                        DatePicker("Start", selection: start, displayedComponents: [.date, .hourAndMinute])
+                            .datePickerStyle(.compact)
+                            .disabled(publishAktivitaetState.isLoading)
+                            .tint(Color.SEESTURM_GREEN)
+                            .environment(\.timeZone, TimeZone(identifier: "Europe/Zurich")!)
+                        DatePicker("Ende", selection: end, displayedComponents: [.date, .hourAndMinute])
+                            .datePickerStyle(.compact)
+                            .disabled(publishAktivitaetState.isLoading)
+                            .tint(Color.SEESTURM_GREEN)
+                            .environment(\.timeZone, TimeZone(identifier: "Europe/Zurich")!)
+                        
+                    } header: {
+                        Text("Zeit")
+                    } footer: {
+                        Text("Zeiten in MEZ/MESZ (CH-Zeit)")
+                    }
+                    
+                    Section {
+                        HStack(spacing: 16) {
+                            Text("Treffpunkt")
+                            TextField("Ort", text: location)
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(.roundedBorder)
+                                .disabled(publishAktivitaetState.isLoading)
+                                .focused(focused, equals: .treffpunkt)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    focused.wrappedValue = .titel
+                                }
+                        }
+                    } footer: {
+                        Text("Treffpunkt am Anfang der Aktivität")
+                    }
+                    
+                    Section {
+                        HStack(spacing: 16) {
+                            Text("Titel")
+                            TextField(stufe.aktivitaetDescription, text: title)
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(.roundedBorder)
+                                .disabled(publishAktivitaetState.isLoading)
+                                .focused(focused, equals: .titel)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    focused.wrappedValue = .beschreibung
+                                }
+                        }
+                        SeesturmHTMLEditor(
+                            html: description,
+                            scrollable: true,
+                            disabled: publishAktivitaetState.isLoading
+                        )
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 150)
+                        .focused(focused, equals: .beschreibung)
+                        Button("Vorlage einfügen") {
+                            onShowTemplatesSheet()
+                        }
+                        .foregroundStyle(Color.primary)
+                        .disabled(publishAktivitaetState.isLoading)
+                    } header: {
+                        Text("Beschreibung")
+                    }
+                    
+                    Section {
+                        if aktivitaetForPreview != nil {
+                            Button("Vorschau") {
+                                onShowPreviewSheet()
+                            }
+                            .foregroundStyle(Color.primary)
+                            .disabled(publishAktivitaetState.isLoading)
+                        }
+                        Toggle("Push-Nachricht senden", isOn: sendPushNotification)
+                            .tint(stufe.highContrastColor)
+                            .disabled(publishAktivitaetState.isLoading)
+                    } header: {
+                        Text(mode.buttonTitle)
+                    }
+                    
+                    Section {
+                        SeesturmButton(
+                            type: .primary,
+                            action: .sync(action: onSubmit),
+                            title: mode.buttonTitle,
+                            colors: .custom(contentColor: stufe.onHighContrastColor, buttonColor: stufe.highContrastColor),
+                            isLoading: publishAktivitaetState.isLoading,
+                            disabled: publishAktivitaetState.isLoading
+                        )
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                    }
                 }
             }
         }

@@ -210,6 +210,7 @@ class StufenbereichService: WordpressService {
                 forceNewCreatedDate: false,
                 update: { oldTemplate in
                     AktivitaetTemplateDto(
+                        id: oldTemplate.id,
                         stufenId: oldTemplate.stufenId,
                         description: description
                     )

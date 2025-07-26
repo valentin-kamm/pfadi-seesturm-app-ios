@@ -105,9 +105,9 @@ struct SeesturmButton: View {
                     }
                 }
                 if isLoading {
-                    ProgressView()
-                        .tint(progressIndicatorColor)
-                        .id(UUID())
+                    SeesturmProgressView(
+                        color: progressIndicatorColor
+                    )
                 }
             }
             .frame(maxWidth: maxWidth)

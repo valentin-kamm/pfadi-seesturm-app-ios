@@ -23,25 +23,30 @@ struct PhotoSliderView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            PhotoSliderContentView(
-                images: images,
-                imageIndex: $imageIndex,
-                screenWidth: geometry.size.width,
-                screenHeight: geometry.size.height
-            )
-            .toolbar(toolbarVisibility)
-            .onTapGesture {
-                withAnimation {
-                    if case .visible = toolbarVisibility {
-                        toolbarVisibility = .hidden
-                    }
-                    else {
-                        toolbarVisibility = .visible
+        ZStack {
+            GeometryReader { geometry in
+                PhotoSliderContentView(
+                    images: images,
+                    imageIndex: $imageIndex,
+                    screenSize: geometry.size
+                )
+                .toolbar(toolbarVisibility)
+                .onTapGesture {
+                    withAnimation {
+                        if case .visible = toolbarVisibility {
+                            toolbarVisibility = .hidden
+                        }
+                        else {
+                            toolbarVisibility = .visible
+                        }
                     }
                 }
             }
         }
+        // allow landscape for this view only
+        .unlockRotation()
+        .ignoresSafeArea()
+        .background(Color.customBackground)
     }
 }
 
@@ -49,50 +54,54 @@ private struct PhotoSliderContentView: View {
     
     private let images: [WordpressPhoto]
     @Binding private var imageIndex: Int
-    private let screenWidth: CGFloat
-    private let screenHeight: CGFloat
-    
-    @State private var imagesForSharing: [Int: PhotoForSharing] = [:]
-    
+    private let screenSize: CGSize
+        
     init(
         images: [WordpressPhoto],
         imageIndex: Binding<Int>,
-        screenWidth: CGFloat,
-        screenHeight: CGFloat
+        screenSize: CGSize
     ) {
         self.images = images
         self._imageIndex = imageIndex
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
+        self.screenSize = screenSize
     }
     
     var body: some View {
         TabView(selection: $imageIndex) {
             ForEach(Array(images.enumerated()), id: \.element.id) { index, image in
+                
+                let aspectRatio = Double(image.width) / Double(image.height)
+                
                 if let url = URL(string: image.originalUrl) {
-                    KFImage(url)
-                        .cancelOnDisappear(true)
-                        .placeholder { progress in
-                            ZStack(alignment: .top) {
-                                Rectangle()
-                                    .fill(Color.skeletonPlaceholderColor)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                ProgressView(value: progress.fractionCompleted, total: 1.0)
-                                    .progressViewStyle(.linear)
-                                    .tint(Color.SEESTURM_GREEN)
+                    
+                    ZoomableContainer(
+                        entireViewSize: screenSize,
+                        imageAspectRatio: aspectRatio
+                    ) {
+                        KFImage(url)
+                            .cancelOnDisappear(true)
+                            .placeholder { progress in
+                                ZStack(alignment: .top) {
+                                    Rectangle()
+                                        .fill(Color.skeletonPlaceholderColor)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    ProgressView(value: progress.fractionCompleted, total: 1.0)
+                                        .progressViewStyle(.linear)
+                                        .tint(Color.SEESTURM_GREEN)
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
+                            .resizable()
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .aspectRatio(aspectRatio, contentMode: .fit)
                         }
-                        .resizable()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .aspectRatio(Double(image.width) / Double(image.height), contentMode: .fit)
                         .tag(index)
                 }
                 else {
                     Rectangle()
                         .fill(Color.skeletonPlaceholderColor)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .aspectRatio(Double(image.width) / Double(image.height), contentMode: .fit)
+                        .aspectRatio(aspectRatio, contentMode: .fit)
                         .overlay {
                             Image(systemName: "photo")
                                 .resizable()
@@ -105,20 +114,6 @@ private struct PhotoSliderContentView: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                if let shareImage = imagesForSharing[imageIndex] {
-                    ShareLink(
-                        item: shareImage,
-                        preview: SharePreview(
-                            "Foto \(imageIndex + 1) von \(images.count)",
-                            image: shareImage.image
-                        )
-                    )
-                    .tint(Color.SEESTURM_GREEN)
-                }
-            }
-        }
         .navigationTitle("\(imageIndex + 1) von \(images.count)")
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.customBackground)
@@ -159,8 +154,7 @@ private struct PhotoSliderContentView: View {
                     )
                 ],
                 imageIndex: $index,
-                screenWidth: geometry.size.width,
-                screenHeight: geometry.size.height
+                screenSize: geometry.size
             )
         }
     }

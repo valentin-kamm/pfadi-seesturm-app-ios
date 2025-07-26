@@ -139,11 +139,7 @@ private struct AktivitaetDetailContentView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    UIApplication.shared.open(stufe.calendar.data.subscriptionUrl)
-                } label: {
-                    Image(systemName: "calendar.badge.plus")
-                }
+                CalendarSubscriptionButton(calendar: stufe.calendar)
             }
             ToolbarItem(placement: .topBarTrailing) {
                 if type == .home {

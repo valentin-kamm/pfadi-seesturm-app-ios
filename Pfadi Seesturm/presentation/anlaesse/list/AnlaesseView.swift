@@ -205,6 +205,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
                                             onFetchMoreEvents()
                                         }
                                     }
+                                    .id(events.count)
                             }
                         }
                         Text("Stand Kalender: \(eventsLastUpdated)\n(Alle gezeigten Zeiten in MEZ/MESZ)")
@@ -223,12 +224,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         .background(Color.customBackground)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-                    UIApplication.shared.open(calendar.data.subscriptionUrl)
-                }) {
-                    Image(systemName: "calendar.badge.plus")
-                }
-                .foregroundStyle(calendar.isLeitungsteam ? Color.SEESTURM_RED : Color.SEESTURM_GREEN)
+                CalendarSubscriptionButton(calendar: calendar)
             }
         }
     }

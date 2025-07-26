@@ -94,14 +94,21 @@ class SchoepflialarmService {
         reaction: SchoepflialarmReactionType
     ) async -> SeesturmResult<Void, RemoteDatabaseError> {
         
-        let payload = SchoepflialarmReactionDto(
-            created: Timestamp(),
-            modified: Timestamp(),
-            userId: user.userId,
-            reaction: reaction.rawValue
-        )
-        
         do {
+        
+            // check that user does not have a reaction yet
+            let currentReactions: [SchoepflialarmReactionDto] = try await firestoreRepository.readCollection(collection: .schopflialarmReactions)
+            guard !currentReactions.map({$0.userId}).contains(user.userId) else {
+                return .error(.savingError)
+            }
+            
+            let payload = SchoepflialarmReactionDto(
+                created: Timestamp(),
+                modified: Timestamp(),
+                userId: user.userId,
+                reaction: reaction.rawValue
+            )
+        
             let _ = try await fcfRepository.sendPushNotification(type: .schoepflialarmReactionGeneric(userName: user.displayNameShort, type: reaction))
             try await firestoreRepository.insertDocument(object: payload, collection: .schopflialarmReactions)
             return .success(())

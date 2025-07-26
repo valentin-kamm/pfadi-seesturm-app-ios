@@ -124,11 +124,12 @@ private struct AktuellContentView: View {
                         switch subState {
                         case .loading, .success:
                             AktuellLoadingCardView()
-                                .onAppear {
-                                    if subState.infiniteScrollTaskShouldRun {
-                                        onGetMorePosts()
-                                    }
+                            .onAppear {
+                                if subState.infiniteScrollTaskShouldRun {
+                                    onGetMorePosts()
                                 }
+                            }
+                            .id(data.count)
                         case .error(let message):
                             ErrorCardView(
                                 errorDescription: message,

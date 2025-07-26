@@ -16,8 +16,8 @@ class AktivitaetBearbeitenViewModel {
     var publishAktivitaetState: ActionState<Void> = .idle
     var title: String
     var location: String = ""
-    var start: Date = DateTimeUtil.shared.nextSaturday(at: 14)
-    var end: Date = DateTimeUtil.shared.nextSaturday(at: 16)
+    var start: Date = DateTimeUtil.shared.nextSaturday(at: 14, timeZone: TimeZone(identifier: "Europe/Zurich")!)
+    var end: Date = DateTimeUtil.shared.nextSaturday(at: 16, timeZone: TimeZone(identifier: "Europe/Zurich")!)
     var sendPushNotification: Bool = true
     var showConfirmationDialog: Bool = false
     var showPreviewSheet: Bool = false

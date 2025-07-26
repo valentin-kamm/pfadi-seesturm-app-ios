@@ -16,6 +16,8 @@ struct WeatherDto: Codable {
 extension WeatherDto {
     func toWeather() throws -> Weather {
         
+        let targetDisplayTimezone = TimeZone(identifier: "Europe/Zurich")!
+        
         let readDate = try DateTimeUtil.shared.parseISO8601DateWithTimeZone(iso8601DateString: readTime)
         
         return Weather(
@@ -23,7 +25,7 @@ extension WeatherDto {
             readTimeFormatted: DateTimeUtil.shared.formatDate(
                 date: readDate,
                 format: "dd.MM.yyyy, HH:dd 'Uhr'",
-                timeZone: .current,
+                timeZone: targetDisplayTimezone,
                 type: .relative(withTime: true)
             ),
             daily: try daily.toDailyWeather(),

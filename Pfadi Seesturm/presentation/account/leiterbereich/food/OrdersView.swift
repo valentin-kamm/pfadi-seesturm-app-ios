@@ -190,10 +190,11 @@ private struct OrdersContentView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if case .success(let orders) = ordersState, orders.filter( { $0.userIds.count > 0 }).count > 0 {
+                    
                     if deleteAllOrdersState.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .id(UUID())
+                        SeesturmProgressView(
+                            color: .SEESTURM_GREEN
+                        )
                     }
                     else {
                         Button {
@@ -261,7 +262,7 @@ private struct OrdersContentView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         OrdersContentView(
             ordersState: .success(data: DummyData.foodOrders),
-            deleteAllOrdersState: .idle,
+            deleteAllOrdersState: .loading(action: ()),
             user: DummyData.user1,
             onDeleteFromOrder: { _ in },
             onAddToOrder: { _ in },

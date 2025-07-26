@@ -20,7 +20,7 @@ class FCMApiImpl: FCMApi {
         self.messaging = messaging
     }
     
-    func subscribeToFCMTopic(topic: SeesturmFCMNotificationTopic) async throws {
+    func subscribeToFCMTopic(topic: SeesturmFCMNotificationTopic) async throws -> Void {
         try await messaging.subscribe(toTopic: topic.rawValue)
     }
     

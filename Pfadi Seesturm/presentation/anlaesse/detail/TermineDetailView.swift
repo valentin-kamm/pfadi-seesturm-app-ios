@@ -139,12 +139,7 @@ private struct TermineDetailContentView: View {
         .disabled(terminState.scrollingDisabled)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-                    UIApplication.shared.open(calendar.data.subscriptionUrl)
-                }) {
-                    Image(systemName: "calendar.badge.plus")
-                }
-                .foregroundStyle(calendar.isLeitungsteam ? Color.SEESTURM_RED : Color.SEESTURM_GREEN)
+                CalendarSubscriptionButton(calendar: calendar)
             }
         }
     }

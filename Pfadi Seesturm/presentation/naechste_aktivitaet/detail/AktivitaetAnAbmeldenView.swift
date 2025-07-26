@@ -185,7 +185,9 @@ private struct AktivitaetAnAbmeldenContentView: View {
                 Section {
                     SeesturmButton(
                         type: .primary,
-                        action: .sync(action: onSubmit),
+                        action: .sync(action: {
+                            onSubmit()
+                        }),
                         title: "\(sheetMode.wrappedValue.nomen) senden",
                         colors: .custom(contentColor: .white, buttonColor: sheetMode.wrappedValue.color),
                         isLoading: anAbmeldenState.isLoading

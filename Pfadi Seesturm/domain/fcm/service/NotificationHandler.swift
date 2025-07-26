@@ -4,7 +4,7 @@
 //
 //  Created by Valentin Kamm on 12.04.2025.
 //
-import Firebase
+import FirebaseMessaging
 import Foundation
 
 final class NotificationHandler: NSObject, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -89,8 +89,8 @@ final class NotificationHandler: NSObject, UNUserNotificationCenterDelegate, Mes
         
         DispatchQueue.main.async {
             self.handleNotificationTap(response: response)
+            completionHandler()
         }
-        completionHandler()
     }
     
     @MainActor

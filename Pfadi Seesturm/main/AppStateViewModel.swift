@@ -44,12 +44,18 @@ class AppStateViewModel: ObservableObject {
     }
     
     private func runOnAppStart() {
-        
+                
         Task {
             async let reauthResult: Void = await reauthenticateOnAppStart()
             async let versionCheckResult: Void = await checkMinimumRequiredAppBuild()
             
             let (_, _) = await (reauthResult, versionCheckResult)
+            
+            // re-subscribe to schöepflialarm topic in the background after re-auth is complete
+            let isHitobitoUser = await authService.isCurrentUserHitobitoUser()
+            if isHitobitoUser {
+                let _ = await fcmService.subscribe(to: .schoepflialarm)
+            }
         }
     }
     

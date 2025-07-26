@@ -40,7 +40,7 @@ struct LeiterbereichProfileHeaderView: View {
                     onDeleteAccount()
                 } label: {
                     HStack {
-                        Text("Account löschen")
+                        Text("App-Account löschen")
                         Image(systemName: "person.crop.circle.badge.xmark")
                     }
                 }
@@ -58,7 +58,7 @@ struct LeiterbereichProfileHeaderView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
                 .fontWeight(.bold)
-                .font(.footnote)
+                .font(.callout)
                 .lineLimit(2)
             if let em = user.email {
                 Text(em)

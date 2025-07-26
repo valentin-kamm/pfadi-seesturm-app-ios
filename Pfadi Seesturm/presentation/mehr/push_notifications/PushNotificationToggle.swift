@@ -41,9 +41,10 @@ struct PushNotificationToggle: View {
             Text(topic.topicName)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .layoutPriority(1)
-            ProgressView()
-                .progressViewStyle(CircularProgressViewStyle())
-                .opacity(isPushNotificationToggleLoading ? 1 : 0)
+            SeesturmProgressView(
+                color: .SEESTURM_GREEN
+            )
+            .opacity(isPushNotificationToggleLoading ? 1 : 0)
             Toggle(
                 isOn: Binding(
                     get: { isOn },

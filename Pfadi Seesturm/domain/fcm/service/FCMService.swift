@@ -25,7 +25,7 @@ class FCMService {
     }
     
     func subscribe(to topic: SeesturmFCMNotificationTopic) async -> SeesturmResult<SeesturmFCMNotificationTopic, MessagingError> {
-        
+                
         do {
             try await requestOrCheckNotificationPermission()
             try await fcmRepository.subscribeToTopic(topic: topic)

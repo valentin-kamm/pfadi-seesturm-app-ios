@@ -9,7 +9,7 @@ import SwiftData
 
 enum MehrNavigationDestination: NavigationDestination {
     
-    case pfadijahre(forceReload: Bool)
+    case pfadijahre
     case albums(pfadijahr: WordpressPhotoGallery)
     case photos(album: WordpressPhotoGallery)
     case dokumente
@@ -17,7 +17,6 @@ enum MehrNavigationDestination: NavigationDestination {
     case leitungsteam(stufe: String)
     case pushNotifications
     case gespeichertePersonen
-    case photosSlider(photos: [WordpressPhoto], selectedIndex: Int)
 }
 
 private struct MehrNavigationDestinations: ViewModifier {
@@ -39,17 +38,15 @@ private struct MehrNavigationDestinations: ViewModifier {
     func body(content: Content) -> some View {
         content.navigationDestination(for: MehrNavigationDestination.self) { destination in
             switch destination {
-            case .pfadijahre(let forceReload):
-                GalleriesView(
+            case .pfadijahre:
+                GalleriesViewPfadijahre(
                     viewModel: viewModel,
                     navigationDestination: { pfadijahr in
                         MehrNavigationDestination.albums(pfadijahr: pfadijahr)
-                    },
-                    type: .pfadijahre,
-                    forceReload: forceReload
+                    }
                 )
             case .albums(let pfadijahr):
-                GalleriesView(
+                GalleriesViewAlbums(
                     viewModel: GalleriesViewModel(
                         service: wordpressModule.photosService,
                         type: .albums(pfadijahr: pfadijahr)
@@ -57,8 +54,7 @@ private struct MehrNavigationDestinations: ViewModifier {
                     navigationDestination: { album in
                         MehrNavigationDestination.photos(album: album)
                     },
-                    type: .albums(pfadijahr: pfadijahr),
-                    forceReload: false
+                    pfadijahr: pfadijahr
                 )
             case .photos(let album):
                 PhotosGridView(
@@ -98,11 +94,6 @@ private struct MehrNavigationDestinations: ViewModifier {
                 )
             case .gespeichertePersonen:
                 GespeichertePersonenView()
-            case .photosSlider(let photos, let selectedIndex):
-                PhotoSliderView(
-                    images: photos,
-                    initialImageIndex: selectedIndex
-                )
             }
         }
     }

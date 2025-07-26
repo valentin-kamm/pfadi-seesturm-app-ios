@@ -120,7 +120,7 @@ private struct AktuellDetailContentView<D: NavigationDestination>: View {
                         Label(post.publishedFormatted, systemImage: "calendar")
                             .padding(.horizontal)
                             .lineLimit(1)
-                            .font(.caption)
+                            .font(.footnote)
                             .foregroundStyle(Color.secondary)
                             .labelStyle(.titleAndIcon)
                         RichText(html: post.content)

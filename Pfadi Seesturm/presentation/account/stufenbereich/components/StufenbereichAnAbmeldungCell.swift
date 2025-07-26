@@ -107,13 +107,13 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                                     Label("\(abmeldung.type.taetigkeit): \(abmeldung.createdString)", systemImage: abmeldung.type.icon)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .multilineTextAlignment(.leading)
-                                        .font(.caption2)
+                                        .font(.caption)
                                         .foregroundStyle(abmeldung.type.color)
                                         .labelStyle(.titleAndIcon)
                                     Text(abmeldung.bemerkungForDisplay)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .multilineTextAlignment(.leading)
-                                        .font(.caption2)
+                                        .font(.caption)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             }

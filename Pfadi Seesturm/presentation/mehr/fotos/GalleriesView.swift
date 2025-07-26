@@ -7,23 +7,67 @@
 
 import SwiftUI
 
-struct GalleriesView<D: NavigationDestination>: View {
+struct GalleriesViewPfadijahre<D: NavigationDestination>: View {
     
     private var viewModel: GalleriesViewModel
     private let navigationDestination: (WordpressPhotoGallery) -> D
-    private let type: PhotoGalleriesType
-    private let forceReload: Bool
+    
+    init(
+        viewModel: GalleriesViewModel,
+        navigationDestination: @escaping (WordpressPhotoGallery) -> D
+    ) {
+        self.viewModel = viewModel
+        self.navigationDestination = navigationDestination
+    }
+    
+    var body: some View {
+        GalleriesIntermediateView(
+            viewModel: viewModel,
+            navigationDestination: navigationDestination,
+            type: .pfadijahre
+        )
+    }
+}
+
+struct GalleriesViewAlbums<D: NavigationDestination>: View {
+    
+    @State private var viewModel: GalleriesViewModel
+    private let navigationDestination: (WordpressPhotoGallery) -> D
+    private let pfadijahr: WordpressPhotoGallery
     
     init(
         viewModel: GalleriesViewModel,
         navigationDestination: @escaping (WordpressPhotoGallery) -> D,
-        type: PhotoGalleriesType,
-        forceReload: Bool
+        pfadijahr: WordpressPhotoGallery
+    ) {
+        self.viewModel = viewModel
+        self.navigationDestination = navigationDestination
+        self.pfadijahr = pfadijahr
+    }
+    
+    var body: some View {
+        GalleriesIntermediateView(
+            viewModel: viewModel,
+            navigationDestination: navigationDestination,
+            type: .albums(pfadijahr: pfadijahr)
+        )
+    }
+}
+
+private struct GalleriesIntermediateView<D: NavigationDestination>: View {
+    
+    private var viewModel: GalleriesViewModel
+    private let navigationDestination: (WordpressPhotoGallery) -> D
+    private let type: PhotoGalleriesType
+    
+    init(
+        viewModel: GalleriesViewModel,
+        navigationDestination: @escaping (WordpressPhotoGallery) -> D,
+        type: PhotoGalleriesType
     ) {
         self.viewModel = viewModel
         self.navigationDestination = navigationDestination
         self.type = type
-        self.forceReload = forceReload
     }
     
     private var navigationTitle: String {
@@ -48,7 +92,7 @@ struct GalleriesView<D: NavigationDestination>: View {
             )
         }
         .task {
-            if forceReload || viewModel.galleryState.taskShouldRun {
+            if viewModel.galleryState.taskShouldRun {
                 await viewModel.fetchGalleries(isPullToRefresh: false)
             }
         }

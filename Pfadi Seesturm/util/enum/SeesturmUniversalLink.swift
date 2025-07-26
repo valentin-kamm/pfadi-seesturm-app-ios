@@ -55,7 +55,7 @@ enum SeesturmUniversalLink {
         case .oauthCallback:
             return (.account, NavigationPath())
         case .fotos:
-            return (.mehr, NavigationPath([MehrNavigationDestination.pfadijahre(forceReload: true)]))
+            return (.mehr, NavigationPath([MehrNavigationDestination.pfadijahre]))
         case .dokumente:
             return (.mehr, NavigationPath([MehrNavigationDestination.dokumente]))
         case .lüüchtturm:

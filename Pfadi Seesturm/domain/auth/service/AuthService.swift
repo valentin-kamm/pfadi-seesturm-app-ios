@@ -64,6 +64,7 @@ class AuthService {
                 let _ = try FirebaseHitobitoUserRole(claims: claims)
                 let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: SeesturmFirestoreDocument.user(id: user.uid))
                 let firebaseHitobitoUser = try firebaseHitobitoUserDto.toFirebaseHitobitoUser()
+                //try await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
                 return .success(firebaseHitobitoUser)
             }
             catch let error as PfadiSeesturmError {

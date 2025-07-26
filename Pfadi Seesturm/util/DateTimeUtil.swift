@@ -151,7 +151,7 @@ class DateTimeUtil {
     }
     
     // get date of next saturday at desired time
-    func nextSaturday(at hour: Int) -> Date {
+    func nextSaturday(at hour: Int, timeZone: TimeZone) -> Date {
         
         let calendar = Calendar.current
         let now = Date()
@@ -163,6 +163,7 @@ class DateTimeUtil {
         components.hour = hour
         components.minute = 0
         components.second = 0
+        components.timeZone = timeZone
         return calendar.date(from: components) ?? Date()
     }
     
@@ -239,5 +240,180 @@ class DateTimeUtil {
             timeZone: timeZone,
             type: .absolute
         )
+    }
+}
+
+#Preview {
+    
+    let timeZone = TimeZone(identifier: "Europe/Zurich")!
+    let calendar = Calendar.current
+    let heute = Date()
+    let heuteSpäter = calendar.date(byAdding: .hour, value: 2, to: heute)!
+    let morgen = calendar.date(byAdding: .day, value: 1, to: heute)!
+    let übermorgen = calendar.date(byAdding: .day, value: 2, to: heute)!
+    let überübermorgen = calendar.date(byAdding: .day, value: 3, to: heute)!
+    let gestern = calendar.date(byAdding: .day, value: -1, to: heute)!
+    let vorgestern = calendar.date(byAdding: .day, value: -2, to: heute)!
+    let vorvorgestern = calendar.date(byAdding: .day, value: -3, to: heute)!
+    
+    List {
+        Section {
+            Text(DateTimeUtil.shared.formatDate(
+                date: vorvorgestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: vorgestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: gestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: heute,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: morgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: übermorgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: überübermorgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: true)
+            ))
+        }
+        Section {
+            Text(DateTimeUtil.shared.formatDate(
+                date: vorvorgestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: vorgestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: gestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: heute,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: morgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: übermorgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: überübermorgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .relative(withTime: false)
+            ))
+        }
+        Section {
+            Text(DateTimeUtil.shared.formatDate(
+                date: vorvorgestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: vorgestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: gestern,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: heute,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: morgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: übermorgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+            Text(DateTimeUtil.shared.formatDate(
+                date: überübermorgen,
+                format: "dd.MM.yyyy",
+                timeZone: timeZone,
+                type: .absolute
+            ))
+        }
+        Section {
+            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+                isAllDay: false,
+                startDate: heute,
+                endDate: morgen,
+                timezone: timeZone
+            ))
+            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+                isAllDay: true,
+                startDate: heute,
+                endDate: morgen,
+                timezone: timeZone
+            ))
+            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+                isAllDay: false,
+                startDate: heute,
+                endDate: heuteSpäter,
+                timezone: timeZone
+            ))
+            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+                isAllDay: true,
+                startDate: heute,
+                endDate: heuteSpäter,
+                timezone: timeZone
+            ))
+        }
     }
 }

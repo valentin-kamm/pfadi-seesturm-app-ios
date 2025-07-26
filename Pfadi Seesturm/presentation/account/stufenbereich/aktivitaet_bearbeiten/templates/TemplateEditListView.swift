@@ -47,26 +47,30 @@ struct TemplateEditListView: View {
             await viewModel.observeTemplates()
         }
         .sheet(isPresented: $viewModel.showInsertSheet) {
+            let mode: TemplateEditMode = .insert(onSubmit: { description in
+                Task {
+                    await viewModel.insertTemplate(description: description)
+                }
+            })
             TemplateEditView(
-                mode: .insert(onSubmit: { description in
-                    Task {
-                        await viewModel.insertTemplate(description: description)
-                    }
-                }),
+                viewModel: TemplateEditViewModel(mode: mode),
+                mode: mode,
                 editState: $viewModel.editState
             )
         }
         .sheet(isPresented: viewModel.showEditSheet) {
             if let template = viewModel.editSheetTemplate {
-                TemplateEditView(
-                    mode: .update(
-                        description: template.description,
-                        onSubmit: { newDescription in
-                            Task {
-                                await viewModel.updateTemplate(id: template.id, description: newDescription)
-                            }
+                let mode: TemplateEditMode = .update(
+                    description: template.description,
+                    onSubmit: { newDescription in
+                        Task {
+                            await viewModel.updateTemplate(id: template.id, description: newDescription)
                         }
-                    ),
+                    }
+                )
+                TemplateEditView(
+                    viewModel: TemplateEditViewModel(mode: mode),
+                    mode: mode,
                     editState: $viewModel.editState
                 )
             }

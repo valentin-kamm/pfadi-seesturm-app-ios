@@ -8,23 +8,18 @@ import SwiftUI
 
 struct TemplateEditView: View {
     
-    @State private var description: String
+    @State private var viewModel: TemplateEditViewModel
     private let mode: TemplateEditMode
     private let editState: Binding<ActionState<Void>>
     
     init(
+        viewModel: TemplateEditViewModel,
         mode: TemplateEditMode,
         editState: Binding<ActionState<Void>>
     ) {
+        self.viewModel = viewModel
         self.mode = mode
         self.editState = editState
-        
-        switch mode {
-        case .insert:
-            self.description = ""
-        case .update(let description, _):
-            self.description = description
-        }
     }
     
     var body: some View {
@@ -32,7 +27,7 @@ struct TemplateEditView: View {
             List {
                 Section {
                     SeesturmHTMLEditor(
-                        html: $description,
+                        html: $viewModel.description,
                         scrollable: true,
                         disabled: editState.wrappedValue.isLoading
                     )
@@ -47,9 +42,9 @@ struct TemplateEditView: View {
                         action: .sync(action: {
                             switch mode {
                             case .insert(let onSubmit):
-                                onSubmit(description)
+                                onSubmit(viewModel.description)
                             case .update(_, let onSubmit):
-                                onSubmit(description)
+                                onSubmit(viewModel.description)
                             }
                         }),
                         title: mode.buttonTitle,
@@ -76,17 +71,21 @@ struct TemplateEditView: View {
 }
 
 #Preview("Loading") {
+    let mode = TemplateEditMode.insert(onSubmit: { _ in })
     TemplateEditView(
-        mode: .insert(onSubmit: { _ in }),
+        viewModel: TemplateEditViewModel(mode: mode),
+        mode: mode,
         editState: .constant(.loading(action: ()))
     )
 }
 #Preview("Idle") {
+    let mode = TemplateEditMode.update(
+        description: "<b>Hallo</b>",
+        onSubmit: { _ in }
+    )
     TemplateEditView(
-        mode: .update(
-            description: "<b>Hallo</b>",
-            onSubmit: { _ in }
-        ),
+        viewModel: TemplateEditViewModel(mode: mode),
+        mode: mode,
         editState: .constant(.idle)
     )
 }

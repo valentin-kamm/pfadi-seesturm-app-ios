@@ -16,7 +16,12 @@ class StufenbereichViewModel {
     var deleteAbmeldungenState: ActionState<GoogleCalendarEventWithAnAbmeldungen> = .idle
     var deleteAllAbmeldungenState: ActionState<Void> = .idle
     var sendPushNotificationState: ActionState<GoogleCalendarEvent> = .idle
-    private var _selectedDate: Date = Calendar.current.date(byAdding: .month, value: -3, to: Date()) ?? Date()
+    private var _selectedDate: Date = {
+        let calendar = Calendar.current
+        let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: Date()) ?? calendar.startOfDay(for: Date())
+        let threeMonthsAgoAtMidnight = calendar.startOfDay(for: threeMonthsAgo)
+        return threeMonthsAgoAtMidnight
+    }()
     var selectedAktivitaetInteraction: AktivitaetInteractionType = .abmelden
     var showDeleteAllAbmeldungenConfirmationDialog: Bool = false
     var showDeleteAbmeldungenConfirmationDialog: Bool = false

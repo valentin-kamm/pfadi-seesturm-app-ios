@@ -208,7 +208,7 @@ struct LeiterbereichView: View {
                 sendSchoepflialarmReactionState: $viewModel.sendSchoepflialarmReactionState,
                 togglePushNotificationState: $viewModel.toggleSchoepflialarmReactionsPushNotificationState
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.medium, .large])
         }
     }
 }

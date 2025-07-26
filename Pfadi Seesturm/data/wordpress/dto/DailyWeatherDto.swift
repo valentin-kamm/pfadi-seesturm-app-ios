@@ -33,13 +33,15 @@ extension DailyWeatherDto {
         let sunsetDate = try DateTimeUtil.shared.parseISO8601DateWithTimeZone(iso8601DateString: sunset)
         let weatherCondition = convertConditionCode()
         
+        let targetDisplayTimezone = TimeZone(identifier: "Europe/Zurich")!
+        
         return DailyWeather(
             forecastStart: forecastStartDate,
             forecastEnd: forecastEndDate,
             dayFormatted: DateTimeUtil.shared.formatDate(
                 date: forecastStartDate,
                 format: "EEEE, d. MMMM",
-                timeZone: .current,
+                timeZone: targetDisplayTimezone,
                 type: .relative(withTime: false)
             ),
             weatherCondition: weatherCondition,
@@ -56,14 +58,14 @@ extension DailyWeatherDto {
             sunriseFormatted: DateTimeUtil.shared.formatDate(
                 date: sunriseDate,
                 format: "HH:mm",
-                timeZone: .current,
+                timeZone: targetDisplayTimezone,
                 type: .absolute
             ),
             sunset: sunsetDate,
             sunsetFormatted: DateTimeUtil.shared.formatDate(
                 date: sunsetDate,
                 format: "HH:mm",
-                timeZone: .current,
+                timeZone: targetDisplayTimezone,
                 type: .absolute
             )
         )

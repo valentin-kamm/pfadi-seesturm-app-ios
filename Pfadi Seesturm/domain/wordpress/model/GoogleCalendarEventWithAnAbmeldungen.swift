@@ -17,3 +17,13 @@ extension GoogleCalendarEventWithAnAbmeldungen {
         return count == 1 ? "\(count) \(interaction.nomen)" : "\(count) \(interaction.nomenMehrzahl)"
     }
 }
+
+extension [GoogleCalendarEventWithAnAbmeldungen] {
+    var groupesByMonthAndYear: [(Date, [GoogleCalendarEventWithAnAbmeldungen])] {
+        let grouped = Dictionary(grouping: self, by: { $0.event.firstDayOfMonthOfStartDate })
+        let sortedKeys = grouped.keys.sorted(by: >)
+        return sortedKeys.map { startDate in
+            (startDate, grouped[startDate] ?? [])
+        }
+    }
+}

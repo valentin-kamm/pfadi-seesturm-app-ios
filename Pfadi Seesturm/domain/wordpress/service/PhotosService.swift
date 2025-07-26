@@ -30,7 +30,7 @@ class PhotosService: WordpressService {
     func getPhotos(albumId: String) async -> SeesturmResult<[WordpressPhoto], NetworkError> {
         await fetchFromWordpress(
             fetchAction: { try await self.repository.getPhotos(albumId: albumId) },
-            transform: { $0.map { $0.toWordpressPhoto() } }
+            transform: { $0.toWordpressPhotos() }
         )
     }
 }

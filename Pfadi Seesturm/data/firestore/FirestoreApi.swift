@@ -12,6 +12,7 @@ protocol FirestoreApi {
     func insertDocument<T: FirestoreDto>(object: T, collection: CollectionReference) async throws
     func upsertDocument<T: FirestoreDto>(object: T, document: DocumentReference) async throws
     func readDocument<T: FirestoreDto>(document: DocumentReference) async throws -> T
+    func readCollection<T: FirestoreDto>(collection: CollectionReference) async throws -> [T]
     func deleteDocument(document: DocumentReference) async throws
     func deleteDocuments(documents: [DocumentReference]) async throws
     func deleteAllDocuments(in collection: CollectionReference) async throws
@@ -74,6 +75,13 @@ class FirestoreApiImpl: FirestoreApi {
     
     func readDocument<T: FirestoreDto>(document: DocumentReference) async throws -> T {
         return try await document.getDocument(as: T.self)
+    }
+    
+    func readCollection<T: FirestoreDto>(collection: CollectionReference) async throws -> [T] {
+        let snapshot = try await collection.getDocuments()
+        return try snapshot.documents.compactMap { document in
+            try document.data(as: T.self)
+        }
     }
     
     func deleteDocument(document: DocumentReference) async throws {

@@ -47,8 +47,7 @@ class WordpressApiImpl: WordpressApi {
     
     func getEvents(calendarId: String, includePast: Bool, maxResults: Int) async throws -> GoogleCalendarEventsDto {
         if !includePast {
-            let dateString = getDateString()
-            let urlString = "\(baseUrl)events/byCalendarId?calendarId=\(calendarId)&timeMin=\(dateString)&maxResults=\(maxResults)"
+            let urlString = "\(baseUrl)events/byCalendarId?calendarId=\(calendarId)&timeMin=\(getDateString())&maxResults=\(maxResults)"
             return try await HttpUtil.shared.performGetRequest(urlString: urlString)
         }
         let urlString = "\(baseUrl)events/byCalendarId?calendarId=\(calendarId)&maxResults=\(maxResults)"
@@ -59,8 +58,7 @@ class WordpressApiImpl: WordpressApi {
         return try await HttpUtil.shared.performGetRequest(urlString: urlString)
     }
     func getEvents(calendarId: String, timeMin: Date) async throws -> GoogleCalendarEventsDto {
-        let dateString = getDateString(date: timeMin)
-        let urlString = "\(baseUrl)events/byCalendarId?calendarId=\(calendarId)&timeMin=\(dateString)"
+        let urlString = "\(baseUrl)events/byCalendarId?calendarId=\(calendarId)&timeMin=\(getDateString(date: timeMin))"
         return try await HttpUtil.shared.performGetRequest(urlString: urlString)
     }
     func getEvent(calendarId: String, eventId: String) async throws -> GoogleCalendarEventDto {

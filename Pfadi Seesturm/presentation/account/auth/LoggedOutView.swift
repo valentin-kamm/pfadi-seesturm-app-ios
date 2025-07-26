@@ -30,11 +30,11 @@ struct LoggedOutView: View {
                     .scaledToFit()
                     .frame(width: 100, height: 100)
                 Text("Login")
-                    .font(.title2)
+                    .font(.title)
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                 Text("Melde dich mit MiData an um fortzufahren.")
-                    .font(.caption)
+                    .font(.footnote)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.bottom, 8)
@@ -51,4 +51,11 @@ struct LoggedOutView: View {
         }
         .padding()
     }
+}
+
+#Preview {
+    LoggedOutView(
+        authState: .signedOut(state: .idle),
+        onAuthenticate: {}
+    )
 }
