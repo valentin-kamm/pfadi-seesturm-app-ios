@@ -20,6 +20,7 @@ struct GespeichertePersonenView: View {
     
     @State private var showInsertSheet = false
     @State private var deletingError: String? = nil
+    @State private var insertPersonState: ActionState<Void> = .idle
     
     private var showSnackbar: Binding<Bool> {
         Binding(
@@ -55,7 +56,9 @@ struct GespeichertePersonenView: View {
             }
         )
         .sheet(isPresented: $showInsertSheet) {
-            GespeichertePersonHinzufuegenView()
+            GespeichertePersonHinzufuegenView(
+                insertPersonState: $insertPersonState
+            )
         }
         .customSnackbar(
             show: showSnackbar,
@@ -63,6 +66,10 @@ struct GespeichertePersonenView: View {
             message: deletingError ?? "Eine Person konnte nicht gelöscht werden. Unbekannter Fehler.",
             dismissAutomatically: true,
             allowManualDismiss: true
+        )
+        .actionSnackbar(
+            action: $insertPersonState,
+            events: [.success(dismissAutomatically: true, allowManualDismiss: true)]
         )
     }
 }

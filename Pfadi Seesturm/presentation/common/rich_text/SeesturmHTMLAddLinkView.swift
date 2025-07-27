@@ -14,7 +14,8 @@ struct SeesturmHTMLAddLinkView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var text = ""
     @State private var url = ""
-    @State private var showError: Bool = false
+    @State private var showUrlError: Bool = false
+    @State private var showTextError: Bool = false
     
     init(textAttributes: TextAttributes) {
         self.textAttributes = textAttributes
@@ -80,22 +81,33 @@ struct SeesturmHTMLAddLinkView: View {
             }
         }
         .customSnackbar(
-            show: $showError,
+            show: $showUrlError,
             type: .error,
             message: "Die angegebene URL ist ungültig.",
+            dismissAutomatically: true,
+            allowManualDismiss: true
+        )
+        .customSnackbar(
+            show: $showTextError,
+            type: .error,
+            message: "Der Text darf nicht leer sein.",
             dismissAutomatically: true,
             allowManualDismiss: true
         )
     }
     
     private func onSubmit() {
-        if let vu = validUrl {
-            let linkTitle = text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : text.trimmingCharacters(in: .whitespacesAndNewlines)
-            textAttributes.addLink(url: vu, text: linkTitle)
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if let vu = validUrl, !trimmedText.isEmpty {
+            textAttributes.addLink(url: vu, text: trimmedText)
             dismiss()
         }
+        else if validUrl == nil {
+            showUrlError = true
+        }
         else {
-            showError = true
+            showTextError = true
         }
     }
 }

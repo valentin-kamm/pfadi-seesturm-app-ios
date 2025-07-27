@@ -8958,8 +8958,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/templates/TemplateListView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "deleteItems(_:_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -11262,8 +11262,8 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

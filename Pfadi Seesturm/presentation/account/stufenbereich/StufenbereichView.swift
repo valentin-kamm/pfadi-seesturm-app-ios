@@ -186,6 +186,9 @@ private struct StufenbereichContentView: View {
                     .tint(Color.SEESTURM_GREEN)
                     .disabled(!abmeldungenState.isSuccess)
                     .frame(maxWidth: .infinity, alignment: .trailing)
+                    .font(.callout)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.secondary)
                     if (stufe.allowedAktivitaetInteractions.count > 1) {
                         Picker("An-/Abmeldung", selection: selectedAktivitaetInteraction) {
                             ForEach(stufe.allowedAktivitaetInteractions) { interaction in

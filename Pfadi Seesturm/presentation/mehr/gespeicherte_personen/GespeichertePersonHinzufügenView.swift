@@ -18,6 +18,14 @@ struct GespeichertePersonHinzufuegenView: View {
     @State private var pfadiname = ""
     @State private var savingError: String? = nil
     
+    @Binding private var insertPersonState: ActionState<Void>
+    
+    init(
+        insertPersonState: Binding<ActionState<Void>>
+    ) {
+        self._insertPersonState = insertPersonState
+    }
+    
     private var newPerson: GespeichertePerson {
         GespeichertePerson(
             id: UUID(),
@@ -127,6 +135,7 @@ struct GespeichertePersonHinzufuegenView: View {
         do {
             modelContext.insert(newPerson.toGespeichertePersonDao())
             try modelContext.save()
+            insertPersonState = .success(action: (), message: "Person erfolgreich gespeichert")
             dismiss()
         }
         catch {
@@ -138,5 +147,7 @@ struct GespeichertePersonHinzufuegenView: View {
 }
 
 #Preview {
-    GespeichertePersonHinzufuegenView()
+    GespeichertePersonHinzufuegenView(
+        insertPersonState: .constant(.idle)
+    )
 }

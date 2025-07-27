@@ -10,20 +10,18 @@ import Combine
 
 struct SeesturmHTMLEditor: View {
     
-    @StateObject private var textAttributes: TextAttributes
+    @StateObject private var textAttributes: TextAttributes = TextAttributes()
     private let html: Binding<String>
     private let scrollable: Bool
     private let disabled: Bool
     @State private var showAddLinkSheet: Bool
     
     init(
-        textAttributes: TextAttributes = TextAttributes(),
         html: Binding<String>,
         scrollable: Bool,
         disabled: Bool,
         showAddLinkSheet: Bool = false
     ) {
-        _textAttributes = StateObject(wrappedValue: textAttributes)
         self.html = html
         self.scrollable = scrollable
         self.disabled = disabled
@@ -240,7 +238,7 @@ private class SeesturmHTMLEditorToolbar: UIView {
 
 #Preview {
     SeesturmHTMLEditor(
-        textAttributes: TextAttributes(),
+        //textAttributes: TextAttributes(),
         html: .constant(""),
         scrollable: false,
         disabled: false,

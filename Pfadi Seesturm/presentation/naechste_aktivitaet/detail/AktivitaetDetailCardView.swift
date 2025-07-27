@@ -9,6 +9,8 @@ import RichText
 
 struct AktivitaetDetailCardView: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    
     private let stufe: SeesturmStufe
     private let aktivitaet: GoogleCalendarEvent?
     private let openSheet: (AktivitaetInteractionType) -> Void
@@ -129,6 +131,7 @@ struct AktivitaetDetailCardView: View {
                                     .loadingBlinking()
                                     .padding(.top, -16)
                             }
+                            .customCSS("html * { background-color: transparent;}")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     Divider()

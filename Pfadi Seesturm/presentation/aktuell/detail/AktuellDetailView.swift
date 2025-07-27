@@ -134,6 +134,7 @@ private struct AktuellDetailContentView<D: NavigationDestination>: View {
                                     .redacted(reason: .placeholder)
                                     .loadingBlinking()
                             })
+                            .customCSS("html * { background-color: transparent;}")
                             .padding([.horizontal, .bottom])
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)

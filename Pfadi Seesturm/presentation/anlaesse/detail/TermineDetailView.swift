@@ -128,6 +128,7 @@ private struct TermineDetailContentView: View {
                                     .redacted(reason: .placeholder)
                                     .loadingBlinking()
                             })
+                            .customCSS("html * { background-color: transparent;}")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
