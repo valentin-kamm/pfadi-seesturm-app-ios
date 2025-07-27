@@ -8,9 +8,7 @@ import SwiftUI
 import RichText
 
 struct AktivitaetDetailCardView: View {
-    
-    @Environment(\.colorScheme) var colorScheme
-    
+        
     private let stufe: SeesturmStufe
     private let aktivitaet: GoogleCalendarEvent?
     private let openSheet: (AktivitaetInteractionType) -> Void
