@@ -99,18 +99,7 @@ class FCMService {
                 document: .user(id: userId),
                 forceNewCreatedDate: false,
                 update: { oldUser in
-                    FirebaseHitobitoUserDto(
-                        id: oldUser.id,
-                        created: oldUser.created,
-                        modified: oldUser.modified,
-                        email: oldUser.email,
-                        firstname: oldUser.firstname,
-                        lastname: oldUser.lastname,
-                        pfadiname: oldUser.pfadiname,
-                        role: oldUser.role,
-                        profilePictureUrl: oldUser.profilePictureUrl,
-                        fcmToken: newToken
-                    )
+                    FirebaseHitobitoUserDto(from: oldUser, newFcmToken: newToken)
                 }
             )
             return .success(())

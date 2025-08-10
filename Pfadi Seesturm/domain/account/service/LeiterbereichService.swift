@@ -4,18 +4,23 @@
 //
 //  Created by Valentin Kamm on 24.03.2025.
 //
+import SwiftUI
+import PhotosUI
 
 class LeiterbereichService: WordpressService {
     
     private let termineRepository: AnlaesseRepository
     private let firestoreRepository: FirestoreRepository
+    private let storageRepository: StorageRepository
     
     init(
         termineRepository: AnlaesseRepository,
-        firestoreRepository: FirestoreRepository
+        firestoreRepository: FirestoreRepository,
+        storageRepository: StorageRepository
     ) {
         self.termineRepository = termineRepository
         self.firestoreRepository = firestoreRepository
+        self.storageRepository = storageRepository
     }
     
     func fetchNext3Events(calendar: SeesturmCalendar) async -> SeesturmResult<[GoogleCalendarEvent], NetworkError> {
@@ -38,7 +43,7 @@ class LeiterbereichService: WordpressService {
             return .error(e)
         case .success(let d):
             do {
-                let users = try d.map { try $0.toFirebaseHitobitoUser() }
+                let users = try d.map { try FirebaseHitobitoUser($0) }
                 return .success(users)
             }
             catch {
@@ -120,6 +125,40 @@ class LeiterbereichService: WordpressService {
         }
         catch {
             return .error(.deletingError)
+        }
+    }
+    
+    func uploadProfilePicture(item: PhotosPickerItem, user: FirebaseHitobitoUser) -> AsyncStream<ProgressActionState<Void>> {
+        AsyncStream { continuation in
+            Task {
+                do {
+                    let downloadUrl = try await storageRepository.uploadData(
+                        item: .profilePicture(user: user, item: item),
+                        metadata: nil
+                    ) { progress in
+                        continuation.yield(.loading(action: (), progress: progress))
+                    }
+                    try await firestoreRepository.performTransaction(
+                        type: FirebaseHitobitoUserDto.self,
+                        document: .user(id: user.userId),
+                        forceNewCreatedDate: false
+                    ) { oldUser in
+                        FirebaseHitobitoUserDto(from: oldUser, newProfilePictureUrl: downloadUrl.absoluteString)
+                    }
+                    continuation.yield(.success(action: (), message: "Das Profilbild wurde erfolgreich gespeichert."))
+                }
+                catch {
+                    let message: String
+                    if let pfadiSeesturmError = error as? PfadiSeesturmError {
+                        message = pfadiSeesturmError.localizedDescription
+                    }
+                    else {
+                        message = "Beim Hochladen der Daten ist ein unbekannter Fehler aufgetreten."
+                    }
+                    continuation.yield(.error(action: (), message: message))
+                }
+                continuation.finish()
+            }
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import FirebaseStorage
 
 protocol AccountModule {
     
@@ -20,22 +21,26 @@ class AccountModuleImpl: AccountModule {
     private let firestoreRepository: FirestoreRepository
     private let cloudFunctionsRepository: CloudFunctionsRepository
     private let fcmService: FCMService
+    private let storageRepository: StorageRepository
     
     init(
         anlaesseRepository: AnlaesseRepository,
         firestoreRepository: FirestoreRepository,
         cloudFunctionsRepository: CloudFunctionsRepository,
-        fcmService: FCMService
+        fcmService: FCMService,
+        storageRepository: StorageRepository
     ) {
         self.anlaesseRepository = anlaesseRepository
         self.firestoreRepository = firestoreRepository
         self.cloudFunctionsRepository = cloudFunctionsRepository
         self.fcmService = fcmService
+        self.storageRepository = storageRepository
     }
     
     lazy var leiterbereichService: LeiterbereichService = LeiterbereichService(
         termineRepository: anlaesseRepository,
-        firestoreRepository: firestoreRepository
+        firestoreRepository: firestoreRepository,
+        storageRepository: storageRepository
     )
     lazy var stufenbereichService: StufenbereichService = StufenbereichService(
         termineRepository: anlaesseRepository,
@@ -78,6 +83,10 @@ struct AccountModuleKey: EnvironmentKey {
                 )
             ),
             notificationCenter: UNUserNotificationCenter.current()
+        ),
+        storageRepository: StorageRepositoryImpl(
+            api: StorageApiImpl(),
+            storage: Storage.storage()
         )
     )
 }

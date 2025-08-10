@@ -29,37 +29,73 @@ struct FirebaseHitobitoUserDto: FirestoreDto {
         profilePictureUrl == other.profilePictureUrl &&
         fcmToken == other.fcmToken
     }
-}
-
-extension FirebaseHitobitoUserDto {
-    func toFirebaseHitobitoUser() throws -> FirebaseHitobitoUser {
+    
+    init(_ dto: HitobitoUserInfoDto, role: String) {
+        self.id = dto.sub
+        self.created = nil
+        self.modified = nil
+        self.email = dto.email
+        self.firstname = dto.firstName
+        self.lastname = dto.lastName
+        self.pfadiname = dto.nickname
+        self.role = role
+        self.profilePictureUrl = nil
+        self.fcmToken = nil
+    }
+    
+    init(from oldUser: FirebaseHitobitoUserDto, newFcmToken: String) {
+        self.id = oldUser.id
+        self.created = oldUser.created
+        self.modified = nil
+        self.email = oldUser.email
+        self.firstname = oldUser.firstname
+        self.lastname = oldUser.lastname
+        self.pfadiname = oldUser.pfadiname
+        self.role = oldUser.role
+        self.profilePictureUrl = oldUser.profilePictureUrl
+        self.fcmToken = newFcmToken
+    }
+    
+    init(from oldUser: FirebaseHitobitoUserDto, newProfilePictureUrl: String) {
+        self.id = oldUser.id
+        self.created = oldUser.created
+        self.modified = nil
+        self.email = oldUser.email
+        self.firstname = oldUser.firstname
+        self.lastname = oldUser.lastname
+        self.pfadiname = oldUser.pfadiname
+        self.role = oldUser.role
+        self.profilePictureUrl = newProfilePictureUrl
+        self.fcmToken = oldUser.fcmToken
+    }
+    
+    init(jsonString: String) throws {
         
-        let createdDate = try DateTimeUtil.shared.convertFirestoreTimestamp(timestamp: created)
-        let modifiedDate = try DateTimeUtil.shared.convertFirestoreTimestamp(timestamp: modified)
+        struct Plain: Decodable {
+            var userId: String
+            var email: String?
+            var firstname: String?
+            var lastname: String?
+            var pfadiname: String?
+            var role: String
+            var profilePictureUrl: String?
+            var fcmToken: String?
+        }
         
-        return FirebaseHitobitoUser(
-            userId: id ?? UUID().uuidString,
-            vorname: firstname,
-            nachname: lastname,
-            pfadiname: pfadiname,
-            email: email,
-            role: try FirebaseHitobitoUserRole(role: role),
-            profilePictureUrl: URL(string: profilePictureUrl ?? ""),
-            created: createdDate,
-            createdFormatted: DateTimeUtil.shared.formatDate(
-                date: createdDate,
-                format: "EEEE, d. MMMM yyyy 'Uhr'",
-                timeZone: .current,
-                type: .relative(withTime: true)
-            ),
-            modified: modifiedDate,
-            modifiedFormatted: DateTimeUtil.shared.formatDate(
-                date: modifiedDate,
-                format: "EEEE, d. MMMM yyyy 'Uhr'",
-                timeZone: .current,
-                type: .relative(withTime: true)
-            ),
-            fcmToken: fcmToken
-        )
+        guard let data = jsonString.data(using: .utf8) else {
+            throw PfadiSeesturmError.unknown(message: "Data conversion for \(jsonString) did not work.")
+        }
+        let decoded = try JSONDecoder().decode(Plain.self, from: data)
+        
+        self.id = decoded.userId
+        self.created = Timestamp()
+        self.modified = Timestamp()
+        self.email = decoded.email
+        self.firstname = decoded.firstname
+        self.lastname = decoded.lastname
+        self.pfadiname = decoded.pfadiname
+        self.role = decoded.role
+        self.profilePictureUrl = decoded.profilePictureUrl
+        self.fcmToken = decoded.fcmToken
     }
 }

@@ -231,6 +231,7 @@ enum PfadiSeesturmError: LocalizedError {
     case authError(message: String)
     case cancelled(message: String)
     case unknownSchoepflialarmReactionType(message: String)
+    case jpgConversionFailed(message: String)
     case unknown(message: String)
         
     var errorDescription: String? {
@@ -256,6 +257,8 @@ enum PfadiSeesturmError: LocalizedError {
         case .cancelled(let message):
             return message
         case .unknownSchoepflialarmReactionType(let message):
+            return message
+        case .jpgConversionFailed(let message):
             return message
         case .unknown(let message):
             return message

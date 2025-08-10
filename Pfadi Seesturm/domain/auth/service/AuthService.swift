@@ -33,23 +33,27 @@ class AuthService {
             let firebaseUser = try await authRepository.authenticateWithFirebase(firebaseToken: firebaseAuthToken)
             let firebaseUserClaims = try await authRepository.getCurrentFirebaseUserClaims(user: firebaseUser)
             let firebaseUserRole = try FirebaseHitobitoUserRole(claims: firebaseUserClaims)
-            let firebaseUserDto = userInfo.toFirebaseHitobitoUserDto(role: firebaseUserRole.rawValue)
+            let firebaseUserDto = FirebaseHitobitoUserDto(userInfo, role: firebaseUserRole.rawValue)
             try await upsertUser(user: firebaseUserDto, id: userInfo.sub)
-            let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: .user(id: userInfo.sub))
-            let firebaseHitobitoUser = try firebaseHitobitoUserDto.toFirebaseHitobitoUser()
             try await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
+            let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: .user(id: userInfo.sub))
+            let firebaseHitobitoUser = try FirebaseHitobitoUser(firebaseHitobitoUserDto)
             return .success(firebaseHitobitoUser)
         }
-        catch let error as PfadiSeesturmError {
-            switch error {
-            case .cancelled:
-                return .error(.cancelled)
-            default:
-                return .error(.signInError(message: error.localizedDescription))
-            }
-        }
         catch {
-            return .error(.signInError(message: "Unbekannter Fehler: \(error.localizedDescription)"))
+            let authError: AuthError
+            if let pfadiSeesturmError = error as? PfadiSeesturmError {
+                switch pfadiSeesturmError {
+                case .cancelled:
+                    authError = .cancelled
+                default:
+                    authError = .signInError(message: error.localizedDescription)
+                }
+            }
+            else {
+                authError = .signInError(message: "Unbekannter Fehler: \(error.localizedDescription)")
+            }
+            return .error(authError)
         }
     }
     
@@ -57,25 +61,37 @@ class AuthService {
         authRepository.resumeExternalUserAgentFlow(url: url)
     }
     
-    func reauthenticateOnAppStart() async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
-        if let user = authRepository.getCurrentFirebaseUser() {
-            do {
-                let claims = try await authRepository.getCurrentFirebaseUserClaims(user: user)
-                let _ = try FirebaseHitobitoUserRole(claims: claims)
-                let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: SeesturmFirestoreDocument.user(id: user.uid))
-                let firebaseHitobitoUser = try firebaseHitobitoUserDto.toFirebaseHitobitoUser()
-                //try await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
-                return .success(firebaseHitobitoUser)
-            }
-            catch let error as PfadiSeesturmError {
-                return .error(.signInError(message: "Die Anmeldung ist fehlgeschlagen. Versuche es erneut oder kontaktiere den Admin. \(error.localizedDescription)"))
-            }
-            catch {
-                return .error(.signInError(message: "Bei der Anmeldung ist ein unbekannter Fehler aufgetreten. Versuche es erneut. \(error.localizedDescription)"))
-            }
-        }
-        else {
+    func reauthenticate(resubscribeToSchoepflialarm: Bool) async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
+        
+        guard let user = authRepository.getCurrentFirebaseUser() else {
             return .error(.signInError(message: "Es ist kein Benutzer angemeldet. Neue Anmeldung nötig."))
+        }
+        
+        do {
+            let claims = try await authRepository.getCurrentFirebaseUserClaims(user: user)
+            let _ = try FirebaseHitobitoUserRole(claims: claims)
+            
+            // re-subscribe to schöpflialarm topic, but do not suspend and without caring about the error
+            if resubscribeToSchoepflialarm {
+                Task {
+                    try? await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
+                }
+            }
+            
+            let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: .user(id: user.uid))
+            let firebaseHitobitoUser = try FirebaseHitobitoUser(firebaseHitobitoUserDto)
+            
+            return .success(firebaseHitobitoUser)
+        }
+        catch {
+            let message: String
+            if let pfadiSeesturmError = error as? PfadiSeesturmError {
+                message = "Die Anmeldung ist fehlgeschlagen. Versuche es erneut oder kontaktiere den Admin. \(pfadiSeesturmError.localizedDescription)"
+            }
+            else {
+                message = "Bei der Anmeldung ist ein unbekannter Fehler aufgetreten. Versuche es erneut. \(error.localizedDescription)"
+            }
+            return .error(.signInError(message: message))
         }
     }
     
@@ -131,5 +147,25 @@ class AuthService {
     
     func getCurrentUid() -> String? {
         return authRepository.getCurrentUid()
+    }
+    
+    func listenToUser(userId: String) -> AsyncStream<SeesturmResult<FirebaseHitobitoUser, RemoteDatabaseError>> {
+        return firestoreRepository.observeDocument(
+            type: FirebaseHitobitoUserDto.self,
+            document: .user(id: userId)
+        ).map { result in
+            switch result {
+            case .error(let e):
+                return .error(e)
+            case .success(let dto):
+                do {
+                    let firebaseHitobitoUser = try FirebaseHitobitoUser(dto)
+                    return .success(firebaseHitobitoUser)
+                }
+                catch {
+                    return .error(.readingError)
+                }
+            }
+        }
     }
 }

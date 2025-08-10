@@ -22,17 +22,40 @@ struct HitobitoUserInfoDto: Decodable {
     let language: String?
     let kantonalverbandId: Int?
     let roles: [HitobitoUserRoleDto?]?
-}
-
-extension HitobitoUserInfoDto {
-    func toFirebaseHitobitoUserDto(role: String) -> FirebaseHitobitoUserDto {
-        return FirebaseHitobitoUserDto(
-            id: sub,
-            email: email,
-            firstname: firstName,
-            lastname: lastName,
-            pfadiname: nickname,
-            role: role
-        )
+    
+    private init(
+        sub: String = "",
+        email: String? = nil,
+        firstName: String? = nil,
+        lastName: String? = nil,
+        nickname: String? = nil,
+        street: String? = nil,
+        housenumber: String? = nil,
+        zipCode: String? = nil,
+        town: String? = nil,
+        country: String? = nil,
+        gender: String? = nil,
+        birthday: String? = nil,
+        primaryGroupId: Int? = nil,
+        language: String? = nil,
+        kantonalverbandId: Int? = nil,
+        roles: [HitobitoUserRoleDto?]? = nil
+    ) {
+        self.sub = sub
+        self.email = email
+        self.firstName = firstName
+        self.lastName = lastName
+        self.nickname = nickname
+        self.street = street
+        self.housenumber = housenumber
+        self.zipCode = zipCode
+        self.town = town
+        self.country = country
+        self.gender = gender
+        self.birthday = birthday
+        self.primaryGroupId = primaryGroupId
+        self.language = language
+        self.kantonalverbandId = kantonalverbandId
+        self.roles = roles
     }
 }

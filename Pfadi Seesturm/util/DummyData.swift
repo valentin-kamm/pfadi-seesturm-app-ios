@@ -5,6 +5,7 @@
 //  Created by Valentin Kamm on 07.06.2025.
 //
 import Foundation
+import FirebaseFirestore
 
 //#if DEBUG
 struct DummyData {
@@ -17,45 +18,54 @@ struct DummyData {
     static let mediumDateFormatted = DateTimeUtil.shared.formatDate(date: mediumDate, format: "dd.MM.yyyy", timeZone: .current, type: .absolute)
     static let newDateFormatted = DateTimeUtil.shared.formatDate(date: newDate, format: "dd.MM.yyyy", timeZone: .current, type: .absolute)
     
-    static let user1 = FirebaseHitobitoUser(
-        userId: "123",
-        vorname: "Peter",
-        nachname: "Müller",
-        pfadiname: "Tarantula",
-        email: "test@test.ch",
-        role: .user,
-        profilePictureUrl: nil,
-        created: oldDate,
-        createdFormatted: oldDateFormatted,
-        modified: oldDate,
-        modifiedFormatted: oldDateFormatted
-    )
-    static let user2 = FirebaseHitobitoUser(
-        userId: "456",
-        vorname: "Maia",
-        nachname: "Tanner",
-        pfadiname: nil,
-        email: "test@test2.ch",
-        role: .user,
-        profilePictureUrl: nil,
-        created: mediumDate,
-        createdFormatted: mediumDateFormatted,
-        modified: mediumDate,
-        modifiedFormatted: mediumDateFormatted
-    )
-    static let user3 = FirebaseHitobitoUser(
-        userId: "789",
-        vorname: "Hans",
-        nachname: "Blatter",
-        pfadiname: "Elch",
-        email: "test@test3.ch",
-        role: .user,
-        profilePictureUrl: URL(string: "https://s3.eu-west-2.amazonaws.com/img.creativepool.com/files/candidate/portfolio/_w680/641887.jpg")!,
-        created: newDate,
-        createdFormatted: newDateFormatted,
-        modified: newDate,
-        modifiedFormatted: newDateFormatted
-    )
+    static let user1Json = """
+        {
+            "userId": "456",
+            "vorname": "Peter",
+            "nachname": "Müller",
+            "pfadiname": "Tarantula",
+            "email": "test@test.ch",
+            "role": "hitobito_user",
+            "profilePictureUrl": null,
+            "created": "2023-01-01T12:00:00Z",
+            "createdFormatted": "01.01.2023",
+            "modified": "2023-01-01T12:00:00Z",
+            "modifiedFormatted": "01.01.2023"
+          }
+        """
+    static let user2Json = """
+        {
+            "userId": "456",
+            "vorname": "Maia",
+            "nachname": "Tanner",
+            "pfadiname": null,
+            "email": "test@test2.ch",
+            "role": "hitobito_user",
+            "profilePictureUrl": null,
+            "created": "2023-06-01T12:00:00Z",
+            "createdFormatted": "01.06.2023",
+            "modified": "2023-06-01T12:00:00Z",
+            "modifiedFormatted": "01.06.2023"
+          }
+        """
+    static let user3Json = """
+        {
+            "userId": "789",
+            "vorname": "Hans",
+            "nachname": "Blatter",
+            "pfadiname": "Elch",
+            "email": "test@test3.ch",
+            "role": "hitobito_user",
+            "profilePictureUrl": "https://s3.eu-west-2.amazonaws.com/img.creativepool.com/files/candidate/portfolio/_w680/641887.jpg",
+            "created": "2024-01-01T12:00:00Z",
+            "createdFormatted": "01.01.2024",
+            "modified": "2024-01-01T12:00:00Z",
+            "modifiedFormatted": "01.01.2024"
+          }
+        """
+    static let user1 = try! FirebaseHitobitoUser(try! FirebaseHitobitoUserDto(jsonString: user1Json))
+    static let user2 = try! FirebaseHitobitoUser(try! FirebaseHitobitoUserDto(jsonString: user2Json))
+    static let user3 = try! FirebaseHitobitoUser(try! FirebaseHitobitoUserDto(jsonString: user3Json))
     
     static let documents: [WordpressDocument] = try! JSONDecoder().decode(
         [WordpressDocumentDto].self,
