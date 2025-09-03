@@ -13,17 +13,20 @@ class AuthService {
     private let cloudFunctionsRepository: CloudFunctionsRepository
     private let firestoreRepository: FirestoreRepository
     private let fcmRepository: FCMRepository
+    private let storageRepository: StorageRepository
     
     init(
         authRepository: AuthRepository,
         cloudFunctionsRepository: CloudFunctionsRepository,
         firestoreRepository: FirestoreRepository,
         fcmRepository: FCMRepository,
+        storageRepository: StorageRepository
     ) {
         self.authRepository = authRepository
         self.cloudFunctionsRepository = cloudFunctionsRepository
         self.firestoreRepository = firestoreRepository
         self.fcmRepository = fcmRepository
+        self.storageRepository = storageRepository
     }
     
     func authenticate() async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
@@ -120,6 +123,7 @@ class AuthService {
         do {
             try await fcmRepository.unsubscribeFromTopic(topic: .schoepflialarm)
             try await fcmRepository.unsubscribeFromTopic(topic: .schoepflialarmReaction)
+            try await storageRepository.deleteData(item: .profilePicture(user: user))
             try await firestoreRepository.deleteDocument(document: SeesturmFirestoreDocument.user(id: user.userId))
             try await authRepository.deleteFirebaseUserAccount()
             return .success(())

@@ -56,7 +56,7 @@ struct FirebaseHitobitoUserDto: FirestoreDto {
         self.fcmToken = newFcmToken
     }
     
-    init(from oldUser: FirebaseHitobitoUserDto, newProfilePictureUrl: String) {
+    init(from oldUser: FirebaseHitobitoUserDto, newProfilePictureUrl: String?) {
         self.id = oldUser.id
         self.created = oldUser.created
         self.modified = nil

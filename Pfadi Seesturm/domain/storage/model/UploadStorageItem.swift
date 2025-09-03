@@ -1,5 +1,5 @@
 //
-//  StorageItem.swift
+//  UploadStorageItem.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 07.08.2025.
@@ -8,8 +8,8 @@ import SwiftUI
 import PhotosUI
 import FirebaseStorage
 
-enum StorageItem {
-    case profilePicture(user: FirebaseHitobitoUser, item: PhotosPickerItem)
+enum UploadStorageItem {
+    case profilePicture(user: FirebaseHitobitoUser, data: JPGData)
     
     func getReference(storage: Storage) -> StorageReference {
         switch self {
@@ -18,10 +18,19 @@ enum StorageItem {
         }
     }
     
-    func getData() async throws  -> Data {
+    func getData() throws  -> Data {
         switch self {
         case .profilePicture(_, let item):
-            return try await JPGData(from: item).wrappedData
+            return item.compressedData
         }
+    }
+    
+    var metadata: StorageMetadata {
+        let metadata = StorageMetadata()
+        switch self {
+        case .profilePicture(_, _):
+            metadata.contentType = "image/jpeg"
+        }
+        return metadata
     }
 }

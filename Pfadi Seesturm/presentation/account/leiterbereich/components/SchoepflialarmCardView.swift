@@ -28,7 +28,7 @@ struct SchoepflialarmCardView: View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .center, spacing: 16) {
                     CircleProfilePictureView(
-                        user: user,
+                        type: .user(user: schoepflialarm.user),
                         size: 30
                     )
                     Text(schoepflialarm.user?.displayNameShort ?? "Unbekannter Benutzer")

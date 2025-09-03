@@ -20,12 +20,16 @@ class StorageRepositoryImpl: StorageRepository {
         self.storage = storage
     }
     
-    func uploadData(item: StorageItem, metadata: StorageMetadata? = nil, onProgress: @escaping (Double) -> Void) async throws -> URL {
+    func uploadData(item: UploadStorageItem, onProgress: @escaping (Double) -> Void) async throws -> URL {
         return try await api.uploadData(
             reference: item.getReference(storage: storage),
-            data: try await item.getData(),
-            metadata: metadata,
+            data: try item.getData(),
+            metadata: item.metadata,
             onProgress: onProgress
         )
+    }
+    
+    func deleteData(item: DeleteStorageItem) async throws {
+        return try await api.deleteData(reference: item.getReference(storage: storage))
     }
 }

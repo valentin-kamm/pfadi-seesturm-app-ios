@@ -10,6 +10,7 @@ import FirebaseStorage
 protocol StorageApi {
 
     func uploadData(reference: StorageReference, data: Data, metadata: StorageMetadata?, onProgress: @escaping (Double) -> Void) async throws -> URL
+    func deleteData(reference: StorageReference) async throws
 }
 
 class StorageApiImpl: StorageApi {
@@ -25,5 +26,9 @@ class StorageApiImpl: StorageApi {
             }
         
         return try await reference.downloadURL()
+    }
+    
+    func deleteData(reference: StorageReference) async throws {
+        try await reference.delete()
     }
 }

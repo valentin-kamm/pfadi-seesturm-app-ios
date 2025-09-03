@@ -28,7 +28,7 @@ struct PhotoSliderView: View {
                 PhotoSliderContentView(
                     images: images,
                     imageIndex: $imageIndex,
-                    screenSize: geometry.size
+                    viewSize: geometry.size
                 )
                 .toolbar(toolbarVisibility)
                 .onTapGesture {
@@ -54,16 +54,16 @@ private struct PhotoSliderContentView: View {
     
     private let images: [WordpressPhoto]
     @Binding private var imageIndex: Int
-    private let screenSize: CGSize
+    private let viewSize: CGSize
         
     init(
         images: [WordpressPhoto],
         imageIndex: Binding<Int>,
-        screenSize: CGSize
+        viewSize: CGSize
     ) {
         self.images = images
         self._imageIndex = imageIndex
-        self.screenSize = screenSize
+        self.viewSize = viewSize
     }
     
     var body: some View {
@@ -75,7 +75,7 @@ private struct PhotoSliderContentView: View {
                 if let url = URL(string: image.originalUrl) {
                     
                     ZoomableContainer(
-                        entireViewSize: screenSize,
+                        viewSize: viewSize,
                         imageAspectRatio: aspectRatio
                     ) {
                         KFImage(url)
@@ -154,7 +154,7 @@ private struct PhotoSliderContentView: View {
                     )
                 ],
                 imageIndex: $index,
-                screenSize: geometry.size
+                viewSize: geometry.size
             )
         }
     }

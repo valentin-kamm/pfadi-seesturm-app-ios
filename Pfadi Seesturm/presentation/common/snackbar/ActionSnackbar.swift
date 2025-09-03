@@ -177,4 +177,51 @@ extension View {
             )
         )
     }
+    func progressActionSnackbar<D>(
+        action: Binding<ProgressActionState<D>>,
+        events: [SeesturmBinarySnackbarType],
+        defaultErrorMessage: String = "Ein unbekannter Fehler ist aufgetreten",
+        defaultSuccessMessage: String = "Operation erfolgreich",
+        actionResetState: ActionState<D> = .idle
+    ) -> some View {
+        
+        var actionState: Binding<ActionState<D>> {
+            Binding(
+                get: {
+                    switch action.wrappedValue {
+                    case .idle:
+                        return .idle
+                    case .loading(let a, _):
+                        return .loading(action: a)
+                    case .error(let a, let m):
+                        return .error(action: a, message: m)
+                    case .success(let a, let m):
+                        return .success(action: a, message: m)
+                    }
+                },
+                set: { newValue in
+                    switch newValue {
+                    case .idle:
+                        action.wrappedValue = .idle
+                    case .loading(let a):
+                        action.wrappedValue = .loading(action: a, progress: 0)
+                    case .error(let a, let m):
+                        action.wrappedValue = ProgressActionState.error(action: a, message: m)
+                    case .success(let a, let m):
+                        action.wrappedValue = .success(action: a, message: m)
+                    }
+                }
+            )
+        }
+        
+        return self.modifier(
+            ActionSnackbarModifier(
+                action: actionState,
+                events: events,
+                defaultErrorMessage: defaultErrorMessage,
+                defaultSuccessMessage: defaultSuccessMessage,
+                actionResetState: actionResetState
+            )
+        )
+    }
 }

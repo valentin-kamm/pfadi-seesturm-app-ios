@@ -21,6 +21,7 @@ final class AppDependencies {
     let wordpressModule: WordpressModule
     let fcfModule: FCFModule
     let appState: AppStateViewModel
+    let authState: AuthViewModel
     let storageModule: StorageModule
     let accountModule: AccountModule
     let notificationHandler: NotificationHandler
@@ -39,17 +40,18 @@ final class AppDependencies {
             modelContext: modelContext,
             firestoreRepository: firestoreModule.firestoreRepository
         )
+        self.storageModule = StorageModuleImpl()
         self.authModule = AuthModuleImpl(
             cloudFunctionsRepository: fcfModule.fcfRepository,
             firebaseAuth: .auth(),
             firestoreRepository: firestoreModule.firestoreRepository,
-            fcmRepository: fcmModule.fcmRepository
+            fcmRepository: fcmModule.fcmRepository,
+            storageRepository: storageModule.storageRepository
         )
         self.wordpressModule = WordpressModuleImpl(
             firestoreRepository: firestoreModule.firestoreRepository,
             modelContext: modelContext
         )
-        self.storageModule = StorageModuleImpl()
         self.accountModule = AccountModuleImpl(
             anlaesseRepository: wordpressModule.anlaesseRepository,
             firestoreRepository: firestoreModule.firestoreRepository,
@@ -59,9 +61,10 @@ final class AppDependencies {
         )
         self.appState = AppStateViewModel(
             authService: authModule.authService,
-            leiterbereichService: accountModule.leiterbereichService,
-            schoepflialarmService: accountModule.schoepflialarmService,
             wordpressApi: wordpressModule.wordpressApi
+        )
+        self.authState = AuthViewModel(
+            authService: authModule.authService
         )
         self.notificationHandler = NotificationHandler(
             appState: appState,

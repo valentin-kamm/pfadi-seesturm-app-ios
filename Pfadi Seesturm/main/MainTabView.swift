@@ -10,6 +10,7 @@ import SwiftData
 
 struct MainTabView : View {
     
+    @EnvironmentObject private var authState: AuthViewModel
     @EnvironmentObject private var appState: AppStateViewModel
     @Environment(\.modelContext) private var modelContext: ModelContext
     @AppStorage("theme") private var selectedTheme: String = "system"
@@ -88,7 +89,7 @@ struct MainTabView : View {
             .toolbarBackground(.bar, for: .tabBar)
             
             AccountView(
-                authState: appState.authState,
+                authState: authState.authState,
                 leiterbereich: { user in
                     let viewModel = LeiterbereichViewModel(
                         leiterbereichService: accountModule.leiterbereichService,
@@ -111,10 +112,10 @@ struct MainTabView : View {
                 },
                 path: appState.path(for: .account),
                 onAuthenticate: {
-                    await appState.authenticate()
+                    await authState.authenticate()
                 },
                 onResetAuthState: {
-                    appState.resetAuthState()
+                    authState.resetAuthState()
                 }
             )
             .tabItem {

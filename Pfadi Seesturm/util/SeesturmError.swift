@@ -144,6 +144,20 @@ enum LocalError: DataError {
     }
 }
 
+enum StorageError: DataError {
+    case deletingError
+    case unknown
+    
+    var defaultMessage: String {
+        switch self {
+        case .deletingError:
+            return "Die Datei konnte nicht gelöscht werden."
+        case .unknown:
+            return "Unbekannter Fehler beim Bearbeiten der Datei."
+        }
+    }
+}
+
 enum MessagingError: SeesturmError {
     
     case unknown

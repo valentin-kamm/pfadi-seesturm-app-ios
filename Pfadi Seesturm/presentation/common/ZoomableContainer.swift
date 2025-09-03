@@ -11,20 +11,20 @@ struct ZoomableContainer<Content: View>: View {
     
     @State private var tapLocation: CGPoint? = nil
     
-    private let entireViewSize: CGSize
+    private let viewSize: CGSize
     private let imageAspectRatio: CGFloat
     private let maxZoomScale: CGFloat
     private let doubleTapZoomScale: CGFloat
     private let content: Content
 
     init(
-        entireViewSize: CGSize,
+        viewSize: CGSize,
         imageAspectRatio: CGFloat,
         maxZoomScale: CGFloat = 5,
         doubleTapZoomScale: CGFloat = 3,
         @ViewBuilder content: () -> Content
     ) {
-        self.entireViewSize = entireViewSize
+        self.viewSize = viewSize
         self.imageAspectRatio = imageAspectRatio
         self.maxZoomScale = maxZoomScale
         self.doubleTapZoomScale = doubleTapZoomScale
@@ -38,7 +38,7 @@ struct ZoomableContainer<Content: View>: View {
     var body: some View {
         ZoomableView(
             tapLocation: $tapLocation,
-            entireViewSize: entireViewSize,
+            viewSize: viewSize,
             imageAspectRatio: imageAspectRatio,
             maxZoomScale: maxZoomScale,
             doubleTapZoomScale: doubleTapZoomScale
@@ -52,7 +52,7 @@ struct ZoomableContainer<Content: View>: View {
 private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
     
     @Binding private var tapLocation: CGPoint?
-    private let entireViewSize: CGSize
+    private let viewSize: CGSize
     private let imageAspectRatio: CGFloat
     private let maxZoomScale: CGFloat
     private let doubleTapZoomScale: CGFloat
@@ -60,38 +60,18 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
 
     init(
         tapLocation: Binding<CGPoint?>,
-        entireViewSize: CGSize,
+        viewSize: CGSize,
         imageAspectRatio: CGFloat,
         maxZoomScale: CGFloat,
         doubleTapZoomScale: CGFloat,
         @ViewBuilder content: () -> Content
     ) {
         self._tapLocation = tapLocation
-        self.entireViewSize = entireViewSize
+        self.viewSize = viewSize
         self.imageAspectRatio = imageAspectRatio
         self.maxZoomScale = maxZoomScale
         self.doubleTapZoomScale = doubleTapZoomScale
         self.content = content()
-    }
-    
-    private var imageSize: CGSize {
-        
-        let viewAspectRatio = entireViewSize.width / entireViewSize.height
-        
-        let size: CGSize
-        if imageAspectRatio > viewAspectRatio {
-            // image is wider than the view
-            let width = entireViewSize.width
-            let height = width / imageAspectRatio
-            size = CGSize(width: width, height: height)
-        }
-        else {
-            // image is taller or equal to the view
-            let height = entireViewSize.height
-            let width = height * imageAspectRatio
-            size = CGSize(width: width, height: height)
-        }
-        return size
     }
     
     func makeUIViewController(context: Context) -> ZoomableViewController<UIView> {
@@ -101,7 +81,7 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
         view.backgroundColor = .clear
         
         return ZoomableViewController(
-            contentSize: imageSize,
+            contentSize: viewSize.imageFitSize(for: imageAspectRatio),
             maxZoomScale: maxZoomScale,
             doubleTapZoomScale: doubleTapZoomScale,
             content: view
@@ -111,7 +91,7 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: ZoomableViewController<UIView>, context: Context) {
         
         // update sizes on rotation
-        uiViewController.updateContentSize(imageSize)
+        uiViewController.updateContentSize(viewSize.imageFitSize(for: imageAspectRatio))
         
         // handle double taps to zoom
         if let location = tapLocation {

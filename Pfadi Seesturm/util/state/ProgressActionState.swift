@@ -5,6 +5,8 @@
 //  Created by Valentin Kamm on 07.08.2025.
 //
 
+import SwiftUI
+
 enum ProgressActionState<D>: SeesturmState {
     case idle
     case loading(action: D, progress: Double)
@@ -23,6 +25,15 @@ enum ProgressActionState<D>: SeesturmState {
     var isSuccess: Bool {
         switch self {
         case .success(_, _):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var isLoading: Bool {
+        switch self {
+        case .loading(_, _):
             return true
         default:
             return false

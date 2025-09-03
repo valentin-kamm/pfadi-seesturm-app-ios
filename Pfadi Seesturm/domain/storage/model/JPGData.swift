@@ -7,25 +7,41 @@
 import SwiftUI
 import PhotosUI
 
-struct JPGData {
+struct JPGData: Identifiable {
     
-    let wrappedData: Data
+    let compressedData: Data
+    let originalUiImage: UIImage
     
-    init(from data: Data, compressionQuality: CGFloat = 0.5) throws {
-        
-        guard let image = UIImage(data: data), let jpgData = image.jpegData(compressionQuality: compressionQuality) else {
-            throw PfadiSeesturmError.jpgConversionFailed(message: "Bild konnte nicht in JPG konvertiert werden.")
-        }
-        
-        self.wrappedData = jpgData
+    var id: Int {
+        self.originalUiImage.hashValue
     }
+    
+    private let defaultCompressionQuality: CGFloat = 0.5
     
     init(from photosPickerItem: PhotosPickerItem) async throws {
         
-        guard let imageData = try await photosPickerItem.loadTransferable(type: Data.self) else {
+        guard
+            let originalData = try await photosPickerItem.loadTransferable(type: Data.self),
+            let originalImage = UIImage(data: originalData),
+            let compressedData = originalImage.jpegData(compressionQuality: defaultCompressionQuality)
+        else {
             throw PfadiSeesturmError.jpgConversionFailed(message: "Bild konnte nicht in JPG konvertiert werden.")
         }
         
-        try self.init(from: imageData)
+        self.compressedData = compressedData
+        self.originalUiImage = originalImage
+    }
+    
+    init(from uiImage: UIImage) throws {
+        guard
+            let originalData = uiImage.jpegData(compressionQuality: 1),
+            let originalImage = UIImage(data: originalData),
+            let compressedData = originalImage.jpegData(compressionQuality: defaultCompressionQuality)
+        else {
+            throw PfadiSeesturmError.jpgConversionFailed(message: "Bild konnte nicht in JPG konvertiert werden.")
+        }
+        
+        self.compressedData = compressedData
+        self.originalUiImage = originalImage
     }
 }

@@ -11,8 +11,10 @@ import SwiftData
 
 struct LeiterbereichView: View {
     
+    @EnvironmentObject private var authState: AuthViewModel
     @EnvironmentObject private var appState: AppStateViewModel
     @Environment(\.modelContext) private var modelContext: ModelContext
+    @Environment(\.accountModule) private var accountModule: AccountModule
     @Query private var stufenQuery: [SelectedStufeDao]
     @Query private var topicsQuery: [SubscribedFCMNotificationTopicDao]
     
@@ -58,7 +60,7 @@ struct LeiterbereichView: View {
             calendar: calendar,
             selectedStufen: selectedStufen,
             isPushNotificationsToggleOn: isPushNotificationsToggleOn,
-            isEditAccountButtonLoading: appState.authState.signOutButtonIsLoading,
+            isEditAccountButtonLoading: authState.authState.signOutButtonIsLoading,
             onSignOut: {
                 withAnimation {
                     viewModel.showSignOutConfirmationDialog = true
@@ -105,7 +107,8 @@ struct LeiterbereichView: View {
                     }
                 }
             },
-            onRetryTermine: viewModel.fetchNext3Events
+            onRetryTermine: viewModel.fetchNext3Events,
+            showEditAccountSheet: $viewModel.showEditAccountSheet
         )
         .confirmationDialog(
             "Möchtest du dich wirklich abmelden?",
@@ -117,7 +120,7 @@ struct LeiterbereichView: View {
                 }
                 Button("Abmelden", role: .destructive) {
                     Task {
-                        await appState.signOut(user: user)
+                        await authState.signOut(user: user)
                     }
                 }
             }
@@ -132,7 +135,7 @@ struct LeiterbereichView: View {
                 }
                 Button("Löschen", role: .destructive) {
                     Task {
-                        await appState.deleteAccount(user: user)
+                        await authState.deleteAccount(user: user)
                     }
                 }
             }
@@ -168,9 +171,9 @@ struct LeiterbereichView: View {
             }
         )
         .customSnackbar(
-            show: appState.signOutErrorSnackbarBinding(user: user),
+            show: authState.signOutErrorSnackbarBinding(user: user),
             type: .error,
-            message: appState.signOutErrorSnackbarMessage,
+            message: authState.signOutErrorSnackbarMessage,
             dismissAutomatically: false,
             allowManualDismiss: true
         )
@@ -210,6 +213,16 @@ struct LeiterbereichView: View {
             )
             .presentationDetents([.medium, .large])
         }
+        .sheet(isPresented: $viewModel.showEditAccountSheet) {
+            EditProfileView(
+                viewModel: EditProfileViewModel(
+                    user: user,
+                    leiterbereichService: accountModule.leiterbereichService
+                ),
+                leiterbereichViewModel: viewModel,
+                user: user
+            )
+        }
     }
 }
 
@@ -231,6 +244,7 @@ private struct LeiterbereichContentView: View {
     private let onAddStufe: (SeesturmStufe) -> Void
     private let onRemoveStufe: (SeesturmStufe) -> Void
     private let onRetryTermine: () async -> Void
+    private let showEditAccountSheet: Binding<Bool>
     
     init(
         ordersState: UiState<[FoodOrder]>,
@@ -248,7 +262,8 @@ private struct LeiterbereichContentView: View {
         onNavigateToTermine: @escaping () -> Void,
         onAddStufe: @escaping (SeesturmStufe) -> Void,
         onRemoveStufe: @escaping (SeesturmStufe) -> Void,
-        onRetryTermine: @escaping () async -> Void
+        onRetryTermine: @escaping () async -> Void,
+        showEditAccountSheet: Binding<Bool>
     ) {
         self.ordersState = ordersState
         self.schoepflialarmState = schoepflialarmState
@@ -266,6 +281,7 @@ private struct LeiterbereichContentView: View {
         self.onAddStufe = onAddStufe
         self.onRemoveStufe = onRemoveStufe
         self.onRetryTermine = onRetryTermine
+        self.showEditAccountSheet = showEditAccountSheet
     }
     
     var body: some View {
@@ -274,12 +290,30 @@ private struct LeiterbereichContentView: View {
             
             List {
                 Section {
-                    LeiterbereichProfileHeaderView(
-                        user: user,
-                        isLoading: isEditAccountButtonLoading,
-                        onSignOut: onSignOut,
-                        onDeleteAccount: onDeleteAccount
-                    )
+                    VStack(alignment: .center, spacing: 8) {
+                        CircleProfilePictureView(
+                            type: isEditAccountButtonLoading ? .loading : .user(user: user),
+                            size: 60,
+                            showEditBadge: true
+                        )
+                        .padding(.bottom, 4)
+                        .onTapGesture {
+                            showEditAccountSheet.wrappedValue = true
+                        }
+                        Text("Willkommen, \(user.displayNameShort)!")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .multilineTextAlignment(.center)
+                            .fontWeight(.bold)
+                            .font(.callout)
+                            .lineLimit(2)
+                        if let em = user.email {
+                            Text(em)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .multilineTextAlignment(.center)
+                                .font(.caption)
+                                .lineLimit(1)
+                        }
+                    }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -446,7 +480,8 @@ private struct LeiterbereichContentView: View {
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
-            onRetryTermine: {}
+            onRetryTermine: {},
+            showEditAccountSheet: .constant(false)
         )
     }
 }
@@ -468,7 +503,8 @@ private struct LeiterbereichContentView: View {
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
-            onRetryTermine: {}
+            onRetryTermine: {},
+            showEditAccountSheet: .constant(false)
         )
     }
 }
@@ -490,7 +526,8 @@ private struct LeiterbereichContentView: View {
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
-            onRetryTermine: {}
+            onRetryTermine: {},
+            showEditAccountSheet: .constant(false)
         )
     }
 }
@@ -512,7 +549,8 @@ private struct LeiterbereichContentView: View {
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
-            onRetryTermine: {}
+            onRetryTermine: {},
+            showEditAccountSheet: .constant(false)
         )
     }
 }

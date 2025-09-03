@@ -128,13 +128,12 @@ class LeiterbereichService: WordpressService {
         }
     }
     
-    func uploadProfilePicture(item: PhotosPickerItem, user: FirebaseHitobitoUser) -> AsyncStream<ProgressActionState<Void>> {
+    func uploadProfilePicture(data: JPGData, user: FirebaseHitobitoUser) -> AsyncStream<ProgressActionState<Void>> {
         AsyncStream { continuation in
             Task {
                 do {
                     let downloadUrl = try await storageRepository.uploadData(
-                        item: .profilePicture(user: user, item: item),
-                        metadata: nil
+                        item: .profilePicture(user: user, data: data)
                     ) { progress in
                         continuation.yield(.loading(action: (), progress: progress))
                     }
@@ -159,6 +158,22 @@ class LeiterbereichService: WordpressService {
                 }
                 continuation.finish()
             }
+        }
+    }
+    
+    func deleteProfilePicture(user: FirebaseHitobitoUser) async -> SeesturmResult<Void, StorageError> {
+        do {
+            try await storageRepository.deleteData(item: .profilePicture(user: user))
+            try await firestoreRepository.performTransaction(
+                type: FirebaseHitobitoUserDto.self,
+                document: .user(id: user.userId),
+                forceNewCreatedDate: false) { oldUser in
+                    FirebaseHitobitoUserDto(from: oldUser, newProfilePictureUrl: nil)
+                }
+            return .success(())
+        }
+        catch {
+            return .error(.deletingError)
         }
     }
 }

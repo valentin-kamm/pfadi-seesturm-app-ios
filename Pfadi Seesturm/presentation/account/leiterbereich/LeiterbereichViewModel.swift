@@ -17,6 +17,7 @@ class LeiterbereichViewModel {
     var usersState: UiState<[FirebaseHitobitoUser]> = .loading(subState: .idle)
     
     // account interactions
+    var showEditAccountSheet: Bool = false
     var showSignOutConfirmationDialog: Bool = false
     var showDeleteAccountConfirmationDialog: Bool = false
     

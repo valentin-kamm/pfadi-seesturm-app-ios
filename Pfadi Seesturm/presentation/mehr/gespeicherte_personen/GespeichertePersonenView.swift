@@ -124,7 +124,7 @@ private struct GespeichertePersonenContentView: View {
                         Label("Keine Personen gespeichert", systemImage: "person.slash")
                     },
                     description: {
-                        Text("Füge die Angaben von Personen hinzu, die du of von Aktivitäten abmeldest. So musst du sie nicht jedes Mal neu eintragen.")
+                        Text("Füge die Angaben von Personen hinzu, die du oft von Aktivitäten abmeldest. So musst du sie nicht jedes Mal neu eintragen.")
                     },
                     actions: {
                         SeesturmButton(

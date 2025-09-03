@@ -60,6 +60,25 @@ struct FirebaseHitobitoUser: Codable, Hashable, Identifiable {
     var displayNameShort: String {
         pfadiname ?? vorname ?? "Unbekannter Benutzer"
     }
+    
+    var displayNameFull: String {
+        if let pn = pfadiname, let vn = vorname, let nn = nachname {
+            return "\(vn) \(nn) / \(pn)"
+        }
+        else if let vn = vorname, let nn = nachname {
+            return "\(vn) \(nn)"
+        }
+        else if let vn = vorname {
+            return vn
+        }
+        else {
+            return "Unbekannter Benutzer"
+        }
+    }
+    
+    var hasProfilePicture: Bool {
+        return profilePictureUrl != nil
+    }
 }
 
 extension [FirebaseHitobitoUser] {
