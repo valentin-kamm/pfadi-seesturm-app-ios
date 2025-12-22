@@ -109,7 +109,7 @@ final class NotificationHandler: NSObject, UNUserNotificationCenterDelegate, Mes
                 return
             }
             Task {
-                let authResult = await authService.reauthenticateOnAppStart()
+                let authResult = await authService.reauthenticateWithHitobito(resubscribeToSchoepflialarm: false)
                 switch authResult {
                 case .error(_):
                     return

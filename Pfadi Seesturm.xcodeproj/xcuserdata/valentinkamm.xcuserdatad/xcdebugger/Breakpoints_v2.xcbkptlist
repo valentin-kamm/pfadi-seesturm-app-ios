@@ -1735,38 +1735,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "611BDE97-8660-4A1B-BF4C-9722BABAC81D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C67439E5-9F43-451C-8CF2-DBF55E7ECF81"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "710B3A6B-8013-443B-B6DF-16D82897C348"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -3841,38 +3809,6 @@
             startingLineNumber = "23"
             endingLineNumber = "23"
             landmarkName = "init(stufe:service:initialSheetMode:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "27A0D05F-F81D-4CF6-952F-056A2F3C9AA0"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "navigate(from:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DDD34453-9E10-469D-BC47-DA2E08889CDF"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
-            landmarkName = "navigate(from:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6606,8 +6542,8 @@
             filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "checkMinimumRequiredAppBuild()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6622,8 +6558,8 @@
             filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
             landmarkName = "checkMinimumRequiredAppBuild()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6638,8 +6574,8 @@
             filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "204"
-            endingLineNumber = "204"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
             landmarkName = "checkMinimumRequiredAppBuild()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7614,8 +7550,8 @@
             filePath = "Pfadi Seesturm/domain/fcm/service/FCMService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
             landmarkName = "updateFCMToken(for:newToken:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8023,70 +7959,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6BA63492-DDB9-499F-B9A5-D60716D3CE38"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "runOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "98496A76-7BEA-47A8-8E5F-66A3C7B491A5"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "runOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CC9E5D2A-D03F-4C73-87AC-CD0406184D9F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "runOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "14C0384A-DEE0-4707-951C-B78C37550127"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "runOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "05186C1D-7AC1-4382-B640-D6F3688E7A16"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -8113,38 +7985,6 @@
             startingLineNumber = "58"
             endingLineNumber = "58"
             landmarkName = "init(leiterbereichService:schoepflialarmService:fcmService:user:calendar:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "BA15F839-B6BC-479A-B3A9-EEA707F53164"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2FE7EA91-DD56-4BA2-88CC-E904C4AC8FC3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "reauthenticateOnAppStart()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -8910,8 +8750,8 @@
             filePath = "Pfadi Seesturm/di/AppDependencies.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "configureFirebase()"
             landmarkType = "9">
          </BreakpointContent>
@@ -10167,198 +10007,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "906A22BE-5A85-42FB-AC8D-E3C80F16D375"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5F1CCE9E-BEFB-4760-9EDD-A18B1017B9B7"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8039CAA0-3470-433C-89BE-21156070CE2E"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "authenticate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E77D935B-C798-4F56-9C5D-2387AA90C12C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "authenticate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "538E5005-4D34-4D02-AE03-15C379BB0159"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "authenticate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "81424C30-6291-4FC2-90C8-6C0B5CC3F03F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "authenticate()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "73FB6A5B-8ED3-4344-9479-8CB82290312F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6A1B7F7F-C9A9-475D-93A9-786AC6B995AE"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "174F7365-1973-4F5C-A220-E3F100EB5AEC"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5F3F6979-F707-422A-A343-32FF79A064F0"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "20DCF121-9470-4852-80A0-8770EC2A5C0D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7D5158BD-5951-4D5C-B103-727E27092123"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "91121A82-F8C5-4BFC-BD40-10A15DE45CC3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -10366,8 +10014,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
             landmarkName = "upsertUser(user:id:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10382,8 +10030,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
             landmarkName = "upsertUser(user:id:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10398,8 +10046,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
             landmarkName = "signOut(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10414,8 +10062,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
             landmarkName = "signOut(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10430,8 +10078,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "signOut(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10446,8 +10094,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
             landmarkName = "signOut(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10462,8 +10110,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "signOut(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10478,8 +10126,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
             landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10494,8 +10142,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10510,8 +10158,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
             landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10526,8 +10174,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10542,8 +10190,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10558,8 +10206,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -10574,8 +10222,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "isCurrentUserHitobitoUser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -10590,8 +10238,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
             landmarkName = "isCurrentUserHitobitoUser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -10606,8 +10254,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "isCurrentUserHitobitoUser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -10622,8 +10270,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "isCurrentUserHitobitoUser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -10638,8 +10286,8 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
             landmarkName = "isCurrentUserHitobitoUser()"
             landmarkType = "7">
          </BreakpointContent>
@@ -10654,73 +10302,9 @@
             filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "getCurrentUid()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "BAA777F5-C5AA-4BCD-A6E2-39FE03821554"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/auth/service/AuthService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "reauthenticateOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A9BC0674-9196-4CB4-8FA7-C1F7D162455F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
-            landmarkName = "deleteAccount(user:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "837BB214-5A2A-4396-87BE-4BB0CBB156E7"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
-            landmarkName = "deleteAccount(user:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "628E8955-C4E7-46F7-92BA-9ED922BAD3CB"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
-            landmarkName = "deleteAccount(user:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -10734,8 +10318,8 @@
             filePath = "Pfadi Seesturm/domain/fcm/service/FCMService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
             landmarkName = "updateFCMToken(for:newToken:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -11345,38 +10929,6 @@
             startingLineNumber = "62"
             endingLineNumber = "62"
             landmarkName = "init(leiterbereichService:schoepflialarmService:fcmService:user:calendar:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "68E73231-ED8E-48B8-97D8-013B9D19C26B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "runOnAppStart()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "778D4E32-B70D-4111-A008-95CC55F67E21"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/main/AppStateViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "runOnAppStart()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

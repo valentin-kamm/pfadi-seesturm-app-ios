@@ -38,7 +38,7 @@ class LeiterbereichService: WordpressService {
             return .error(e)
         case .success(let d):
             do {
-                let users = try d.map { try $0.toFirebaseHitobitoUser() }
+                let users = try d.map { try FirebaseHitobitoUser($0) }
                 return .success(users)
             }
             catch {

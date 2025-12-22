@@ -12,6 +12,7 @@ import SwiftData
 struct LeiterbereichView: View {
     
     @EnvironmentObject private var appState: AppStateViewModel
+    @EnvironmentObject private var authState: AuthViewModel
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Query private var stufenQuery: [SelectedStufeDao]
     @Query private var topicsQuery: [SubscribedFCMNotificationTopicDao]
@@ -58,7 +59,7 @@ struct LeiterbereichView: View {
             calendar: calendar,
             selectedStufen: selectedStufen,
             isPushNotificationsToggleOn: isPushNotificationsToggleOn,
-            isEditAccountButtonLoading: appState.authState.signOutButtonIsLoading,
+            isEditAccountButtonLoading: authState.authState.signOutButtonIsLoading,
             onSignOut: {
                 withAnimation {
                     viewModel.showSignOutConfirmationDialog = true
@@ -117,7 +118,7 @@ struct LeiterbereichView: View {
                 }
                 Button("Abmelden", role: .destructive) {
                     Task {
-                        await appState.signOut(user: user)
+                        await authState.signOut(user: user)
                     }
                 }
             }
@@ -132,7 +133,7 @@ struct LeiterbereichView: View {
                 }
                 Button("Löschen", role: .destructive) {
                     Task {
-                        await appState.deleteAccount(user: user)
+                        await authState.deleteAccount(user: user)
                     }
                 }
             }
@@ -168,9 +169,9 @@ struct LeiterbereichView: View {
             }
         )
         .customSnackbar(
-            show: appState.signOutErrorSnackbarBinding(user: user),
+            show: authState.signOutErrorSnackbarBinding(user: user),
             type: .error,
-            message: appState.signOutErrorSnackbarMessage,
+            message: authState.signOutErrorSnackbarMessage,
             dismissAutomatically: false,
             allowManualDismiss: true
         )
