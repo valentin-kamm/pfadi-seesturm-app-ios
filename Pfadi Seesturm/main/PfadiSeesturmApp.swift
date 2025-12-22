@@ -37,7 +37,7 @@ struct PfadiSeesturmApp: App {
 private struct DIView: View {
     
     @StateObject private var appState: AppStateViewModel
-    @StateObject private var authState: AuthViewModel
+    @State private var authState: AuthViewModel
     @AppStorage("showOnboardingView\(Constants.ONBOARDING_SCREEN_VERSION)") private var showOnboardingScreen: Bool = true
     private let appDependencies: AppDependencies
     private let modelContainer: ModelContainer
@@ -49,7 +49,7 @@ private struct DIView: View {
         self.appDependencies = appDependencies
         self.modelContainer = modelContainer
         _appState = StateObject(wrappedValue: appDependencies.appState)
-        _authState = StateObject(wrappedValue: appDependencies.authState)
+        authState = appDependencies.authState
     }
     
     var body: some View {
@@ -77,7 +77,7 @@ private struct DIView: View {
         .modelContainer(modelContainer)
         // main app state
         .environmentObject(appState)
-        .environmentObject(authState)
+        .environment(authState)
         // DI Modules
         .environment(\.authModule, appDependencies.authModule)
         .environment(\.wordpressModule, appDependencies.wordpressModule)

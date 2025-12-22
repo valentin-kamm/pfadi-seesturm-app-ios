@@ -29,7 +29,7 @@ class AuthService {
         self.storageRepository = storageRepository
     }
     
-    func authenticate() async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
+    func authenticateWithHitobito() async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
         do {
             let (userInfo, hitobitoAccessToken) = try await authRepository.getHitobitoUserAndToken()
             let firebaseAuthToken = try await cloudFunctionsRepository.getFirebaseAuthToken(userId: userInfo.sub, hitobitoAccessToken: hitobitoAccessToken)
@@ -64,7 +64,7 @@ class AuthService {
         authRepository.resumeExternalUserAgentFlow(url: url)
     }
     
-    func reauthenticate(resubscribeToSchoepflialarm: Bool) async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
+    func reauthenticateWithHitobito(resubscribeToSchoepflialarm: Bool) async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
         
         guard let user = authRepository.getCurrentFirebaseUser() else {
             return .error(.signInError(message: "Es ist kein Benutzer angemeldet. Neue Anmeldung nötig."))

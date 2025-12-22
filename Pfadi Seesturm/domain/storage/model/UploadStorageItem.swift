@@ -18,10 +18,10 @@ enum UploadStorageItem {
         }
     }
     
-    func getData() throws  -> Data {
+    var data: Data {
         switch self {
-        case .profilePicture(_, let item):
-            return item.compressedData
+        case .profilePicture(_, let data):
+            return data.compressedData
         }
     }
     

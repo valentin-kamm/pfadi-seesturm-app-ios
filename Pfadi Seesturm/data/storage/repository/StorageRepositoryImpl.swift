@@ -23,7 +23,7 @@ class StorageRepositoryImpl: StorageRepository {
     func uploadData(item: UploadStorageItem, onProgress: @escaping (Double) -> Void) async throws -> URL {
         return try await api.uploadData(
             reference: item.getReference(storage: storage),
-            data: try item.getData(),
+            data: item.data,
             metadata: item.metadata,
             onProgress: onProgress
         )
