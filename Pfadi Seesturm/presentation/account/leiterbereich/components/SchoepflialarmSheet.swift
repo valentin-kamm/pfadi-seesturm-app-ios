@@ -152,7 +152,7 @@ struct SchoepflialarmSheet: View {
                                 VStack(alignment: .leading, spacing: 16) {
                                     HStack(alignment: .center, spacing: 16) {
                                         CircleProfilePictureView(
-                                            user: user,
+                                            type: .idle(user: schoepflialarm.user),
                                             size: 30
                                         )
                                         Text(schoepflialarm.user?.displayNameShort ?? "Unbekannter Benutzer")
@@ -188,7 +188,7 @@ struct SchoepflialarmSheet: View {
                                         ForEach(reactions) { reaction in
                                             HStack(alignment: .center, spacing: 16) {
                                                 CircleProfilePictureView(
-                                                    user: reaction.user,
+                                                    type: .idle(user: reaction.user),
                                                     size: 20
                                                 )
                                                 Text(reaction.user?.displayNameShort ?? "Unbekannter Benutzer")

@@ -8,7 +8,7 @@ import Foundation
 
 protocol StorageRepository {
     
-    func uploadData(item: UploadStorageItem) async throws -> URL
+    func uploadData(item: UploadStorageItem, onProgress: @escaping (Double) -> Void) async throws -> URL
     func deleteData(item: DeleteStorageItem) async throws
     
 }

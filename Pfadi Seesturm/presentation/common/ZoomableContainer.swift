@@ -74,26 +74,6 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
         self.content = content()
     }
     
-    private var imageSize: CGSize {
-        
-        let viewAspectRatio = entireViewSize.width / entireViewSize.height
-        
-        let size: CGSize
-        if imageAspectRatio > viewAspectRatio {
-            // image is wider than the view
-            let width = entireViewSize.width
-            let height = width / imageAspectRatio
-            size = CGSize(width: width, height: height)
-        }
-        else {
-            // image is taller or equal to the view
-            let height = entireViewSize.height
-            let width = height * imageAspectRatio
-            size = CGSize(width: width, height: height)
-        }
-        return size
-    }
-    
     func makeUIViewController(context: Context) -> ZoomableViewController<UIView> {
         
         let hostingController = UIHostingController(rootView: content)
@@ -101,7 +81,7 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
         view.backgroundColor = .clear
         
         return ZoomableViewController(
-            contentSize: imageSize,
+            contentSize: entireViewSize.imageFitSize(for: imageAspectRatio),
             maxZoomScale: maxZoomScale,
             doubleTapZoomScale: doubleTapZoomScale,
             content: view
@@ -111,7 +91,7 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: ZoomableViewController<UIView>, context: Context) {
         
         // update sizes on rotation
-        uiViewController.updateContentSize(imageSize)
+        uiViewController.updateContentSize(entireViewSize.imageFitSize(for: imageAspectRatio))
         
         // handle double taps to zoom
         if let location = tapLocation {

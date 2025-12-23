@@ -28,6 +28,21 @@ struct FirebaseHitobitoUser: Codable, Hashable, Identifiable {
         pfadiname ?? vorname ?? "Unbekannter Benutzer"
     }
     
+    var displayNameFull: String {
+        if let pn = pfadiname, let vn = vorname, let nn = nachname {
+            return "\(vn) \(nn) / \(pn)"
+        }
+        else if let vn = vorname, let nn = nachname {
+            return "\(vn) \(nn)"
+        }
+        else if let vn = vorname {
+            return vn
+        }
+        else {
+            return "Unbekannter Benutzer"
+        }
+    }
+    
     var profilePictureStoragePath: String {
         return "profilePictures/\(userId).jpg"
     }

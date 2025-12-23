@@ -9,7 +9,7 @@ import FirebaseStorage
 
 protocol StorageApi {
     
-    func uploadData(path: String, data: Data, contentType: String) async throws -> URL
+    func uploadData(path: String, data: Data, contentType: String, onProgress: @escaping (Double) -> Void) async throws -> URL
     func deleteData(path: String) async throws
 }
 
@@ -23,7 +23,7 @@ class StorageApiImpl: StorageApi {
         self.storage = storage
     }
     
-    func uploadData(path: String, data: Data, contentType: String) async throws -> URL {
+    func uploadData(path: String, data: Data, contentType: String, onProgress: @escaping (Double) -> Void) async throws -> URL {
         
         let reference = getReference(from: path)
         let metadata = StorageMetadata()
@@ -32,7 +32,11 @@ class StorageApiImpl: StorageApi {
         let _ = try await reference.putDataAsync(
             data,
             metadata: metadata
-        )
+        ) { progress in
+            if let p = progress {
+                onProgress(p.fractionCompleted)
+            }
+        }
         
         return try await reference.downloadURL()
     }

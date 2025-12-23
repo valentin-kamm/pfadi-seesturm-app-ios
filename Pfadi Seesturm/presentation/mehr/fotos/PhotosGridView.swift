@@ -122,9 +122,11 @@ private struct PhotosGridContentView: View {
         .fullScreenCover(item: $selectedPhoto) { photo in
             if case .success(let photos) = photosState, let index = photos.firstIndex(of: photo) {
                 NavigationStack(path: .constant(NavigationPath())) {
+                    let items = photos.map { photo in
+                        PhotoSliderViewItem(from: photo)
+                    }
                     PhotoSliderView(
-                        images: photos,
-                        initialImageIndex: index
+                        mode: .multi(images: items, initialIndex: index)
                     )
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {

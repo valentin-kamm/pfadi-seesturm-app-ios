@@ -19,17 +19,23 @@ class ProfilePictureService {
         self.firestoreRepository = firestoreRepository
     }
     
-    func uploadProfilePicture(user: FirebaseHitobitoUser, picture: ProfilePictureData) async -> SeesturmResult<URL, StorageError> {
+    func uploadProfilePicture(user: FirebaseHitobitoUser, picture: ProfilePictureData, onProgress: @escaping (Double) -> Void) async -> SeesturmResult<URL, StorageError> {
         
         do {
-            let downloadUrl = try await storageRepository.uploadData(item: .profilePicture(user: user, data: picture))
+            let downloadUrl = try await storageRepository.uploadData(
+                item: .profilePicture(user: user, data: picture)
+            ) { progress in
+                onProgress(0.9 * progress)
+            }
             try await firestoreRepository.performTransaction(
                 type: FirebaseHitobitoUserDto.self,
                 document: .user(id: user.userId),
-                forceNewCreatedDate: false
-            ) { oldUser in
-                FirebaseHitobitoUserDto(from: oldUser, newProfilePictureUrl: downloadUrl.absoluteString)
-            }
+                forceNewCreatedDate: false,
+                update: { oldUser in
+                    FirebaseHitobitoUserDto(from: oldUser, newProfilePictureUrl: downloadUrl.absoluteString)
+                }
+            )
+            onProgress(1)
             return .success(downloadUrl)
         }
         catch {

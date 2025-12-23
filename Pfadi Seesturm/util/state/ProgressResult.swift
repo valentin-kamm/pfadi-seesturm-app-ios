@@ -1,22 +1,21 @@
 //
-//  ProgressActionState.swift
+//  ProgressResult.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 23.12.2025.
 //
 
-enum ProgressActionState<D>: SeesturmState {
-    case idle
-    case loading(action: D, progress: Double)
-    case error(action: D, message: String)
-    case success(action: D, message: String)
+enum ProgressResult<D>: SeesturmState {
+    case loading(progress: Double)
+    case error(message: String)
+    case success(data: D, message: String)
 }
 
-extension ProgressActionState {
+extension ProgressResult {
     
     var isError: Bool {
         switch self {
-        case .error(_, _):
+        case .error(_):
             return true
         default:
             return false
@@ -34,7 +33,7 @@ extension ProgressActionState {
     
     var isLoading: Bool {
         switch self {
-        case .loading(_, _):
+        case .loading(_):
             return true
         default:
             return false

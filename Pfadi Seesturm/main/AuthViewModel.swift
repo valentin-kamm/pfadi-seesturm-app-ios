@@ -119,28 +119,38 @@ class AuthViewModel: ObservableObject {
         )
     }
     
-    func setProfilePicture(picture: ProfilePictureData) async -> SeesturmResult<Void, StorageError> {
-        
-        guard case .signedInWithHitobito(let user, _) = authState
-        else {
-            return .error(.unauthenticated(message: "Du bist nicht angemeldet und kannst somit keine Profilbild hochladen."))
+    func uploadProfilePicture(picture: ProfilePictureData) -> AsyncStream<ProgressResult<URL>> {
+        AsyncStream(ProgressResult<URL>.self) { continuation in
+            
+            guard case .signedInWithHitobito(let user, _) = authState else {
+                continuation.yield(.error(message: "Du bist nicht angemeldet und kannst somit keine Profilbild hochladen."))
+                continuation.finish()
+                return
+            }
+            
+            Task {
+                let result = await profilePictureService.uploadProfilePicture(
+                    user: user,
+                    picture: picture
+                ) { progress in
+                    continuation.yield(.loading(progress: progress))
+                }
+                
+                switch result {
+                case .error(let e):
+                    continuation.yield(.error(message: e.defaultMessage))
+                case .success(let d):
+                    updateLocalProfilePictureUrl(url: d)
+                    continuation.yield(.success(data: d, message: "Das Profilbild wurde erfolgreich gespeichert."))
+                }
+                continuation.finish()
+            }
         }
-
-        let result = await profilePictureService.uploadProfilePicture(user: user, picture: picture)
-        
-        switch result {
-        case .error(let e):
-            return .error(e)
-        case .success(let url):
-            updateLocalProfilePictureUrl(url: url)
-            return .success(())
-        }
-        
     }
     
     func deleteProfilePicture() async -> SeesturmResult<Void, StorageError> {
         
-        guard case .signedInWithHitobito(let user, let state) = authState else {
+        guard case .signedInWithHitobito(let user, _) = authState else {
             return .error(.unauthenticated(message: "Du bist nicht angemeldet und kannst dein Profilbild somit nicht löschen."))
         }
         
@@ -149,7 +159,7 @@ class AuthViewModel: ObservableObject {
         switch result {
         case .error(let e):
             return .error(e)
-        case .success(let d):
+        case .success(_):
             updateLocalProfilePictureUrl(url: nil)
             return .success(())
         }

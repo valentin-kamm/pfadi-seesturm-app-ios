@@ -7230,8 +7230,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "requestNotificationPermissionIfNecessary()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7246,8 +7246,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "observeUsers()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7262,8 +7262,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "359"
-            endingLineNumber = "359"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
             landmarkName = "observeSchoepflialarm()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7278,8 +7278,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "376"
-            endingLineNumber = "376"
+            startingLineNumber = "377"
+            endingLineNumber = "377"
             landmarkName = "observeSchoepflialarmReactions()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7294,8 +7294,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "370"
-            endingLineNumber = "370"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "observeSchoepflialarmReactions()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7310,8 +7310,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353"
+            startingLineNumber = "354"
+            endingLineNumber = "354"
             landmarkName = "observeSchoepflialarm()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7326,8 +7326,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "303"
-            endingLineNumber = "303"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7342,8 +7342,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7358,8 +7358,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "310"
-            endingLineNumber = "310"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7374,8 +7374,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "312"
-            endingLineNumber = "312"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7390,8 +7390,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "318"
+            endingLineNumber = "318"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7406,8 +7406,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "319"
-            endingLineNumber = "319"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7422,8 +7422,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7438,8 +7438,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
             landmarkName = "schoepflialarmResult"
             landmarkType = "24">
          </BreakpointContent>
@@ -7966,8 +7966,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
             landmarkName = "loadData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7982,8 +7982,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
             landmarkName = "init(leiterbereichService:schoepflialarmService:fcmService:user:calendar:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8766,8 +8766,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "358"
-            endingLineNumber = "358"
+            startingLineNumber = "359"
+            endingLineNumber = "359"
             landmarkName = "observeSchoepflialarm()"
             landmarkType = "7">
          </BreakpointContent>
@@ -8782,8 +8782,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "362"
-            endingLineNumber = "362"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
             landmarkName = "observeSchoepflialarm()"
             landmarkType = "7">
          </BreakpointContent>
@@ -10926,8 +10926,8 @@
             filePath = "Pfadi Seesturm/presentation/account/leiterbereich/LeiterbereichViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "init(leiterbereichService:schoepflialarmService:fcmService:user:calendar:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -11330,6 +11330,404 @@
             endingLineNumber = "44"
             landmarkName = "performGetRequest(urlString:keyDecodingStrategy:headers:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A6BEA670-1228-4939-B57C-CE9CCC9DCF36"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/leiterbereich/EditProfileView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BF481D26-950C-4167-A0D7-CCCE23EC7CBB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/leiterbereich/EditProfileView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9E0F323B-93BD-4205-8B6E-F761DFA6B1FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/leiterbereich/EditProfileView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "48509788-3144-4711-8DD2-CC152821852A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/leiterbereich/EditProfileView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3DF317E9-E73B-44B6-ABED-3A190FB46ACA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/main/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7A42B7DE-B395-4CF8-9837-CDBC6426F93C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/main/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "679DA030-BAA0-45CE-AA03-DB990B05A703"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/main/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "ADE32649-0AB6-4F5E-B84D-F02E75D8D0A1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/main/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EA949A93-14A3-4E0D-AA23-4EA39CD289F6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/main/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "uploadProfilePicture(picture:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B8D619C5-14D5-48B8-8B6B-D66D20B4B3CB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/repository/StorageRepositoryImpl.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "uploadData(item:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E03A91C1-B776-43B8-B17D-D5E855AA106C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/ProfilePictureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "uploadProfilePicture(user:picture:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DEE0D52B-0B9A-420D-B9D9-AE53EAF780A9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/ProfilePictureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "uploadProfilePicture(user:picture:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4374C8B4-DD2A-4CAB-B7AC-4B8F1D448D75"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/ProfilePictureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "uploadProfilePicture(user:picture:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "34AF60CD-FBA2-4A76-B30A-0DF007CF0A80"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/ProfilePictureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "uploadProfilePicture(user:picture:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A6F8C197-2F1E-407E-B6A8-9C99A72C1CB7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/ProfilePictureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "uploadProfilePicture(user:picture:onProgress:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A6F8C197-2F1E-407E-B6A8-9C99A72C1CB7 - a822f8a1782da8cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Pfadi_Seesturm.ProfilePictureService.uploadProfilePicture(user: Pfadi_Seesturm.FirebaseHitobitoUser, picture: Pfadi_Seesturm.ProfilePictureData, onProgress: (Swift.Double) -&gt; ()) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Foundation.URL, Pfadi_Seesturm.StorageError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/ProfilePictureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "49"
+                  endingLineNumber = "49">
+               </Location>
+               <Location
+                  uuid = "A6F8C197-2F1E-407E-B6A8-9C99A72C1CB7 - fc5bd277f7804ac8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(7) suspend resume partial function for Pfadi_Seesturm.ProfilePictureService.uploadProfilePicture(user: Pfadi_Seesturm.FirebaseHitobitoUser, picture: Pfadi_Seesturm.ProfilePictureData, onProgress: (Swift.Double) -&gt; ()) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Foundation.URL, Pfadi_Seesturm.StorageError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/ProfilePictureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "49"
+                  endingLineNumber = "49">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EF269348-848C-4DE5-9B1D-24571F6FF48F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4E95CF09-F4BB-47FA-A1E8-4E0E1D0D600B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "880EC494-8744-4DA1-99C2-E58AFA347B28"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7662DB0B-D872-4467-B97F-5649F049B705"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9A169E2C-E903-45AB-85FF-75B02F06FA64"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "64D3AD6E-EE2E-42B9-B680-9B09954A3FC6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C6095DDE-FDF3-4366-AD91-84ED2BADD0E2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/data/storage/StorageApi.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "uploadData(path:data:contentType:onProgress:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B07B876B-73E6-4089-B3E9-64E993123D05"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/leiterbereich/EditProfileView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

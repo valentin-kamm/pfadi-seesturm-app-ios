@@ -16,11 +16,12 @@ class StorageRepositoryImpl: StorageRepository {
         self.api = api
     }
     
-    func uploadData(item: UploadStorageItem) async throws -> URL {
+    func uploadData(item: UploadStorageItem, onProgress: @escaping (Double) -> Void) async throws -> URL {
         return try await api.uploadData(
             path: item.path,
             data: item.data,
-            contentType: item.contentType
+            contentType: item.contentType,
+            onProgress: onProgress
         )
     }
     

@@ -53,4 +53,18 @@ extension UiState {
             return false
         }
     }
+    
+    var isLoading: Bool {
+        switch self {
+        case .loading(let subState):
+            switch subState {
+            case .loading:
+                return true
+            default:
+                return false
+            }
+        default:
+            return false
+        }
+    }
 }
