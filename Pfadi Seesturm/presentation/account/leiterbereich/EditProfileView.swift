@@ -81,6 +81,7 @@ struct EditProfileView: View {
                     )
                 }
             }
+            .ignoresSafeArea()
         }
         .fullScreenCover(isPresented: showFullscreenProfilePicture) {
             NavigationStack(path: .constant(NavigationPath())) {

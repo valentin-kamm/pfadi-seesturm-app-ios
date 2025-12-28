@@ -9,10 +9,6 @@ import SwiftUI
 
 struct ProfilePictureCropperView: View {
     
-    @Environment(\.dismiss) private var dismiss
-    @State private var croppingState: UiState<ProfilePicture> = .loading(subState: .idle)
-    
-    @State private var viewModel: ProfilePictureCropperViewModel
     private let image: UIImage
     private let viewSize: CGSize
     private let onCrop: (ProfilePicture) -> Void
@@ -33,6 +29,10 @@ struct ProfilePictureCropperView: View {
         self.onCrop = onCrop
         self.onCancel = onCancel
         self.maskWidthMultiplier = maskWidthMultiplier
+        self.maxMagnificationScale = maxMagnificationScale
+    }
+    
+    var body: some View {
         
         let maskDiameter = min(
             viewSize.width * maskWidthMultiplier,
@@ -44,29 +44,117 @@ struct ProfilePictureCropperView: View {
             maxMagnificationScale,
             initialZoomScale
         )
+        let identity = ProfilePictureCropperIdentity(
+            maskDiameter: maskDiameter,
+            imageSizeInView: imageSizeInView,
+            maxScale: maxScale,
+            initialScale: initialZoomScale
+        )
         
-        self.maxMagnificationScale = maxScale
+        ProfilePictureCropperIntermediateView(
+            image: image,
+            maskDiameter: maskDiameter,
+            imageSizeInView: imageSizeInView,
+            maxScale: maxScale,
+            initialScale: initialZoomScale,
+            onCrop: onCrop,
+            onCancel: onCancel
+        )
+        .id(identity)
+    }
+}
+
+private struct ProfilePictureCropperIntermediateView: View {
+    
+    @Environment(\.dismiss) private var dismiss
+    @State private var viewModel: ProfilePictureCropperViewModel
+    @State private var croppingState: UiState<ProfilePicture> = .loading(subState: .idle)
+    
+    private let image: UIImage
+    private let onCrop: (ProfilePicture) -> Void
+    private let onCancel: () -> Void
+    
+    init(
+        image: UIImage,
+        maskDiameter: CGFloat,
+        imageSizeInView: CGSize,
+        maxScale: CGFloat,
+        initialScale: CGFloat,
+        onCrop: @escaping (ProfilePicture) -> Void,
+        onCancel: @escaping () -> Void
+    ) {
+        self.image = image
+        self.onCrop = onCrop
+        self.onCancel = onCancel
+        
         self.viewModel = ProfilePictureCropperViewModel(
             imageSizeInView: imageSizeInView,
             maxMagnificationScale: maxScale,
             maskDiameter: maskDiameter,
-            initialZoomScale: initialZoomScale
+            initialZoomScale: initialScale
         )
     }
     
-    private var showErrorSnackbarBinding: Binding<Bool> {
-        Binding(
-            get: {
-                self.croppingState.isError
-            },
-            set: { isShown in
-                if !isShown {
-                    withAnimation {
-                        self.croppingState = .loading(subState: .idle)
-                    }
+    var body: some View {
+        ProfilePictureCropperContentView(
+            image: image,
+            scale: viewModel.scale,
+            offset: viewModel.offset,
+            maskSize: viewModel.maskSize,
+            onCancel: onCancel,
+            onCrop: {
+                Task {
+                    await cropImage()
                 }
-            }
+            },
+            magnificationGesture: magnificationGesture,
+            dragGesture: dragGesture,
+            isCropping: croppingState.isLoading
         )
+            .customSnackbar(
+                show: showErrorSnackbarBinding,
+                type: .error,
+                message: "Das Bild konnte nicht zugeschnitten werden. Versuche es erneut.",
+                dismissAutomatically: true,
+                allowManualDismiss: true
+            )
+    }
+}
+
+private struct ProfilePictureCropperContentView<M: Gesture, D: Gesture>: View {
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    private let image: UIImage
+    private let scale: CGFloat
+    private let offset: CGSize
+    private let maskSize: CGSize
+    private let onCancel: () -> Void
+    private let onCrop: () -> Void
+    private let magnificationGesture: M
+    private let dragGesture: D
+    private let isCropping: Bool
+    
+    init(
+        image: UIImage,
+        scale: CGFloat,
+        offset: CGSize,
+        maskSize: CGSize,
+        onCancel: @escaping () -> Void,
+        onCrop: @escaping () -> Void,
+        magnificationGesture: M,
+        dragGesture: D,
+        isCropping: Bool
+    ) {
+        self.image = image
+        self.scale = scale
+        self.offset = offset
+        self.maskSize = maskSize
+        self.onCancel = onCancel
+        self.onCrop = onCrop
+        self.magnificationGesture = magnificationGesture
+        self.dragGesture = dragGesture
+        self.isCropping = isCropping
     }
     
     var body: some View {
@@ -74,18 +162,19 @@ struct ProfilePictureCropperView: View {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
-                .scaleEffect(viewModel.scale)
-                .offset(viewModel.offset)
-                .opacity(0.5)
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-                .scaleEffect(viewModel.scale)
-                .offset(viewModel.offset)
-                .mask {
-                    Circle()
-                        .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
-                }
+                .scaleEffect(scale)
+                .offset(offset)
+            Canvas { context, size in
+                context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(.black.opacity(0.5)))
+                context.blendMode = .clear
+                context.fill(Path(ellipseIn: CGRect(
+                    x: (size.width - maskSize.width) / 2,
+                    y: (size.height - maskSize.height) / 2,
+                    width: maskSize.width,
+                    height: maskSize.height
+                )), with: .color(.white))
+            }
+            .compositingGroup()
             VStack(alignment: .center) {
                 Text("Bewegen und skalieren")
                     .foregroundStyle(Color.white)
@@ -105,33 +194,50 @@ struct ProfilePictureCropperView: View {
                     Spacer()
                     SeesturmButton(
                         type: .primary,
-                        action: .async(action: cropImage),
+                        action: .sync(action: onCrop),
                         title: "Auswählen",
                         colors: .custom(contentColor: .white, buttonColor: .clear),
-                        isLoading: croppingState.isLoading
+                        isLoading: isCropping
                     )
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .safeAreaPadding(.all)
             .padding(32)
+            .padding(.top, 48)
         }
         .background(Color.black)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .simultaneousGesture(magnificationGesture)
         .simultaneousGesture(dragGesture)
-        .disabled(croppingState.isLoading)
-        .customSnackbar(
-            show: showErrorSnackbarBinding,
-            type: .error,
-            message: "Das Bild konnte nicht zugeschnitten werden. Versuche es erneut.",
-            dismissAutomatically: true,
-            allowManualDismiss: true
-        )
+        .disabled(isCropping)
     }
 }
 
-extension ProfilePictureCropperView {
+private struct ProfilePictureCropperIdentity: Hashable {
+    let maskDiameter: CGFloat
+    let imageSizeInView: CGSize
+    let maxScale: CGFloat
+    let initialScale: CGFloat
+}
+
+extension ProfilePictureCropperIntermediateView {
+    
+    private var showErrorSnackbarBinding: Binding<Bool> {
+        Binding(
+            get: {
+                self.croppingState.isError
+            },
+            set: { isShown in
+                if !isShown {
+                    withAnimation {
+                        self.croppingState = .loading(subState: .idle)
+                    }
+                }
+            }
+        )
+    }
     
     private func cropImage() async {
         
@@ -157,9 +263,9 @@ extension ProfilePictureCropperView {
     }
     
     private var magnificationGesture: some Gesture {
-        MagnificationGesture()
+        MagnifyGesture()
             .onChanged { value in
-                let scaledValue = value.magnitude
+                let scaledValue = value.magnification
                 let maxScaledValues = viewModel.calculateMagnificationGestureMaxValues()
                 viewModel.scale = min(
                     max(scaledValue * viewModel.lastScale, maxScaledValues.0),
@@ -209,12 +315,19 @@ extension ProfilePictureCropperView {
 }
 
 #Preview {
+    
+    let image = UIImage(named: "onboarding_welcome_image")!
+    
     GeometryReader { geometry in
-        ProfilePictureCropperView(
-            image: UIImage(named: "onboarding_welcome_image")!,
-            viewSize: geometry.size,
+        ProfilePictureCropperIntermediateView(
+            image: image,
+            maskDiameter: 0.9 * geometry.size.width,
+            imageSizeInView: geometry.size.imageFitSize(for: image.aspectRatio),
+            maxScale: 5.0,
+            initialScale: 1.0,
             onCrop: { _ in },
             onCancel: {}
         )
     }
+    .ignoresSafeArea()
 }
