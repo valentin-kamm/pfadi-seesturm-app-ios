@@ -69,7 +69,7 @@ struct EditProfileView: View {
             GeometryReader { geometry in
                 if geometry.size != .zero {
                     ProfilePictureCropperView(
-                        image: data,
+                        image: data.uiImage,
                         viewSize: geometry.size,
                         onCrop: { croppedImage in
                             viewModel.photosPickerItem = nil
@@ -128,7 +128,7 @@ struct EditProfileView: View {
         )
     }
     
-    private func uploadProfilePicture(picture: ProfilePictureData) {
+    private func uploadProfilePicture(picture: ProfilePicture) {
                 
         Task {
             for await result in authState.uploadProfilePicture(picture: picture) {

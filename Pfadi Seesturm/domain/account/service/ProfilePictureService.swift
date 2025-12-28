@@ -19,7 +19,7 @@ class ProfilePictureService {
         self.firestoreRepository = firestoreRepository
     }
     
-    func uploadProfilePicture(user: FirebaseHitobitoUser, picture: ProfilePictureData, onProgress: @escaping (Double) -> Void) async -> SeesturmResult<URL, StorageError> {
+    func uploadProfilePicture(user: FirebaseHitobitoUser, picture: ProfilePicture, onProgress: @escaping (Double) -> Void) async -> SeesturmResult<URL, StorageError> {
         
         do {
             let downloadUrl = try await storageRepository.uploadData(
@@ -68,7 +68,7 @@ class ProfilePictureService {
                 message = pfadiSeesturmError.localizedDescription
             }
             else {
-                message = "Beim Hochladen des Profilbilds ist ein unbekannter Fehler aufgetreten."
+                message = "Beim Löschen des Profilbilds ist ein unbekannter Fehler aufgetreten."
             }
             return .error(.deletingError(message: message))
         }

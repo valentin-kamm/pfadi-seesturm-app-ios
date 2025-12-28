@@ -10,20 +10,20 @@ import SwiftUI
 struct ProfilePictureCropperView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @State private var croppingState: UiState<ProfilePictureData> = .loading(subState: .idle)
+    @State private var croppingState: UiState<ProfilePicture> = .loading(subState: .idle)
     
     @State private var viewModel: ProfilePictureCropperViewModel
-    private let image: ProfilePictureData
+    private let image: UIImage
     private let viewSize: CGSize
-    private let onCrop: (ProfilePictureData) -> Void
+    private let onCrop: (ProfilePicture) -> Void
     private let onCancel: () -> Void
     private let maskWidthMultiplier: CGFloat
     private let maxMagnificationScale: CGFloat
     
     init(
-        image: ProfilePictureData,
+        image: UIImage,
         viewSize: CGSize,
-        onCrop: @escaping (ProfilePictureData) -> Void,
+        onCrop: @escaping (ProfilePicture) -> Void,
         onCancel: @escaping () -> Void,
         maskWidthMultiplier: CGFloat = 0.9,
         maxMagnificationScale: CGFloat = 5.0
@@ -38,7 +38,7 @@ struct ProfilePictureCropperView: View {
             viewSize.width * maskWidthMultiplier,
             viewSize.height * maskWidthMultiplier
         )
-        let imageSizeInView = viewSize.imageFitSize(for: image.originalUiImage.aspectRatio)
+        let imageSizeInView = viewSize.imageFitSize(for: image.aspectRatio)
         let initialZoomScale = maskDiameter / min(imageSizeInView.width, imageSizeInView.height)
         let maxScale = max(
             maxMagnificationScale,
@@ -71,13 +71,13 @@ struct ProfilePictureCropperView: View {
     
     var body: some View {
         ZStack {
-            Image(uiImage: image.originalUiImage)
+            Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
                 .scaleEffect(viewModel.scale)
                 .offset(viewModel.offset)
                 .opacity(0.5)
-            Image(uiImage: image.originalUiImage)
+            Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
                 .scaleEffect(viewModel.scale)
@@ -209,25 +209,12 @@ extension ProfilePictureCropperView {
 }
 
 #Preview {
-    
-    @Previewable @State var image: ProfilePictureData?
-    
     GeometryReader { geometry in
-        if let i = image {
-            ProfilePictureCropperView(
-                image: i,
-                viewSize: geometry.size,
-                onCrop: { _ in },
-                onCancel: {},
-                maskWidthMultiplier: 0.9,
-                maxMagnificationScale: 5
-            )
-        }
-        else {
-            EmptyView()
-        }
-    }
-    .task {
-        image = try! await ProfilePictureData(from: UIImage(named: "onboarding_welcome_image")!)
+        ProfilePictureCropperView(
+            image: UIImage(named: "onboarding_welcome_image")!,
+            viewSize: geometry.size,
+            onCrop: { _ in },
+            onCancel: {}
+        )
     }
 }

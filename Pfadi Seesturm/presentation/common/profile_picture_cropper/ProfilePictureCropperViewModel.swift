@@ -47,9 +47,9 @@ class ProfilePictureCropperViewModel {
         return (minScale, maxMagnificationScale)
     }
     
-    nonisolated func cropToCircle(image: ProfilePictureData) async -> SeesturmResult<ProfilePictureData, LocalError> {
+    nonisolated func cropToCircle(image: UIImage) async -> SeesturmResult<ProfilePicture, LocalError> {
         
-        let orientedImage = image.originalUiImage.correctlyOriented
+        let orientedImage = image.correctlyOriented
         let cropRect = await calculateCropRect(orientedImage)
         
         let imageRendererFormat = orientedImage.imageRendererFormat
@@ -67,7 +67,7 @@ class ProfilePictureCropperViewModel {
         }
         
         do {
-            let data = try await ProfilePictureData(from: croppedImage)
+            let data = try await ProfilePicture(from: croppedImage)
             return .success(data)
         }
         catch {

@@ -50,4 +50,7 @@ struct Constants {
         return false
         #endif
     }()
+    
+    static let PROFILE_PICTURE_SIZE: CGFloat = 1024
+    static let PROFILE_PICTURE_COMPRESSION_QUALITY: CGFloat = 0.75
 }

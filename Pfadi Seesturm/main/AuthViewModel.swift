@@ -119,8 +119,8 @@ class AuthViewModel: ObservableObject {
         )
     }
     
-    func uploadProfilePicture(picture: ProfilePictureData) -> AsyncStream<ProgressResult<URL>> {
-        AsyncStream(ProgressResult<URL>.self) { continuation in
+    func uploadProfilePicture(picture: ProfilePicture) -> AsyncStream<ProgressResult<Void>> {
+        AsyncStream(ProgressResult<Void>.self) { continuation in
             
             guard case .signedInWithHitobito(let user, _) = authState else {
                 continuation.yield(.error(message: "Du bist nicht angemeldet und kannst somit keine Profilbild hochladen."))
@@ -141,7 +141,7 @@ class AuthViewModel: ObservableObject {
                     continuation.yield(.error(message: e.defaultMessage))
                 case .success(let d):
                     updateLocalProfilePictureUrl(url: d)
-                    continuation.yield(.success(data: d, message: "Das Profilbild wurde erfolgreich gespeichert."))
+                    continuation.yield(.success(data: (), message: "Das Profilbild wurde erfolgreich gespeichert."))
                 }
                 continuation.finish()
             }

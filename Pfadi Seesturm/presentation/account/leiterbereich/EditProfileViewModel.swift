@@ -22,7 +22,7 @@ class EditProfileViewModel {
             updateImageSelectionState()
         }
     }
-    var imageSelectionState: UiState<ProfilePictureData> = .loading(subState: .idle)
+    var imageSelectionState: UiState<PickedGalleryImage> = .loading(subState: .idle)
     
     // track image uploading state
     var imageUploadState: ProgressActionState<Void> = .idle
@@ -31,7 +31,7 @@ class EditProfileViewModel {
     var showDeleteImageConfirmationDialog: Bool = false
     var imageDeleteState: ActionState<Void> = .idle
     
-    var imageSelectionStateBinding: Binding<ProfilePictureData?> {
+    var imageSelectionStateBinding: Binding<PickedGalleryImage?> {
         Binding(
             get: {
                 switch self.imageSelectionState {
@@ -71,20 +71,12 @@ class EditProfileViewModel {
     
     var isCircularImageViewLoading: Bool {
         
-        switch imageUploadState {
-        case .loading(_, _):
+        if imageUploadState.isLoading {
             return true
-        default:
-            break
         }
-        
-        switch imageDeleteState {
-        case .loading(_):
+        if imageDeleteState.isLoading {
             return true
-        default:
-            break
         }
-        
         switch imageSelectionState {
         case .loading(let subState):
             switch subState {
@@ -115,7 +107,7 @@ class EditProfileViewModel {
             imageSelectionState = .loading(subState: .loading)
             
             do {
-                let data = try await ProfilePictureData(from: item)
+                let data = try await PickedGalleryImage(photosPickerItem: item)
                 withAnimation {
                     imageSelectionState = .success(data: data)
                 }

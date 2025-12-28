@@ -8,7 +8,7 @@ import UIKit
 
 enum UploadStorageItem {
     
-    case profilePicture(user: FirebaseHitobitoUser, data: ProfilePictureData)
+    case profilePicture(user: FirebaseHitobitoUser, data: ProfilePicture)
     
     var path: String {
         switch self {

@@ -8,6 +8,7 @@ import SwiftUI
 import FirebaseFunctions
 import FirebaseAuth
 import SwiftData
+import FirebaseStorage
 
 protocol AuthModule {
     
@@ -22,17 +23,20 @@ class AuthModuleImpl: AuthModule {
     private let cloudFunctionsRepository: CloudFunctionsRepository
     private let firestoreRepository: FirestoreRepository
     private let fcmRepository: FCMRepository
+    private let storageRepository: StorageRepository
     
     init(
         cloudFunctionsRepository: CloudFunctionsRepository,
         firebaseAuth: FirebaseAuth.Auth,
         firestoreRepository: FirestoreRepository,
-        fcmRepository: FCMRepository
+        fcmRepository: FCMRepository,
+        storageRepository: StorageRepository
     ) {
         self.cloudFunctionsRepository = cloudFunctionsRepository
         self.firebaseAuth = firebaseAuth
         self.firestoreRepository = firestoreRepository
         self.fcmRepository = fcmRepository
+        self.storageRepository = storageRepository
     }
         
     lazy var authApi: AuthApi = AuthApiImpl(
@@ -46,7 +50,8 @@ class AuthModuleImpl: AuthModule {
         authRepository: authRepository,
         cloudFunctionsRepository: cloudFunctionsRepository,
         firestoreRepository: firestoreRepository,
-        fcmRepository: fcmRepository
+        fcmRepository: fcmRepository,
+        storageRepository: storageRepository
     )
 }
 
@@ -66,6 +71,11 @@ struct AuthModuleKey: EnvironmentKey {
                 messaging: .messaging()
             ),
             modelContext: ModelContext(seesturmModelContainer)
+        ),
+        storageRepository: StorageRepositoryImpl(
+            api: StorageApiImpl(
+                storage: Storage.storage()
+            )
         )
     )
 }

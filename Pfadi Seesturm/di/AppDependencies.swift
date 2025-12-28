@@ -47,7 +47,8 @@ final class AppDependencies {
             cloudFunctionsRepository: fcfModule.fcfRepository,
             firebaseAuth: .auth(),
             firestoreRepository: firestoreModule.firestoreRepository,
-            fcmRepository: fcmModule.fcmRepository
+            fcmRepository: fcmModule.fcmRepository,
+            storageRepository: storageModule.storageRepository
         )
         self.wordpressModule = WordpressModuleImpl(
             firestoreRepository: firestoreModule.firestoreRepository,
