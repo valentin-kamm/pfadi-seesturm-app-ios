@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 class AuthService {
     
@@ -13,17 +14,20 @@ class AuthService {
     private let cloudFunctionsRepository: CloudFunctionsRepository
     private let firestoreRepository: FirestoreRepository
     private let fcmRepository: FCMRepository
+    private let storageRepository: StorageRepository
     
     init(
         authRepository: AuthRepository,
         cloudFunctionsRepository: CloudFunctionsRepository,
         firestoreRepository: FirestoreRepository,
         fcmRepository: FCMRepository,
+        storageRepository: StorageRepository
     ) {
         self.authRepository = authRepository
         self.cloudFunctionsRepository = cloudFunctionsRepository
         self.firestoreRepository = firestoreRepository
         self.fcmRepository = fcmRepository
+        self.storageRepository = storageRepository
     }
     
     func authenticate() async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
@@ -33,10 +37,10 @@ class AuthService {
             let firebaseUser = try await authRepository.authenticateWithFirebase(firebaseToken: firebaseAuthToken)
             let firebaseUserClaims = try await authRepository.getCurrentFirebaseUserClaims(user: firebaseUser)
             let firebaseUserRole = try FirebaseHitobitoUserRole(claims: firebaseUserClaims)
-            let firebaseUserDto = userInfo.toFirebaseHitobitoUserDto(role: firebaseUserRole.rawValue)
-            try await upsertUser(user: firebaseUserDto, id: userInfo.sub)
+            let firebaseUserInfoDto = FirebaseHitobitoUserInfoDto(userInfo, role: firebaseUserRole.rawValue)
+            try await upsertUser(user: firebaseUserInfoDto, userId: userInfo.sub)
             let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: .user(id: userInfo.sub))
-            let firebaseHitobitoUser = try firebaseHitobitoUserDto.toFirebaseHitobitoUser()
+            let firebaseHitobitoUser = try FirebaseHitobitoUser(firebaseHitobitoUserDto)
             try await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
             return .success(firebaseHitobitoUser)
         }
@@ -57,31 +61,46 @@ class AuthService {
         authRepository.resumeExternalUserAgentFlow(url: url)
     }
     
-    func reauthenticateOnAppStart() async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
-        if let user = authRepository.getCurrentFirebaseUser() {
-            do {
-                let claims = try await authRepository.getCurrentFirebaseUserClaims(user: user)
-                let _ = try FirebaseHitobitoUserRole(claims: claims)
-                let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: SeesturmFirestoreDocument.user(id: user.uid))
-                let firebaseHitobitoUser = try firebaseHitobitoUserDto.toFirebaseHitobitoUser()
-                //try await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
-                return .success(firebaseHitobitoUser)
-            }
-            catch let error as PfadiSeesturmError {
-                return .error(.signInError(message: "Die Anmeldung ist fehlgeschlagen. Versuche es erneut oder kontaktiere den Admin. \(error.localizedDescription)"))
-            }
-            catch {
-                return .error(.signInError(message: "Bei der Anmeldung ist ein unbekannter Fehler aufgetreten. Versuche es erneut. \(error.localizedDescription)"))
-            }
-        }
-        else {
+    func reauthenticateWithHitobito(resubscribeToSchoepflialarm: Bool) async -> SeesturmResult<FirebaseHitobitoUser, AuthError> {
+        
+        guard let firebaseUser = authRepository.getCurrentFirebaseUser() else {
             return .error(.signInError(message: "Es ist kein Benutzer angemeldet. Neue Anmeldung nötig."))
+        }
+        
+        do {
+            let claims = try await authRepository.getCurrentFirebaseUserClaims(user: firebaseUser)
+            let _ = try FirebaseHitobitoUserRole(claims: claims)
+            
+            // re-subscribe to schöpflialarm topic, but do not suspend and without caring about the error
+            if resubscribeToSchoepflialarm {
+                Task {
+                    try? await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
+                }
+            }
+            
+            let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: .user(id: firebaseUser.uid))
+            let firebaseHitobitoUser = try FirebaseHitobitoUser(firebaseHitobitoUserDto)
+            
+            return .success(firebaseHitobitoUser)
+        }
+        catch {
+            let message: String
+            if let pfadiSeesturmError = error as? PfadiSeesturmError {
+                message = "Die Anmeldung ist fehlgeschlagen. Versuche es erneut oder kontaktiere den Admin. \(pfadiSeesturmError.localizedDescription)"
+            }
+            else {
+                message = "Bei der Anmeldung ist ein unbekannter Fehler aufgetreten. Versuche es erneut. \(error.localizedDescription)"
+            }
+            return .error(.signInError(message: message))
         }
     }
     
-    private func upsertUser(user: FirebaseHitobitoUserDto, id: String) async throws {
+    private func upsertUser(user: FirebaseHitobitoUserInfoDto, userId: String) async throws {
         do {
-            try await firestoreRepository.upsertDocument(object: user, document: SeesturmFirestoreDocument.user(id: id))
+            try await firestoreRepository.upsertDocument(
+                object: user,
+                document: .user(id: userId)
+            )
         }
         catch {
             throw PfadiSeesturmError.authError(message: "Der Benutzer konnte nicht in der Datenbank gespeichert werden")
@@ -104,6 +123,7 @@ class AuthService {
         do {
             try await fcmRepository.unsubscribeFromTopic(topic: .schoepflialarm)
             try await fcmRepository.unsubscribeFromTopic(topic: .schoepflialarmReaction)
+            try await storageRepository.deleteData(item: .profilePicture(user: user))
             try await firestoreRepository.deleteDocument(document: SeesturmFirestoreDocument.user(id: user.userId))
             try await authRepository.deleteFirebaseUserAccount()
             return .success(())

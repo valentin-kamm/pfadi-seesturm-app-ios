@@ -28,7 +28,7 @@ class WordpressService {
                 return .error(.invalidData)
             case .dateError(message: _):
                 return .error(.invalidDate)
-            case .messagingPermissionError(_), .unknownStufe(_), .unknownNotificationTopic(_), .unknownAktivitaetInteraction(_), .authError(_), .cancelled(_), .unknown(_), .unknownSchoepflialarmReactionType(_):
+            case .messagingPermissionError(_), .unknownStufe(_), .unknownNotificationTopic(_), .unknownAktivitaetInteraction(_), .authError(_), .cancelled(_), .unknown(_), .unknownSchoepflialarmReactionType(_), .jpgConversion(_):
                 return .error(.unknown)
             }
         }

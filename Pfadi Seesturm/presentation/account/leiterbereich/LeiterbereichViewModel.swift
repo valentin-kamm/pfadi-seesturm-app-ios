@@ -19,6 +19,7 @@ class LeiterbereichViewModel {
     // account interactions
     var showSignOutConfirmationDialog: Bool = false
     var showDeleteAccountConfirmationDialog: Bool = false
+    var showEditProfileSheet: Bool = false
     
     // food
     var ordersStateDto: UiState<[FoodOrderDto]> = .loading(subState: .idle)

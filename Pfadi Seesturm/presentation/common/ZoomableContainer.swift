@@ -11,23 +11,23 @@ struct ZoomableContainer<Content: View>: View {
     
     @State private var tapLocation: CGPoint? = nil
     
-    private let entireViewSize: CGSize
-    private let imageAspectRatio: CGFloat
-    private let maxZoomScale: CGFloat
-    private let doubleTapZoomScale: CGFloat
+    private let viewSize: CGSize
+    private let contentAspectRatio: CGFloat
+    private let maxScale: CGFloat
+    private let doubleTapScale: CGFloat
     private let content: Content
-
+    
     init(
-        entireViewSize: CGSize,
-        imageAspectRatio: CGFloat,
-        maxZoomScale: CGFloat = 5,
-        doubleTapZoomScale: CGFloat = 3,
+        viewSize: CGSize,
+        contentAspectRatio: CGFloat,
+        maxScale: CGFloat = 5,
+        doubleTapScale: CGFloat = 3,
         @ViewBuilder content: () -> Content
     ) {
-        self.entireViewSize = entireViewSize
-        self.imageAspectRatio = imageAspectRatio
-        self.maxZoomScale = maxZoomScale
-        self.doubleTapZoomScale = doubleTapZoomScale
+        self.viewSize = viewSize
+        self.contentAspectRatio = contentAspectRatio
+        self.maxScale = maxScale
+        self.doubleTapScale = doubleTapScale
         self.content = content()
     }
     
@@ -38,10 +38,10 @@ struct ZoomableContainer<Content: View>: View {
     var body: some View {
         ZoomableView(
             tapLocation: $tapLocation,
-            entireViewSize: entireViewSize,
-            imageAspectRatio: imageAspectRatio,
-            maxZoomScale: maxZoomScale,
-            doubleTapZoomScale: doubleTapZoomScale
+            viewSize: viewSize,
+            contentAspectRatio: contentAspectRatio,
+            maxScale: maxScale,
+            doubleTapScale: doubleTapScale
         ) {
             content
         }
@@ -52,68 +52,45 @@ struct ZoomableContainer<Content: View>: View {
 private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
     
     @Binding private var tapLocation: CGPoint?
-    private let entireViewSize: CGSize
-    private let imageAspectRatio: CGFloat
-    private let maxZoomScale: CGFloat
-    private let doubleTapZoomScale: CGFloat
+    private let viewSize: CGSize
+    private let contentAspectRatio: CGFloat
+    private let maxScale: CGFloat
+    private let doubleTapScale: CGFloat
     private let content: Content
-
+    
     init(
         tapLocation: Binding<CGPoint?>,
-        entireViewSize: CGSize,
-        imageAspectRatio: CGFloat,
-        maxZoomScale: CGFloat,
-        doubleTapZoomScale: CGFloat,
+        viewSize: CGSize,
+        contentAspectRatio: CGFloat,
+        maxScale: CGFloat,
+        doubleTapScale: CGFloat,
         @ViewBuilder content: () -> Content
     ) {
         self._tapLocation = tapLocation
-        self.entireViewSize = entireViewSize
-        self.imageAspectRatio = imageAspectRatio
-        self.maxZoomScale = maxZoomScale
-        self.doubleTapZoomScale = doubleTapZoomScale
+        self.viewSize = viewSize
+        self.contentAspectRatio = contentAspectRatio
+        self.maxScale = maxScale
+        self.doubleTapScale = doubleTapScale
         self.content = content()
-    }
-    
-    private var imageSize: CGSize {
-        
-        let viewAspectRatio = entireViewSize.width / entireViewSize.height
-        
-        let size: CGSize
-        if imageAspectRatio > viewAspectRatio {
-            // image is wider than the view
-            let width = entireViewSize.width
-            let height = width / imageAspectRatio
-            size = CGSize(width: width, height: height)
-        }
-        else {
-            // image is taller or equal to the view
-            let height = entireViewSize.height
-            let width = height * imageAspectRatio
-            size = CGSize(width: width, height: height)
-        }
-        return size
     }
     
     func makeUIViewController(context: Context) -> ZoomableViewController<UIView> {
         
         let hostingController = UIHostingController(rootView: content)
-        let view = hostingController.view!
-        view.backgroundColor = .clear
+        hostingController.view.backgroundColor = .clear
         
         return ZoomableViewController(
-            contentSize: imageSize,
-            maxZoomScale: maxZoomScale,
-            doubleTapZoomScale: doubleTapZoomScale,
-            content: view
+            contentSize: viewSize.imageFitSize(for: contentAspectRatio),
+            maxScale: maxScale,
+            doubleTapScale: doubleTapScale,
+            content: hostingController.view
         )
     }
-
+    
     func updateUIViewController(_ uiViewController: ZoomableViewController<UIView>, context: Context) {
         
-        // update sizes on rotation
-        uiViewController.updateContentSize(imageSize)
-        
-        // handle double taps to zoom
+        uiViewController.updateContentSize(viewSize.imageFitSize(for: contentAspectRatio))
+                
         if let location = tapLocation {
             uiViewController.handleDoubleTap(location)
             DispatchQueue.main.async {
@@ -123,22 +100,22 @@ private struct ZoomableView<Content: View>: UIViewControllerRepresentable {
     }
 }
 
-class ZoomableViewController<Content: UIView>: UIViewController, UIScrollViewDelegate {
+private class ZoomableViewController<Content: UIView>: UIViewController, UIScrollViewDelegate {
     
     private var contentSize: CGSize
-    private let maxZoomScale: CGFloat
-    private let doubleTapZoomScale: CGFloat
+    private let maxScale: CGFloat
+    private let doubleTapScale: CGFloat
     private let content: Content
     
     init(
         contentSize: CGSize,
-        maxZoomScale: CGFloat,
-        doubleTapZoomScale: CGFloat,
+        maxScale: CGFloat,
+        doubleTapScale: CGFloat,
         content: Content
     ) {
         self.contentSize = contentSize
-        self.maxZoomScale = maxZoomScale
-        self.doubleTapZoomScale = doubleTapZoomScale
+        self.maxScale = maxScale
+        self.doubleTapScale = doubleTapScale
         self.content = content
         super.init(nibName: nil, bundle: nil)
     }
@@ -152,6 +129,7 @@ class ZoomableViewController<Content: UIView>: UIViewController, UIScrollViewDel
         scrollView.bouncesZoom = true
         scrollView.clipsToBounds = true
         scrollView.backgroundColor = .clear
+        scrollView.contentInsetAdjustmentBehavior = .never // very important
         return scrollView
     }()
     
@@ -159,7 +137,7 @@ class ZoomableViewController<Content: UIView>: UIViewController, UIScrollViewDel
         super.viewDidLoad()
 
         scrollView.delegate = self
-        scrollView.maximumZoomScale = maxZoomScale
+        scrollView.maximumZoomScale = maxScale
         view.addSubview(scrollView)
         
         NSLayoutConstraint.activate([
@@ -184,7 +162,7 @@ class ZoomableViewController<Content: UIView>: UIViewController, UIScrollViewDel
     private func centerContent() {
         
         let scrollSize = scrollView.bounds.size
-
+        
         let horizontalInset = max((scrollSize.width - contentSize.width * scrollView.zoomScale) / 2, 0)
         let verticalInset = max((scrollSize.height - contentSize.height * scrollView.zoomScale) / 2, 0)
 
@@ -218,7 +196,7 @@ class ZoomableViewController<Content: UIView>: UIViewController, UIScrollViewDel
     func handleDoubleTap(_ location: CGPoint) {
         
         let zoomRect: CGRect = zoomRectForScale(
-            scale: scrollView.zoomScale > 1 ? 1 : doubleTapZoomScale,
+            scale: scrollView.zoomScale > 1 ? 1 : doubleTapScale,
             center: location
         )
         scrollView.zoom(to: zoomRect, animated: true)

@@ -37,6 +37,7 @@ struct PfadiSeesturmApp: App {
 private struct DIView: View {
     
     @StateObject private var appState: AppStateViewModel
+    @StateObject private var authState: AuthViewModel
     @AppStorage("showOnboardingView\(Constants.ONBOARDING_SCREEN_VERSION)") private var showOnboardingScreen: Bool = true
     private let appDependencies: AppDependencies
     private let modelContainer: ModelContainer
@@ -48,6 +49,7 @@ private struct DIView: View {
         self.appDependencies = appDependencies
         self.modelContainer = modelContainer
         _appState = StateObject(wrappedValue: appDependencies.appState)
+        _authState = StateObject(wrappedValue: appDependencies.authState)
     }
     
     var body: some View {
@@ -75,6 +77,7 @@ private struct DIView: View {
         .modelContainer(modelContainer)
         // main app state
         .environmentObject(appState)
+        .environmentObject(authState)
         // DI Modules
         .environment(\.authModule, appDependencies.authModule)
         .environment(\.wordpressModule, appDependencies.wordpressModule)
@@ -85,7 +88,12 @@ private struct DIView: View {
         .handleOpenURLInApp()
         // handle universal links
         .onOpenURL { url in
-            appState.navigate(from: url)
+            if let universalLink = SeesturmUniversalLink(url: url) {
+                if case .oauthCallback = universalLink {
+                    authState.resumeExternalUserAgentFlow(url: url)
+                }
+                appState.navigate(from: universalLink)
+            }
         }
     }
 }

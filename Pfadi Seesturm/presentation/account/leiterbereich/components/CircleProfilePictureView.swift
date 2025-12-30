@@ -10,64 +10,66 @@ import Kingfisher
 
 struct CircleProfilePictureView: View {
     
-    private let user: FirebaseHitobitoUser?
+    private let type: CircleProfilePictureViewType
     private let size: CGFloat
-    private let isLoading: Bool
     private let showEditBadge: Bool
     
     init(
-        user: FirebaseHitobitoUser?,
+        type: CircleProfilePictureViewType,
         size: CGFloat,
-        isLoading: Bool = false,
         showEditBadge: Bool = false
     ) {
-        self.user = user
+        self.type = type
         self.size = size
-        self.isLoading = isLoading
         self.showEditBadge = showEditBadge
     }
     
     var borderColor: Color {
-        if isLoading || user?.profilePictureUrl == nil {
+        switch type {
+        case .idle(let user):
+            return user?.profilePictureUrl == nil ? .secondary : .clear
+        case .loading:
             return .secondary
         }
-        return .clear
     }
     
     var body: some View {
         ZStack {
             Group {
-                if let imageUrl = user?.profilePictureUrl {
-                    KFImage(imageUrl)
-                        .placeholder {
-                            Rectangle()
-                                .fill(Color.skeletonPlaceholderColor)
-                                .aspectRatio(1, contentMode: .fill)
-                                .frame(width: size, height: size)
-                                .loadingBlinking()
-                                .clipped()
-                        }
-                        .resizable()
-                        .renderingMode(isLoading ? Image.TemplateRenderingMode.template : Image.TemplateRenderingMode.original)
-                }
-                else {
-                    Image("SeesturmLogo")
-                        .renderingMode(isLoading ? Image.TemplateRenderingMode.template : Image.TemplateRenderingMode.original)
-                        .resizable()
-                        .padding(3)
+                
+                switch type {
+                case .idle(let user):
+                    if let imageUrl = user?.profilePictureUrl {
+                        KFImage(imageUrl)
+                            .placeholder {
+                                Rectangle()
+                                    .fill(Color.skeletonPlaceholderColor)
+                                    .aspectRatio(1, contentMode: .fill)
+                                    .frame(width: size, height: size)
+                                    .loadingBlinking()
+                                    .clipped()
+                            }
+                            .resizable()
+                    }
+                    else {
+                        Image("SeesturmLogo")
+                            .resizable()
+                            .padding(0.05 * size)
+                    }
+                case .loading:
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.customCardViewBackground)
+                        SeesturmProgressView(
+                            color: Color.SEESTURM_GREEN
+                        )
+                    }
                 }
             }
             .aspectRatio(1, contentMode: .fit)
             .scaledToFill()
             .frame(width: size, height: size)
             .clipped()
-            .foregroundStyle(isLoading ? Color.clear : Color.SEESTURM_GREEN)
-            
-            if isLoading {
-                SeesturmProgressView(
-                    color: Color.SEESTURM_GREEN
-                )
-            }
         }
         .frame(width: size, height: size)
         .background(Color.customCardViewBackground)
@@ -93,30 +95,31 @@ struct CircleProfilePictureView: View {
     }
 }
 
+enum CircleProfilePictureViewType {
+    case idle(user: FirebaseHitobitoUser?)
+    case loading
+}
+
 #Preview {
     VStack {
         CircleProfilePictureView(
-            user: DummyData.user1,
+            type: .idle(user: DummyData.user1),
             size: 60,
-            isLoading: false,
             showEditBadge: false
         )
         CircleProfilePictureView(
-            user: DummyData.user3,
+            type: .idle(user: DummyData.user3),
             size: 60,
-            isLoading: false,
             showEditBadge: false
         )
         CircleProfilePictureView(
-            user: DummyData.user3,
+            type: .idle(user: DummyData.user3),
             size: 60,
-            isLoading: false,
             showEditBadge: true
         )
         CircleProfilePictureView(
-            user: DummyData.user3,
+            type: .loading,
             size: 60,
-            isLoading: true,
             showEditBadge: true
         )
     }

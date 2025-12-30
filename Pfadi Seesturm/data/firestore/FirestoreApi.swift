@@ -44,27 +44,27 @@ class FirestoreApiImpl: FirestoreApi {
             do {
                 let snapshot = try transaction.getDocument(document)
                 
-                if snapshot.exists {
-                    
-                    var itemToSave = object
-                    
-                    let existingItem = try snapshot.data(as: T.self)
-                    
-                    guard !existingItem.contentEquals(object) else {
-                        return true
-                    }
-                    
-                    itemToSave.created = existingItem.created
-                    itemToSave.modified = nil
-                    
-                    try transaction.setData(from: itemToSave, forDocument: document, merge: false)
-                    return true
-                }
-                else {
-                    // document does not exist yet -> Insert it
+                guard snapshot.exists else {
+                    // document does not exist yet -> insert it
                     try transaction.setData(from: object, forDocument: document)
                     return true
                 }
+                
+                let existingItem = try snapshot.data(as: T.self)
+                
+                guard !existingItem.contentEquals(object) else {
+                    // data has not changed -> do nothing
+                    return true
+                }
+                
+                // document exists and data has changed -> perform update with merge, set timestamps correctly
+                var itemToSave = object
+                itemToSave.created = existingItem.created
+                itemToSave.modified = nil
+                
+                try transaction.setData(from: itemToSave, forDocument: document, merge: true)
+                
+                return true
             }
             catch let error as NSError {
                 errorPointer?.pointee = error as NSError

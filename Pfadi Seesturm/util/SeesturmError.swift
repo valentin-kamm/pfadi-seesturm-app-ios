@@ -57,6 +57,27 @@ enum CloudFunctionsError: DataError {
     }
 }
 
+enum StorageError: DataError {
+    
+    case uploadingError(message: String)
+    case deletingError(message: String)
+    case unauthenticated(message: String)
+    case unknown
+    
+    var defaultMessage: String {
+        switch self {
+        case .uploadingError(let message):
+            message
+        case .deletingError(let message):
+            message
+        case .unauthenticated(let message):
+            message
+        case .unknown:
+            "Ein unbekannter Fehler ist aufgetreten."
+        }
+    }
+}
+
 enum NetworkError: DataError {
     
     case unknown
@@ -231,6 +252,7 @@ enum PfadiSeesturmError: LocalizedError {
     case authError(message: String)
     case cancelled(message: String)
     case unknownSchoepflialarmReactionType(message: String)
+    case jpgConversion(message: String)
     case unknown(message: String)
         
     var errorDescription: String? {
@@ -256,6 +278,8 @@ enum PfadiSeesturmError: LocalizedError {
         case .cancelled(let message):
             return message
         case .unknownSchoepflialarmReactionType(let message):
+            return message
+        case .jpgConversion(let message):
             return message
         case .unknown(let message):
             return message

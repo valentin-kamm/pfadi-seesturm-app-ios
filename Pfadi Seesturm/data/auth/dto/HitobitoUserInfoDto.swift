@@ -23,16 +23,3 @@ struct HitobitoUserInfoDto: Decodable {
     let kantonalverbandId: Int?
     let roles: [HitobitoUserRoleDto?]?
 }
-
-extension HitobitoUserInfoDto {
-    func toFirebaseHitobitoUserDto(role: String) -> FirebaseHitobitoUserDto {
-        return FirebaseHitobitoUserDto(
-            id: sub,
-            email: email,
-            firstname: firstName,
-            lastname: lastName,
-            pfadiname: nickname,
-            role: role
-        )
-    }
-}
