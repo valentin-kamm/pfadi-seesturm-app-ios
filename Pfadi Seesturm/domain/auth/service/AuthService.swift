@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 class AuthService {
     
@@ -36,8 +37,8 @@ class AuthService {
             let firebaseUser = try await authRepository.authenticateWithFirebase(firebaseToken: firebaseAuthToken)
             let firebaseUserClaims = try await authRepository.getCurrentFirebaseUserClaims(user: firebaseUser)
             let firebaseUserRole = try FirebaseHitobitoUserRole(claims: firebaseUserClaims)
-            let firebaseUserDto = FirebaseHitobitoUserDto(userInfo, role: firebaseUserRole.rawValue)
-            try await upsertUser(user: firebaseUserDto, id: userInfo.sub)
+            let firebaseUserInfoDto = FirebaseHitobitoUserInfoDto(userInfo, role: firebaseUserRole.rawValue)
+            try await upsertUser(user: firebaseUserInfoDto, userId: userInfo.sub)
             let firebaseHitobitoUserDto: FirebaseHitobitoUserDto = try await firestoreRepository.readDocument(document: .user(id: userInfo.sub))
             let firebaseHitobitoUser = try FirebaseHitobitoUser(firebaseHitobitoUserDto)
             try await fcmRepository.subscribeToTopic(topic: .schoepflialarm)
@@ -94,9 +95,12 @@ class AuthService {
         }
     }
     
-    private func upsertUser(user: FirebaseHitobitoUserDto, id: String) async throws {
+    private func upsertUser(user: FirebaseHitobitoUserInfoDto, userId: String) async throws {
         do {
-            try await firestoreRepository.upsertDocument(object: user, document: SeesturmFirestoreDocument.user(id: id))
+            try await firestoreRepository.upsertDocument(
+                object: user,
+                document: .user(id: userId)
+            )
         }
         catch {
             throw PfadiSeesturmError.authError(message: "Der Benutzer konnte nicht in der Datenbank gespeichert werden")

@@ -30,19 +30,6 @@ struct FirebaseHitobitoUserDto: FirestoreDto {
         fcmToken == other.fcmToken
     }
     
-    init(_ dto: HitobitoUserInfoDto, role: String) {
-        self.id = dto.sub
-        self.created = nil
-        self.modified = nil
-        self.email = dto.email
-        self.firstname = dto.firstName
-        self.lastname = dto.lastName
-        self.pfadiname = dto.nickname
-        self.role = role
-        self.profilePictureUrl = nil
-        self.fcmToken = nil
-    }
-    
     init(from oldUser: FirebaseHitobitoUserDto, newFcmToken: String) {
         self.id = oldUser.id
         self.created = oldUser.created

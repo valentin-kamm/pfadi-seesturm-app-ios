@@ -10,9 +10,12 @@ import Kingfisher
 
 struct PhotoSliderView: View {
     
+    @Environment(\.dismiss) private var dismiss
+    
     private let mode: PhotoSliderViewMode
     @State private var imageIndex: Int
     @State private var toolbarVisibility: Visibility = .visible
+    @State private var screenSize: CGSize = .zero
     
     init(
         mode: PhotoSliderViewMode
@@ -27,14 +30,27 @@ struct PhotoSliderView: View {
     }
     
     var body: some View {
-        ZStack {
+        NavigationStack(path: .constant(NavigationPath())) {
             GeometryReader { geometry in
                 PhotoSliderContentView(
                     mode: mode,
                     imageIndex: $imageIndex,
-                    screenSize: geometry.size
+                    screenSize: screenSize
                 )
+                .onAppear {
+                    self.screenSize = geometry.size
+                }
+                .onChange(of: geometry.size) { _, newValue in
+                    self.screenSize = newValue
+                }
                 .toolbar(toolbarVisibility)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Schliessen") {
+                            dismiss()
+                        }
+                    }
+                }
                 .onTapGesture {
                     withAnimation {
                         if case .visible = toolbarVisibility {
@@ -47,10 +63,8 @@ struct PhotoSliderView: View {
                 }
             }
         }
-        // allow landscape for this view only
-        .unlockRotation()
-        .ignoresSafeArea()
         .background(Color.customBackground)
+        .unlockRotation()
     }
 }
 
@@ -70,58 +84,39 @@ private struct PhotoSliderContentView: View {
         self.screenSize = screenSize
     }
     
-    var body: some View {
+    private var navigationTitle: String {
+        switch mode {
+        case .single(_):
+            ""
+        case .multi(let images, _):
+            "\(imageIndex + 1) von \(images.count)"
+        }
+    }
+    private var images: [PhotoSliderViewItem] {
         switch mode {
         case .single(let image):
-            Group {
-                if let url = image.url {
-                    ZoomableContainer(
-                        entireViewSize: screenSize,
-                        imageAspectRatio: image.aspectRatio
-                    ) {
-                        KFImage(url)
-                            .cancelOnDisappear(true)
-                            .placeholder { progress in
-                                ZStack(alignment: .top) {
-                                    Rectangle()
-                                        .fill(Color.skeletonPlaceholderColor)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    ProgressView(value: progress.fractionCompleted, total: 1.0)
-                                        .progressViewStyle(.linear)
-                                        .tint(Color.SEESTURM_GREEN)
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
-                            .resizable()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .aspectRatio(image.aspectRatio, contentMode: .fit)
-                    }
-                }
-                else {
-                    Rectangle()
-                        .fill(Color.skeletonPlaceholderColor)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .aspectRatio(image.aspectRatio, contentMode: .fit)
-                        .overlay {
-                            Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .foregroundStyle(Color.SEESTURM_GREEN)
-                        }
-                }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.customBackground)
+            [image]
         case .multi(let images, _):
+            images
+        }
+    }
+    private var indexDisplayMode: PageTabViewStyle.IndexDisplayMode {
+        switch mode {
+        case .single(_):
+            .never
+        case .multi(_, _):
+            .always
+        }
+    }
+    
+    var body: some View {
+        ZStack {
             TabView(selection: $imageIndex) {
                 ForEach(Array(images.enumerated()), id: \.element.id) { index, image in
-                                        
                     if let url = image.url {
-                        
                         ZoomableContainer(
-                            entireViewSize: screenSize,
-                            imageAspectRatio: image.aspectRatio
+                            viewSize: screenSize,
+                            contentAspectRatio: image.aspectRatio
                         ) {
                             KFImage(url)
                                 .cancelOnDisappear(true)
@@ -129,18 +124,19 @@ private struct PhotoSliderContentView: View {
                                     ZStack(alignment: .top) {
                                         Rectangle()
                                             .fill(Color.skeletonPlaceholderColor)
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                                         ProgressView(value: progress.fractionCompleted, total: 1.0)
                                             .progressViewStyle(.linear)
                                             .tint(Color.SEESTURM_GREEN)
+                                            .frame(maxWidth: .infinity, alignment: .center)
                                     }
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                                 }
                                 .resizable()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                                 .aspectRatio(image.aspectRatio, contentMode: .fit)
-                            }
-                            .tag(index)
+                        }
+                        .tag(index)
                     }
                     else {
                         Rectangle()
@@ -158,15 +154,16 @@ private struct PhotoSliderContentView: View {
                     }
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-            .navigationTitle("\(imageIndex + 1) von \(images.count)")
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.customBackground)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: indexDisplayMode))
+            .navigationTitle(navigationTitle)
         }
+        .frame(width: screenSize.width, height: screenSize.height, alignment: .center)
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color.customBackground)
     }
 }
 
-    
 enum PhotoSliderViewMode {
     case single(image: PhotoSliderViewItem)
     case multi(images: [PhotoSliderViewItem], initialIndex: Int)

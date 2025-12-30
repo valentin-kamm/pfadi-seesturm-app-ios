@@ -121,24 +121,12 @@ private struct PhotosGridContentView: View {
         .scrollDisabled(photosState.scrollingDisabled || selectedPhoto != nil)
         .fullScreenCover(item: $selectedPhoto) { photo in
             if case .success(let photos) = photosState, let index = photos.firstIndex(of: photo) {
-                NavigationStack(path: .constant(NavigationPath())) {
-                    let items = photos.map { photo in
-                        PhotoSliderViewItem(from: photo)
-                    }
-                    PhotoSliderView(
-                        mode: .multi(images: items, initialIndex: index)
-                    )
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Schliessen") {
-                                withAnimation {
-                                    selectedPhoto = nil
-                                }
-                            }
-                        }
-                    }
+                let items = photos.map { photo in
+                    PhotoSliderViewItem(from: photo)
                 }
-                .ignoresSafeArea()
+                PhotoSliderView(
+                    mode: .multi(images: items, initialIndex: index)
+                )
             }
         }
     }

@@ -16,15 +16,19 @@ struct EditProfileView: View {
     private let user: FirebaseHitobitoUser
     
     @State private var shouldShowFullscreenProfilePicture: Bool = false
-    private var showFullscreenProfilePicture: Binding<Bool> {
+    
+    private var fullscreenProfilePicture: Binding<PhotoSliderViewItem?> {
         Binding(
             get: {
-                shouldShowFullscreenProfilePicture && user.profilePictureUrl != nil
-            },
-            set: { isShown in
-                if !isShown {
-                    shouldShowFullscreenProfilePicture = false
+                if shouldShowFullscreenProfilePicture && user.profilePictureUrl != nil {
+                    PhotoSliderViewItem(from: user)
                 }
+                else {
+                    nil
+                }
+            },
+            set: { picture in
+                shouldShowFullscreenProfilePicture = picture != nil
             }
         )
     }
@@ -83,22 +87,8 @@ struct EditProfileView: View {
             }
             .ignoresSafeArea()
         }
-        .fullScreenCover(isPresented: showFullscreenProfilePicture) {
-            NavigationStack(path: .constant(NavigationPath())) {
-                if let item = PhotoSliderViewItem(from: user) {
-                    PhotoSliderView(mode: .single(image: item))
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Schliessen") {
-                                    withAnimation {
-                                        shouldShowFullscreenProfilePicture = false
-                                    }
-                                }
-                            }
-                        }
-                }
-            }
-            .ignoresSafeArea()
+        .fullScreenCover(item: fullscreenProfilePicture) { item in
+            PhotoSliderView(mode: .single(image: item))
         }
         .confirmationDialog("Möchtest du dein Profilbild wirklich löschen?", isPresented: $viewModel.showDeleteImageConfirmationDialog, titleVisibility: .visible) {
             Button("Abbrechen", role: .cancel) {}
