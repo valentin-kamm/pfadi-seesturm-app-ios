@@ -6,15 +6,12 @@
 //
 import SwiftUI
 
-struct GoogleCalendarEventWithAnAbmeldungen: Hashable {
+struct GoogleCalendarEventWithAnAbmeldungen: Hashable, Identifiable {
     var event: GoogleCalendarEvent
     var anAbmeldungen: [AktivitaetAnAbmeldung]
-}
-
-extension GoogleCalendarEventWithAnAbmeldungen {
-    func displayTextAnAbmeldungen(interaction: AktivitaetInteractionType) -> String {
-        let count = anAbmeldungen.count { $0.type == interaction }
-        return count == 1 ? "\(count) \(interaction.nomen)" : "\(count) \(interaction.nomenMehrzahl)"
+    
+    var id: String {
+        self.event.id
     }
 }
 

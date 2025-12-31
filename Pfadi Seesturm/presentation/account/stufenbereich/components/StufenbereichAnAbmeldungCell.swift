@@ -11,8 +11,8 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
     
     private let aktivitaet: GoogleCalendarEventWithAnAbmeldungen
     private let stufe: SeesturmStufe
-    private let selectedAktivitaetInteraction: Binding<AktivitaetInteractionType>
     private let isBearbeitenButtonLoading: Bool
+    private let onOpenSheet: (AktivitaetInteractionType) -> Void
     private let onSendPushNotification: () -> Void
     private let onDeleteAnAbmeldungen: () -> Void
     private let onEditAktivitaet: () -> Void
@@ -21,8 +21,8 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
     init(
         aktivitaet: GoogleCalendarEventWithAnAbmeldungen,
         stufe: SeesturmStufe,
-        selectedAktivitaetInteraction: Binding<AktivitaetInteractionType>,
         isBearbeitenButtonLoading: Bool,
+        onOpenSheet: @escaping (AktivitaetInteractionType) -> Void,
         onSendPushNotification: @escaping () -> Void,
         onDeleteAnAbmeldungen: @escaping () -> Void,
         onEditAktivitaet: @escaping () -> Void,
@@ -30,16 +30,18 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
     ) {
         self.aktivitaet = aktivitaet
         self.stufe = stufe
-        self.selectedAktivitaetInteraction = selectedAktivitaetInteraction
         self.isBearbeitenButtonLoading = isBearbeitenButtonLoading
+        self.onOpenSheet = onOpenSheet
         self.onSendPushNotification = onSendPushNotification
         self.onDeleteAnAbmeldungen = onDeleteAnAbmeldungen
         self.onEditAktivitaet = onEditAktivitaet
         self.displayNavigationDestination = displayNavigationDestination
     }
     
-    private var filteredAnAbmeldungen: [AktivitaetAnAbmeldung] {
-        aktivitaet.anAbmeldungen.filter { $0.type == selectedAktivitaetInteraction.wrappedValue }
+    private var anAbmeldungenCount: [AktivitaetInteractionType: Int] {
+        stufe.allowedAktivitaetInteractions.reduce(into: [:]) { result, type in
+            result[type] = aktivitaet.anAbmeldungen.filter { $0.type == type }.count
+        }
     }
     
     var body: some View {
@@ -52,10 +54,26 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                             .font(.callout)
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(aktivitaet.event.fullDateTimeFormatted)
+                        Label {
+                            Text(aktivitaet.event.fullDateTimeFormatted)
+                        } icon: {
+                            Image(systemName: "calendar.badge.clock")
+                                .foregroundStyle(stufe.highContrastColor)
+                        }
+                        .multilineTextAlignment(.leading)
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        if let ort = aktivitaet.event.location {
+                            Label {
+                                Text(ort)
+                            } icon: {
+                                Image(systemName: "location")
+                                    .foregroundStyle(stufe.highContrastColor)
+                            }
                             .multilineTextAlignment(.leading)
                             .font(.caption)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
                     stufe.icon
                         .resizable()
@@ -65,65 +83,18 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 HStack(alignment: .center, spacing: 8) {
-                    ForEach(stufe.allowedAktivitaetInteractions.sorted { $0.id < $1.id }) { interaction in
-                        Label(aktivitaet.displayTextAnAbmeldungen(interaction: interaction), systemImage: interaction.icon)
-                            .font(.caption)
-                            .lineLimit(1)
-                            .padding(8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.seesturmGray)
-                            )
-                            .labelStyle(.titleAndIcon)
-                            .foregroundStyle(interaction.color)
-                            .onTapGesture {
-                                withAnimation {
-                                    selectedAktivitaetInteraction.wrappedValue = interaction
-                                }
-                            }
-                    }
-                }
-                CustomCardView(shadowColor: .clear, backgroundColor: .seesturmGray) {
-                    switch filteredAnAbmeldungen.isEmpty {
-                    case true:
-                        Text("Keine \(selectedAktivitaetInteraction.wrappedValue.nomenMehrzahl)")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
-                            .font(.caption)
-                            .padding()
-                    default:
-                        VStack(alignment: .center, spacing: 16) {
-                            ForEach(Array(filteredAnAbmeldungen.sorted { $0.created > $1.created }.enumerated()), id: \.element.id) { index, abmeldung in
-                                
-                                if index > 0 {
-                                    Divider()
-                                }
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(abmeldung.displayName)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .multilineTextAlignment(.leading)
-                                        .fontWeight(.bold)
-                                        .font(.caption)
-                                    Label("\(abmeldung.type.taetigkeit): \(abmeldung.createdString)", systemImage: abmeldung.type.icon)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .multilineTextAlignment(.leading)
-                                        .font(.caption)
-                                        .foregroundStyle(abmeldung.type.color)
-                                        .labelStyle(.titleAndIcon)
-                                    Text(abmeldung.bemerkungForDisplay)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .multilineTextAlignment(.leading)
-                                        .font(.caption)
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding()
+                    ForEach(Array(anAbmeldungenCount).sorted { $0.key.id < $1.key.id }, id: \.key) { interaction, count in
+                        SeesturmButton(
+                            type: .secondary,
+                            action: .sync(action: { onOpenSheet(interaction) }),
+                            title: "\(count) \(count == 1 ? interaction.nomen : interaction.nomenMehrzahl)",
+                            icon: .system(name: interaction.icon),
+                            colors: .custom(contentColor: interaction.color, buttonColor: .seesturmGray),
+                            maxWidth: .infinity
+                        )
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
-                
                 DropdownButton(
                     items: [
                         DropdownItemImpl(
@@ -154,6 +125,7 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                             disabled: !aktivitaet.event.hasEnded || aktivitaet.anAbmeldungen.isEmpty
                         )
                     ],
+                    type: .primary,
                     title: "Bearbeiten",
                     icon: .system(name: "pencil"),
                     colors: .custom(contentColor: stufe.onHighContrastColor, buttonColor: stufe.highContrastColor),
@@ -180,11 +152,11 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
     StufenbereichAnAbmeldungCell(
         aktivitaet: GoogleCalendarEventWithAnAbmeldungen(
             event: DummyData.aktivitaet1,
-            anAbmeldungen: [DummyData.abmeldung1, DummyData.abmeldung2]
+            anAbmeldungen: [DummyData.abmeldung1, DummyData.abmeldung2, DummyData.abmeldung3]
         ),
         stufe: .biber,
-        selectedAktivitaetInteraction: .constant(.anmelden),
         isBearbeitenButtonLoading: true,
+        onOpenSheet: { _ in},
         onSendPushNotification: {},
         onDeleteAnAbmeldungen: {},
         onEditAktivitaet: {},
@@ -195,11 +167,11 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
     StufenbereichAnAbmeldungCell(
         aktivitaet: GoogleCalendarEventWithAnAbmeldungen(
             event: DummyData.aktivitaet1,
-            anAbmeldungen: [DummyData.abmeldung1, DummyData.abmeldung2]
+            anAbmeldungen: [DummyData.abmeldung1, DummyData.abmeldung2, DummyData.abmeldung3]
         ),
         stufe: .biber,
-        selectedAktivitaetInteraction: .constant(.abmelden),
         isBearbeitenButtonLoading: false,
+        onOpenSheet: { _ in},
         onSendPushNotification: {},
         onDeleteAnAbmeldungen: {},
         onEditAktivitaet: {},
@@ -212,9 +184,9 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
             event: DummyData.aktivitaet1,
             anAbmeldungen: []
         ),
-        stufe: .biber,
-        selectedAktivitaetInteraction: .constant(.abmelden),
+        stufe: .wolf,
         isBearbeitenButtonLoading: false,
+        onOpenSheet: { _ in},
         onSendPushNotification: {},
         onDeleteAnAbmeldungen: {},
         onEditAktivitaet: {},

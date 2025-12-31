@@ -36,27 +36,21 @@ class StufenbereichService: WordpressService {
         )
     }
     
-    func observeAnAbmeldungen(stufe: SeesturmStufe) -> AsyncStream<SeesturmResult<[AktivitaetAnAbmeldung], RemoteDatabaseError>> {
-        return firestoreRepository.observeCollection(
-            type: AktivitaetAnAbmeldungDto.self,
-            collection: .abmeldungen,
-            filter: { query in
-                query.whereField("stufenId", isEqualTo: stufe.id)
+    func fetchAnAbmeldungen(for aktivitaeten: [GoogleCalendarEvent], stufe: SeesturmStufe) async -> SeesturmResult<[AktivitaetAnAbmeldung], RemoteDatabaseError> {
+        
+        let eventIds = aktivitaeten.map { $0.id }
+        
+        do {
+            let abmeldungenDto: [AktivitaetAnAbmeldungDto] = try await firestoreRepository.readCollection(collection: .abmeldungen) { query in
+                query
+                    .whereField("stufenId", isEqualTo: stufe.id)
+                    .whereField("eventId", in: eventIds)
             }
-        ).map(transformAnAbmeldungenStream)
-    }
-    private func transformAnAbmeldungenStream(_ input: SeesturmResult<[AktivitaetAnAbmeldungDto], RemoteDatabaseError>) -> SeesturmResult<[AktivitaetAnAbmeldung], RemoteDatabaseError> {
-        switch input {
-        case .error(let e):
-            return .error(e)
-        case .success(let d):
-            do {
-                let abmeldungen = try d.map{ try $0.toAktivitaetAnAbmeldung()}
-                return .success(abmeldungen)
-            }
-            catch {
-                return .error(.decodingError)
-            }
+            let abmeldungen = try abmeldungenDto.map { try $0.toAktivitaetAnAbmeldung() }
+            return .success(abmeldungen)
+        }
+        catch {
+            return .error(.readingError)
         }
     }
     

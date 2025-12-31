@@ -7,23 +7,24 @@
 import Foundation
 
 struct GoogleCalendarEvent: Identifiable, Hashable {
-    var id: String
-    var title: String
-    var description: String?
-    var location: String?
-    var created: Date
-    var modified: Date
-    var createdFormatted: String
-    var modifiedFormatted: String
-    var isAllDay: Bool
-    var firstDayOfMonthOfStartDate: Date
-    var start: Date
-    var end: Date
-    var startDayFormatted: String
-    var startMonthFormatted: String
-    var endDateFormatted: String?
-    var timeFormatted: String
-    var fullDateTimeFormatted: String
+    let id: String
+    let title: String
+    let description: String?
+    let location: String?
+    let created: Date
+    let modified: Date
+    let createdFormatted: String
+    let modifiedFormatted: String
+    let isAllDay: Bool
+    let firstDayOfMonthOfStartDate: Date
+    let start: Date
+    let end: Date
+    let startDateFormatted: String
+    let startDayFormatted: String
+    let startMonthFormatted: String
+    let endDateFormatted: String?
+    let timeFormatted: String
+    let fullDateTimeFormatted: String
 }
 
 extension GoogleCalendarEvent {

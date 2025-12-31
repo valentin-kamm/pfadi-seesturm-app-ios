@@ -11,6 +11,7 @@ struct DropdownButton<T: DropdownItem>: View {
     
     private let items: [T]
     private let onItemClick: ((T) -> Void)?
+    private let type: SeesturmButtonType
     private let title: String?
     private let icon: SeesturmButtonIconType
     private let colors: SeesturmButtonColor
@@ -20,6 +21,7 @@ struct DropdownButton<T: DropdownItem>: View {
     init(
         items: [T],
         onItemClick: ((T) -> Void)? = nil,
+        type: SeesturmButtonType = .secondary,
         title: String?,
         icon: SeesturmButtonIconType = .system(name: "chevron.up.chevron.down"),
         colors: SeesturmButtonColor = .custom(contentColor: .SEESTURM_GREEN, buttonColor: .seesturmGray),
@@ -28,6 +30,7 @@ struct DropdownButton<T: DropdownItem>: View {
     ) {
         self.items = items
         self.onItemClick = onItemClick
+        self.type = type
         self.title = title
         self.icon = icon
         self.colors = colors
@@ -65,7 +68,7 @@ struct DropdownButton<T: DropdownItem>: View {
             }
         } label: {
             SeesturmButton(
-                type: .secondary,
+                type: type,
                 action: .none,
                 title: title,
                 icon: icon,

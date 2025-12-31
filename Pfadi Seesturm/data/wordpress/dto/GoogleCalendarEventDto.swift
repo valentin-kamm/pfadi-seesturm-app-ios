@@ -54,6 +54,12 @@ extension GoogleCalendarEventDto {
             firstDayOfMonthOfStartDate: try DateTimeUtil.shared.getFirstDayOfMonth(of: startDate),
             start: startDate,
             end: endDate,
+            startDateFormatted: DateTimeUtil.shared.formatDate(
+                date: startDate,
+                format: "dd. MMMM yyyy",
+                timeZone: targetDisplayTimezone,
+                type: .absolute
+            ),
             startDayFormatted: DateTimeUtil.shared.formatDate(
                 date: startDate,
                 format: "dd.",

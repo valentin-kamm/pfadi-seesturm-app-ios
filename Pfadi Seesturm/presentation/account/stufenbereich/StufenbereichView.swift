@@ -12,6 +12,26 @@ struct StufenbereichView: View {
     @Environment(\.accountModule) private var accountModule: AccountModule
     @EnvironmentObject private var appState: AppStateViewModel
     
+    @State private var sheetItem: AnAbmeldungenSheetContent? = nil
+    @State private var deleteAbmeldungenConfirmationDialogItem: GoogleCalendarEventWithAnAbmeldungen? = nil
+    private var showDeleteAbmeldungenConfirmationDialog: Binding<Bool> {
+        Binding(
+            get: { deleteAbmeldungenConfirmationDialogItem != nil },
+            set: { isShown in
+                if !isShown { deleteAbmeldungenConfirmationDialogItem = nil }
+            }
+        )
+    }
+    @State private var sendPushNotificationConfirmationDialogItem: GoogleCalendarEventWithAnAbmeldungen? = nil
+    private var showSendPushNotificationConfirmationDialog: Binding<Bool> {
+        Binding(
+            get: { sendPushNotificationConfirmationDialogItem != nil },
+            set: { isShown in
+                if !isShown { sendPushNotificationConfirmationDialogItem = nil }
+            }
+        )
+    }
+    
     @State private var viewModel: StufenbereichViewModel
     private let stufe: SeesturmStufe
     
@@ -26,25 +46,20 @@ struct StufenbereichView: View {
     var body: some View {
         StufenbereichContentView(
             stufe: stufe,
-            abmeldungenState: viewModel.abmeldungenState,
+            abmeldungenState: viewModel.state,
             deleteAllAbmeldungenState: viewModel.deleteAllAbmeldungenState,
-            onGetAktivitaetenRetry: {
+            onRetry: {
                 Task {
-                    await viewModel.getAktivitaeten(isPullToRefresh: false)
+                    await viewModel.loadData(isPullToRefresh: false, force: true)
                 }
             },
             selectedDate: $viewModel.selectedDate,
-            selectedAktivitaetInteraction: $viewModel.selectedAktivitaetInteraction,
             isEditButtonLoading: viewModel.isEditButtonLoading,
             onSendPushNotification: { event in
-                Task {
-                    await viewModel.sendPushNotification(aktivitaet: event)
-                }
+                sendPushNotificationConfirmationDialogItem = event
             },
             onDeleteAnAbmeldungenForAktivitaet: { event in
-                Task {
-                    await viewModel.deleteAnAbmeldungenForAktivitaet(aktivitaet: event)
-                }
+                deleteAbmeldungenConfirmationDialogItem = event
             },
             onEditAktivitaet: { event in
                 appState.appendToNavigationPath(
@@ -55,20 +70,33 @@ struct StufenbereichView: View {
                     )
                 )
             },
-            showDeleteAllAbmeldungenConfirmationDialog: $viewModel.showDeleteAllAbmeldungenConfirmationDialog
+            showDeleteAllAbmeldungenConfirmationDialog: $viewModel.showDeleteAllAbmeldungenConfirmationDialog,
+            onOpenAnAbmeldungenSheet: {
+                self.sheetItem = $0
+            }
         )
         .task {
-            await viewModel.loadData()
+            await viewModel.loadData(isPullToRefresh: false, force: false)
         }
         .refreshable {
             await viewModel.refresh()
         }
-        .confirmationDialog("Die An- und Abmeldungen der ausgewählten Aktivität werden gelöscht. Fortfahren?", isPresented: $viewModel.showDeleteAbmeldungenConfirmationDialog, titleVisibility: .visible) {
-            Button("Abbrechen", role: .cancel) {
-                viewModel.deleteAbmeldungenContinuation?.resume(returning: false)
-            }
+        .confirmationDialog("Die An- und Abmeldungen der ausgewählten Aktivität werden gelöscht. Fortfahren?", isPresented: showDeleteAbmeldungenConfirmationDialog, titleVisibility: .visible, presenting: deleteAbmeldungenConfirmationDialogItem
+        ) { aktivitaet in
+            Button("Abbrechen", role: .cancel) {}
             Button("Löschen", role: .destructive) {
-                viewModel.deleteAbmeldungenContinuation?.resume(returning: true)
+                Task {
+                    await viewModel.deleteAnAbmeldungen(for: aktivitaet)
+                }
+            }
+        }
+        .confirmationDialog("Für die ausgewählte Aktivität wird eine Push-Nachricht versendet. Fortfahren?", isPresented: showSendPushNotificationConfirmationDialog, titleVisibility: .visible, presenting: sendPushNotificationConfirmationDialogItem)
+        { aktivitaet in
+            Button("Abbrechen", role: .cancel) {}
+            Button("Senden", role: .destructive) {
+                Task {
+                    await viewModel.sendPushNotification(for: aktivitaet)
+                }
             }
         }
         .confirmationDialog("Die An- und Abmeldungen aller vergangenen Aktivitäten werden gelöscht. Fortfahren?", isPresented: $viewModel.showDeleteAllAbmeldungenConfirmationDialog, titleVisibility: .visible) {
@@ -81,13 +109,13 @@ struct StufenbereichView: View {
                 }
             }
         }
-        .confirmationDialog("Für die ausgewählte Aktivität wird eine Push-Nachricht versendet. Fortfahren?", isPresented: $viewModel.showSendPushNotificationConfirmationDialog, titleVisibility: .visible) {
-            Button("Abbrechen", role: .cancel) {
-                viewModel.sendPushNotificationContinuation?.resume(returning: false)
-            }
-            Button("Senden", role: .destructive) {
-                viewModel.sendPushNotificationContinuation?.resume(returning: true)
-            }
+        .sheet(item: $sheetItem) { item in
+            StufenbereichAnAbmeldungSheet(
+                initialInteraction: item.type,
+                aktivitaet: item.event,
+                stufe: stufe
+            )
+            .presentationDetents([.medium, .large])
         }
         .actionSnackbar(
             action: $viewModel.deleteAbmeldungenState,
@@ -136,39 +164,39 @@ private struct StufenbereichContentView: View {
     private let stufe: SeesturmStufe
     private let abmeldungenState: UiState<[GoogleCalendarEventWithAnAbmeldungen]>
     private let deleteAllAbmeldungenState: ActionState<Void>
-    private let onGetAktivitaetenRetry: () -> Void
+    private let onRetry: () -> Void
     private let selectedDate: Binding<Date>
-    private let selectedAktivitaetInteraction: Binding<AktivitaetInteractionType>
     private let isEditButtonLoading: (GoogleCalendarEventWithAnAbmeldungen) -> Bool
     private let onSendPushNotification: (GoogleCalendarEventWithAnAbmeldungen) -> Void
     private let onDeleteAnAbmeldungenForAktivitaet: (GoogleCalendarEventWithAnAbmeldungen) -> Void
     private let onEditAktivitaet: (GoogleCalendarEventWithAnAbmeldungen) -> Void
     private let showDeleteAllAbmeldungenConfirmationDialog: Binding<Bool>
+    private let onOpenAnAbmeldungenSheet: (AnAbmeldungenSheetContent) -> Void
     
     init(
         stufe: SeesturmStufe,
         abmeldungenState: UiState<[GoogleCalendarEventWithAnAbmeldungen]>,
         deleteAllAbmeldungenState: ActionState<Void>,
-        onGetAktivitaetenRetry: @escaping () -> Void,
+        onRetry: @escaping () -> Void,
         selectedDate: Binding<Date>,
-        selectedAktivitaetInteraction: Binding<AktivitaetInteractionType>,
         isEditButtonLoading: @escaping (GoogleCalendarEventWithAnAbmeldungen) -> Bool,
         onSendPushNotification: @escaping (GoogleCalendarEventWithAnAbmeldungen) -> Void,
         onDeleteAnAbmeldungenForAktivitaet: @escaping (GoogleCalendarEventWithAnAbmeldungen) -> Void,
         onEditAktivitaet: @escaping (GoogleCalendarEventWithAnAbmeldungen) -> Void,
-        showDeleteAllAbmeldungenConfirmationDialog: Binding<Bool>
+        showDeleteAllAbmeldungenConfirmationDialog: Binding<Bool>,
+        onOpenAnAbmeldungenSheet: @escaping (AnAbmeldungenSheetContent) -> Void
     ) {
         self.stufe = stufe
         self.abmeldungenState = abmeldungenState
         self.deleteAllAbmeldungenState = deleteAllAbmeldungenState
-        self.onGetAktivitaetenRetry = onGetAktivitaetenRetry
+        self.onRetry = onRetry
         self.selectedDate = selectedDate
-        self.selectedAktivitaetInteraction = selectedAktivitaetInteraction
         self.isEditButtonLoading = isEditButtonLoading
         self.onSendPushNotification = onSendPushNotification
         self.onDeleteAnAbmeldungenForAktivitaet = onDeleteAnAbmeldungenForAktivitaet
         self.onEditAktivitaet = onEditAktivitaet
         self.showDeleteAllAbmeldungenConfirmationDialog = showDeleteAllAbmeldungenConfirmationDialog
+        self.onOpenAnAbmeldungenSheet = onOpenAnAbmeldungenSheet
     }
     
     var body: some View {
@@ -189,20 +217,6 @@ private struct StufenbereichContentView: View {
                     .font(.callout)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color.secondary)
-                    if (stufe.allowedAktivitaetInteractions.count > 1) {
-                        Picker("An-/Abmeldung", selection: selectedAktivitaetInteraction) {
-                            ForEach(stufe.allowedAktivitaetInteractions) { interaction in
-                                Label(interaction.nomenMehrzahl, systemImage: interaction.icon)
-                                    .labelStyle(.titleAndIcon)
-                                    .tag(interaction)
-                                    .tint(interaction.color)
-                            }
-                        }
-                        .disabled(!abmeldungenState.isSuccess)
-                        .tint(selectedAktivitaetInteraction.wrappedValue.color)
-                        .pickerStyle(.menu)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical)
@@ -210,7 +224,7 @@ private struct StufenbereichContentView: View {
             switch abmeldungenState {
             case .loading(_):
                 ForEach(0..<6) { index in
-                    StufenbereichAnAbmeldungLoadingCell()
+                    StufenbereichAnAbmeldungLoadingCell(stufe: stufe)
                         .padding(.top, index == 0 ? 16 : 0)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets())
@@ -219,7 +233,7 @@ private struct StufenbereichContentView: View {
             case .error(let message):
                 ErrorCardView(
                     errorDescription: message,
-                    action: .async(action: onGetAktivitaetenRetry)
+                    action: .async(action: onRetry)
                 )
                 .padding(.top)
                 .listRowSeparator(.hidden)
@@ -251,8 +265,15 @@ private struct StufenbereichContentView: View {
                                 StufenbereichAnAbmeldungCell(
                                     aktivitaet: event,
                                     stufe: stufe,
-                                    selectedAktivitaetInteraction: selectedAktivitaetInteraction,
                                     isBearbeitenButtonLoading: isEditButtonLoading(event),
+                                    onOpenSheet: { interaction in
+                                        onOpenAnAbmeldungenSheet(
+                                            AnAbmeldungenSheetContent(
+                                                event: event,
+                                                type: interaction
+                                            )
+                                        )
+                                    },
                                     onSendPushNotification: {
                                         onSendPushNotification(event)
                                     },
@@ -320,6 +341,15 @@ private struct StufenbereichContentView: View {
                 )
             }
         }
+        
+    }
+}
+
+private struct AnAbmeldungenSheetContent: Identifiable {
+    let event: GoogleCalendarEventWithAnAbmeldungen
+    let type: AktivitaetInteractionType
+    var id: String {
+        event.event.id
     }
 }
 
@@ -329,14 +359,14 @@ private struct StufenbereichContentView: View {
             stufe: .biber,
             abmeldungenState: .loading(subState: .loading),
             deleteAllAbmeldungenState: .loading(action: ()),
-            onGetAktivitaetenRetry: {},
+            onRetry: {},
             selectedDate: .constant(Date()),
-            selectedAktivitaetInteraction: .constant(.abmelden),
             isEditButtonLoading: { _ in false },
             onSendPushNotification: { _ in },
             onDeleteAnAbmeldungenForAktivitaet: { _ in },
             onEditAktivitaet: { _ in },
-            showDeleteAllAbmeldungenConfirmationDialog: .constant(false)
+            showDeleteAllAbmeldungenConfirmationDialog: .constant(false),
+            onOpenAnAbmeldungenSheet: { _ in }
         )
     }
 }
@@ -346,14 +376,14 @@ private struct StufenbereichContentView: View {
             stufe: .biber,
             abmeldungenState: .error(message: "Schwerer Fehler"),
             deleteAllAbmeldungenState: .idle,
-            onGetAktivitaetenRetry: {},
+            onRetry: {},
             selectedDate: .constant(Date()),
-            selectedAktivitaetInteraction: .constant(.abmelden),
             isEditButtonLoading: { _ in false },
             onSendPushNotification: { _ in },
             onDeleteAnAbmeldungenForAktivitaet: { _ in },
             onEditAktivitaet: { _ in },
-            showDeleteAllAbmeldungenConfirmationDialog: .constant(false)
+            showDeleteAllAbmeldungenConfirmationDialog: .constant(false),
+            onOpenAnAbmeldungenSheet: { _ in }
         )
     }
 }
@@ -363,14 +393,14 @@ private struct StufenbereichContentView: View {
             stufe: .biber,
             abmeldungenState: .success(data: []),
             deleteAllAbmeldungenState: .idle,
-            onGetAktivitaetenRetry: {},
+            onRetry: {},
             selectedDate: .constant(Date()),
-            selectedAktivitaetInteraction: .constant(.abmelden),
             isEditButtonLoading: { _ in false },
             onSendPushNotification: { _ in },
             onDeleteAnAbmeldungenForAktivitaet: { _ in },
             onEditAktivitaet: { _ in },
-            showDeleteAllAbmeldungenConfirmationDialog: .constant(false)
+            showDeleteAllAbmeldungenConfirmationDialog: .constant(false),
+            onOpenAnAbmeldungenSheet: { _ in }
         )
     }
 }
@@ -389,14 +419,14 @@ private struct StufenbereichContentView: View {
                 )
             ]),
             deleteAllAbmeldungenState: .loading(action: ()),
-            onGetAktivitaetenRetry: {},
+            onRetry: {},
             selectedDate: .constant(DummyData.oldDate),
-            selectedAktivitaetInteraction: .constant(.abmelden),
             isEditButtonLoading: { _ in false },
             onSendPushNotification: { _ in },
             onDeleteAnAbmeldungenForAktivitaet: { _ in },
             onEditAktivitaet: { _ in },
-            showDeleteAllAbmeldungenConfirmationDialog: .constant(false)
+            showDeleteAllAbmeldungenConfirmationDialog: .constant(false),
+            onOpenAnAbmeldungenSheet: { _ in }
         )
     }
 }

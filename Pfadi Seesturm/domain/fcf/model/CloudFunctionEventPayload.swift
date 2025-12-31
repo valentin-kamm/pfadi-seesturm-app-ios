@@ -73,6 +73,12 @@ extension CloudFunctionEventPayload {
             firstDayOfMonthOfStartDate: try DateTimeUtil.shared.getFirstDayOfMonth(of: start),
             start: start,
             end: end,
+            startDateFormatted: DateTimeUtil.shared.formatDate(
+                date: start,
+                format: "dd. MMMM yyyy",
+                timeZone: targetDisplayTimezone,
+                type: .absolute
+            ),
             startDayFormatted: DateTimeUtil.shared.formatDate(
                 date: start,
                 format: "dd.",

@@ -97,7 +97,7 @@ class SchoepflialarmService {
         do {
         
             // check that user does not have a reaction yet
-            let currentReactions: [SchoepflialarmReactionDto] = try await firestoreRepository.readCollection(collection: .schopflialarmReactions)
+            let currentReactions: [SchoepflialarmReactionDto] = try await firestoreRepository.readCollection(collection: .schopflialarmReactions, filter: nil)
             guard !currentReactions.map({$0.userId}).contains(user.userId) else {
                 return .error(.savingError)
             }

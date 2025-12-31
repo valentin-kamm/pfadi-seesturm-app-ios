@@ -9,16 +9,24 @@ import SwiftUI
 
 struct StufenbereichAnAbmeldungLoadingCell: View {
     
+    private let stufe: SeesturmStufe
+    
+    init(
+        stufe: SeesturmStufe
+    ) {
+        self.stufe = stufe
+    }
+    
     var body: some View {
         CustomCardView(shadowColor: .seesturmGreenCardViewShadowColor) {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .center, spacing: 16) {
+                HStack(alignment: .top, spacing: 16) {
                     Text(Constants.PLACEHOLDER_TEXT)
                         .multilineTextAlignment(.leading)
                         .font(.title)
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .lineLimit(1)
+                        .lineLimit(2)
                         .redacted(reason: .placeholder)
                         .loadingBlinking()
                     Circle()
@@ -27,23 +35,29 @@ struct StufenbereichAnAbmeldungLoadingCell: View {
                         .loadingBlinking()
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
-                Label("Abmeldungen", systemImage: AktivitaetInteractionType.abmelden.icon)
-                    .font(.caption)
-                    .opacity(0)
-                    .lineLimit(1)
-                    .padding(8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.skeletonPlaceholderColor)
-                    )
-                    .labelStyle(.titleAndIcon)
-                    .loadingBlinking()
-                Rectangle()
-                    .fill(Color.skeletonPlaceholderColor)
-                    .frame(height: 150)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .cornerRadius(16)
-                    .loadingBlinking()
+                HStack(alignment: .center, spacing: 8) {
+                    ForEach(stufe.allowedAktivitaetInteractions.sorted { $0.id < $1.id }) { _ in
+                        SeesturmButton(
+                            type: .secondary,
+                            action: .none,
+                            title: "",
+                            colors: .custom(contentColor: .clear, buttonColor: .skeletonPlaceholderColor),
+                            disabled: true,
+                            maxWidth: .infinity,
+                            disabledAlpha: 1
+                        )
+                        .loadingBlinking()
+                    }
+                }
+                SeesturmButton(
+                    type: .primary,
+                    action: .none,
+                    title: "Bearbeiten",
+                    icon: .system(name: "pencil"),
+                    colors: .custom(contentColor: stufe.onHighContrastColor, buttonColor: stufe.highContrastColor),
+                    disabled: true
+                )
+                .frame(maxWidth: .infinity, alignment: .center)
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
@@ -54,5 +68,20 @@ struct StufenbereichAnAbmeldungLoadingCell: View {
 }
 
 #Preview {
-    StufenbereichAnAbmeldungLoadingCell()
+    VStack(spacing: 16) {
+        StufenbereichAnAbmeldungCell(
+            aktivitaet: GoogleCalendarEventWithAnAbmeldungen(
+                event: DummyData.aktivitaet1,
+                anAbmeldungen: [DummyData.abmeldung1, DummyData.abmeldung2, DummyData.abmeldung3]
+            ),
+            stufe: .biber,
+            isBearbeitenButtonLoading: true,
+            onOpenSheet: { _ in},
+            onSendPushNotification: {},
+            onDeleteAnAbmeldungen: {},
+            onEditAktivitaet: {},
+            displayNavigationDestination: AccountNavigationDestination.anlaesse
+        )
+        StufenbereichAnAbmeldungLoadingCell(stufe: .biber)
+    }
 }

@@ -118,6 +118,7 @@ enum RemoteDatabaseError: DataError {
     case readingError
     case documentDoesNotExist
     case deletingError
+    case cancelled
     case unknown
     
     var defaultMessage: String {
@@ -132,6 +133,8 @@ enum RemoteDatabaseError: DataError {
             "Dokument existiert nicht."
         case .deletingError:
             "Dokument konnte nicht gelöscht werden."
+        case .cancelled:
+            "Die Operation wurde abgebrochen."
         case .unknown:
             "Unbekannter Fehler beim Bearbeiten der Daten."
         }

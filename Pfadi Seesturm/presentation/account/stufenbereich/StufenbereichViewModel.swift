@@ -11,32 +11,6 @@ import Observation
 @MainActor
 class StufenbereichViewModel {
     
-    var anAbmeldungenState: UiState<[AktivitaetAnAbmeldung]> = .loading(subState: .idle)
-    var aktivitaetenState: UiState<[GoogleCalendarEvent]> = .loading(subState: .idle)
-    var deleteAbmeldungenState: ActionState<GoogleCalendarEventWithAnAbmeldungen> = .idle
-    var deleteAllAbmeldungenState: ActionState<Void> = .idle
-    var sendPushNotificationState: ActionState<GoogleCalendarEvent> = .idle
-    private var _selectedDate: Date = {
-        let calendar = Calendar.current
-        let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: Date()) ?? calendar.startOfDay(for: Date())
-        let threeMonthsAgoAtMidnight = calendar.startOfDay(for: threeMonthsAgo)
-        return threeMonthsAgoAtMidnight
-    }()
-    var selectedAktivitaetInteraction: AktivitaetInteractionType = .abmelden
-    var showDeleteAllAbmeldungenConfirmationDialog: Bool = false
-    var showDeleteAbmeldungenConfirmationDialog: Bool = false
-    var showSendPushNotificationConfirmationDialog: Bool = false
-    
-    var selectedDate: Date {
-        get { _selectedDate }
-        set {
-            _selectedDate = newValue
-            Task {
-                await reloadAktivitaetenIfNecessary()
-            }
-        }
-    }
-    
     private let stufe: SeesturmStufe
     private let service: StufenbereichService
     
@@ -48,12 +22,10 @@ class StufenbereichViewModel {
         self.service = service
     }
     
-    private var hasLoadedInitialAnAbmeldungen = false
-    
-    var deleteAbmeldungenContinuation: CheckedContinuation<Bool, Never>?
-    var sendPushNotificationContinuation: CheckedContinuation<Bool, Never>?
-    
-    var abmeldungenState: UiState<[GoogleCalendarEventWithAnAbmeldungen]> {
+    // loading data
+    private var anAbmeldungenState: UiState<[AktivitaetAnAbmeldung]> = .loading(subState: .idle)
+    private var aktivitaetenState: UiState<[GoogleCalendarEvent]> = .loading(subState: .idle)
+    var state: UiState<[GoogleCalendarEventWithAnAbmeldungen]> {
         switch aktivitaetenState {
         case .loading(let aktivitaetenSubState):
             return .loading(subState: aktivitaetenSubState)
@@ -64,199 +36,213 @@ class StufenbereichViewModel {
             switch anAbmeldungenState {
             case .loading(let abmeldungenSubState):
                 return .loading(subState: abmeldungenSubState)
-            case .error(message: let abmeldungenMessage):
+            case .error(let abmeldungenMessage):
                 return .error(message: abmeldungenMessage)
-            case .success(data: let abmeldungen):
+            case .success(let abmeldungen):
                 let combined = aktivitaeten.map { $0.toAktivitaetWithAnAbmeldungen(anAbmeldungen: abmeldungen) }
                 return .success(data: combined)
             }
         }
     }
-    private var mustReloadAktivitaeten: Bool {
-        if case .success(let aktivitaeten) = aktivitaetenState {
-            let endDates = aktivitaeten.map { $0.end }
-            if let oldestEndDate = endDates.min(), !endDates.isEmpty {
-                return _selectedDate < oldestEndDate
-            }
-            // array is empty, always reload
-            return true
-        }
-        return false
-    }
+    
+    // action on single event
+    var deleteAbmeldungenState: ActionState<GoogleCalendarEventWithAnAbmeldungen> = .idle
+    var sendPushNotificationState: ActionState<GoogleCalendarEventWithAnAbmeldungen> = .idle
     func isEditButtonLoading(aktivitaet: GoogleCalendarEventWithAnAbmeldungen) -> Bool {
-        
         if case .loading(let event) = deleteAbmeldungenState, aktivitaet == event {
             return true
         }
-        if case .loading(let event) = sendPushNotificationState, aktivitaet.event == event {
+        if case .loading(let event) = sendPushNotificationState, aktivitaet == event {
             return true
         }
         return false
     }
     
-    func loadData() async {
-        
-        var tasks: [() async -> Void] = []
-        
-        if aktivitaetenState.taskShouldRun {
-            tasks.append {
-                await self.getAktivitaeten(isPullToRefresh: false)
+    // global actions
+    var deleteAllAbmeldungenState: ActionState<Void> = .idle
+    var showDeleteAllAbmeldungenConfirmationDialog: Bool = false
+    
+    // other state
+    private var _selectedDate: Date = {
+        let calendar = Calendar.current
+        let todayAtMidnight = calendar.startOfDay(for: Date())
+        let threeMonthsAgoAtMidnight = calendar.date(byAdding: .month, value: -3, to: todayAtMidnight) ?? todayAtMidnight
+        return threeMonthsAgoAtMidnight
+    }()
+    var selectedDate: Date {
+        get { _selectedDate }
+        set {
+            // react to events where a new date is set
+            _selectedDate = newValue
+            Task {
+                await reloadDataIfNecessary()
             }
         }
-        tasks.append {
-            await self.observeAnAbmeldungen()
+    }
+    private var mustReloadData: Bool {
+        // when selecting a new date in the date picker, this variable determines if the data must be fetched again or not
+        if case .success(let aktivitaeten) = aktivitaetenState {
+            // get all end dates
+            let endDates = aktivitaeten.map { $0.end }
+            if let oldestEndDate = endDates.min(), !endDates.isEmpty {
+                // if the oldest end date is after the selected date, reload the data
+                return _selectedDate < oldestEndDate
+            }
+            // array is empty, always reload since we have no end dates to compare against
+            return true
+        }
+        // data is still loading, do not reload
+        return false
+    }
+}
+
+extension StufenbereichViewModel {
+    
+    func loadData(isPullToRefresh: Bool, force: Bool) async {
+        
+        let shouldLoadData = aktivitaetenState.taskShouldRun || anAbmeldungenState.taskShouldRun || force
+        
+        guard shouldLoadData else {
+            return
         }
         
-        await withTaskGroup(of: Void.self) { group in
-            for task in tasks {
-                group.addTask {
-                    await task()
-                }
-            }
+        await getAktivitaeten(isPullToRefresh: isPullToRefresh)
+        
+        guard case .success(let aktivitaeten) = aktivitaetenState else {
+            return
         }
+        
+        await getAnAbmeldungen(for: aktivitaeten, isPullToRefresh: isPullToRefresh)
+    }
+    
+    private func reloadDataIfNecessary() async {
+        
+        guard mustReloadData else { return }
+        await loadData(isPullToRefresh: false, force: true)
     }
     
     func refresh() async {
-        await getAktivitaeten(isPullToRefresh: true)
+        await loadData(isPullToRefresh: true, force: true)
     }
     
-    private func reloadAktivitaetenIfNecessary() async {
-        if mustReloadAktivitaeten {
-            await getAktivitaeten(isPullToRefresh: false)
-        }
-    }
-    
-    func getAktivitaeten(isPullToRefresh: Bool) async {
+    private func getAktivitaeten(isPullToRefresh: Bool) async {
         
         if !isPullToRefresh {
             withAnimation {
-                aktivitaetenState = .loading(subState: .loading)
+                self.aktivitaetenState = .loading(subState: .loading)
             }
         }
+        
         let result = await service.fetchEvents(stufe: stufe, timeMin: _selectedDate)
+        
         switch result {
         case .error(let e):
             switch e {
             case .cancelled:
                 withAnimation {
-                    aktivitaetenState = .loading(subState: .retry)
+                    self.aktivitaetenState = .loading(subState: .retry)
                 }
             default:
                 withAnimation {
-                    aktivitaetenState = .error(message: "Aktivitäten der \(stufe.name) konnten nicht geladen werden. \(e.defaultMessage)")
+                    self.aktivitaetenState = .error(message: "Aktivitäten der \(stufe.name) konnten nicht geladen werden. \(e.defaultMessage)")
                 }
             }
         case .success(let d):
             withAnimation {
-                aktivitaetenState = .success(data: d)
+                self.aktivitaetenState = .success(data: d)
             }
         }
     }
     
-    private func observeAnAbmeldungen() async {
-        if !hasLoadedInitialAnAbmeldungen {
+    private func getAnAbmeldungen(for aktivitaeten: [GoogleCalendarEvent], isPullToRefresh: Bool) async {
+        
+        if !isPullToRefresh {
             withAnimation {
-                anAbmeldungenState = .loading(subState: .loading)
+                self.anAbmeldungenState = .loading(subState: .loading)
             }
         }
-        for await result in service.observeAnAbmeldungen(stufe: stufe) {
-            if !hasLoadedInitialAnAbmeldungen {
-                hasLoadedInitialAnAbmeldungen = true
+        
+        let result = await service.fetchAnAbmeldungen(for: aktivitaeten, stufe: stufe)
+        
+        switch result {
+        case .error(let e):
+            switch e {
+            case .cancelled:
+                withAnimation {
+                    self.anAbmeldungenState = .loading(subState: .retry)
+                }
+            default:
+                withAnimation {
+                    self.anAbmeldungenState = .error(message: "An- und Abmeldungen konnten nicht geladen werden. \(e.defaultMessage)")
+                }
             }
-            switch result {
-            case .error(let e):
-                withAnimation {
-                    anAbmeldungenState = .error(message: "An- und Abmeldungen konnten nicht geladen werden. \(e.defaultMessage)")
-                }
-            case .success(let d):
-                withAnimation {
-                    anAbmeldungenState = .success(data: d)
-                }
+        case .success(let d):
+            withAnimation {
+                self.anAbmeldungenState = .success(data: d)
             }
         }
     }
     
-    func deleteAnAbmeldungenForAktivitaet(aktivitaet: GoogleCalendarEventWithAnAbmeldungen) async {
-        
-        let isConfirmed = await withCheckedContinuation { continuation in
-            self.deleteAbmeldungenContinuation = continuation
-            withAnimation {
-                showDeleteAbmeldungenConfirmationDialog = true
-            }
-        }
-        
-        deleteAbmeldungenContinuation = nil
-        
-        guard isConfirmed == true else {
-            return
-        }
+    func deleteAnAbmeldungen(for aktivitaet: GoogleCalendarEventWithAnAbmeldungen) async {
         
         withAnimation {
-            deleteAbmeldungenState = .loading(action: aktivitaet)
+            self.deleteAbmeldungenState = .loading(action: aktivitaet)
         }
         
         let result = await service.deleteAnAbmeldungen(for: aktivitaet)
+        
         switch result {
         case .error(let e):
             withAnimation {
-                deleteAbmeldungenState = .error(action: aktivitaet, message: "An- und Abmeldungen für \(aktivitaet.event.title) konnten nicht gelöscht werden. \(e.defaultMessage)")
+                self.deleteAbmeldungenState = .error(action: aktivitaet, message: "An- und Abmeldungen für \(aktivitaet.event.title) konnten nicht gelöscht werden. \(e.defaultMessage)")
             }
         case .success(_):
             withAnimation {
-                deleteAbmeldungenState = .success(action: aktivitaet, message: "An- und Abmeldungen für \(aktivitaet.event.title) erfolgreich gelöscht.")
+                self.deleteAbmeldungenState = .success(action: aktivitaet, message: "An- und Abmeldungen für \(aktivitaet.event.title) erfolgreich gelöscht.")
             }
         }
     }
     
-    func sendPushNotification(aktivitaet: GoogleCalendarEventWithAnAbmeldungen) async {
-        
-        let isConfirmed = await withCheckedContinuation { continuation in
-            self.sendPushNotificationContinuation = continuation
-            withAnimation {
-                showSendPushNotificationConfirmationDialog = true
-            }
-        }
-        
-        sendPushNotificationContinuation = nil
-        
-        guard isConfirmed == true else {
-            return
-        }
+    func sendPushNotification(for aktivitaet: GoogleCalendarEventWithAnAbmeldungen) async {
         
         withAnimation {
-            sendPushNotificationState = .loading(action: aktivitaet.event)
+            self.sendPushNotificationState = .loading(action: aktivitaet)
         }
         
         let result = await service.sendPushNotification(for: stufe, for: aktivitaet.event)
+        
         switch result {
         case .error(let e):
             withAnimation {
-                sendPushNotificationState = .error(action: aktivitaet.event, message: "Push-Nachricht für \(aktivitaet.event.title) konnte nicht gesendet werden. \(e.defaultMessage)")
+                self.sendPushNotificationState = .error(action: aktivitaet, message: "Push-Nachricht für \(aktivitaet.event.title) konnte nicht gesendet werden. \(e.defaultMessage)")
             }
         case .success(_):
             withAnimation {
-                sendPushNotificationState = .success(action: aktivitaet.event, message: "Push-Nachricht für \(aktivitaet.event.title) erfolgreich gesendet.")
+                self.sendPushNotificationState = .success(action: aktivitaet, message: "Push-Nachricht für \(aktivitaet.event.title) erfolgreich gesendet.")
             }
         }
     }
     
     func deleteAllAnAbmeldungen() async {
         
-        if case .success(let data) = anAbmeldungenState {
-            
+        guard case .success(let data) = anAbmeldungenState else {
+            return
+        }
+        
+        withAnimation {
+            self.deleteAllAbmeldungenState = .loading(action: ())
+        }
+        
+        let result = await service.deleteAllPastAnAbmeldungen(stufe: stufe, anAbmeldungen: data)
+        
+        switch result {
+        case .error(let e):
             withAnimation {
-                deleteAllAbmeldungenState = .loading(action: ())
+                self.deleteAllAbmeldungenState = .error(action: (), message: "An- und Abmeldungen konnten nicht gelöscht werden. \(e.defaultMessage)")
             }
-            let result = await service.deleteAllPastAnAbmeldungen(stufe: stufe, anAbmeldungen: data)
-            switch result {
-            case .error(let e):
-                withAnimation {
-                    deleteAllAbmeldungenState = .error(action: (), message: "An- und Abmeldungen konnten nicht gelöscht werden. \(e.defaultMessage)")
-                }
-            case .success(_):
-                withAnimation {
-                    deleteAllAbmeldungenState = .success(action: (), message: "Vergangene An- und Abmeldungen für die \(stufe.name) erfolgreich gelöscht.")
-                }
+        case .success(_):
+            withAnimation {
+                self.deleteAllAbmeldungenState = .success(action: (), message: "Vergangene An- und Abmeldungen für die \(stufe.name) erfolgreich gelöscht.")
             }
         }
     }
