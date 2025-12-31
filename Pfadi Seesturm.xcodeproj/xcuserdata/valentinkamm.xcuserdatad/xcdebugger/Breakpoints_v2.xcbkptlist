@@ -12322,36 +12322,6 @@
             endingLineNumber = "121"
             landmarkName = "reloadDataIfNecessary()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A1201B87-F78D-45D3-BCCD-80B3B26B3FF8 - 2cff4fa50fe8c15a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for Pfadi_Seesturm.StufenbereichViewModel.reloadDataIfNecessary() async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
-               </Location>
-               <Location
-                  uuid = "A1201B87-F78D-45D3-BCCD-80B3B26B3FF8 - 98d944de0fdea232"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for Pfadi_Seesturm.StufenbereichViewModel.reloadDataIfNecessary() async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -12368,36 +12338,6 @@
             endingLineNumber = "125"
             landmarkName = "refresh()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0B4CE3E8-510F-4E51-99B4-091BB5D85EC1 - 90ccca5474258a6c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for Pfadi_Seesturm.StufenbereichViewModel.refresh() async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125">
-               </Location>
-               <Location
-                  uuid = "0B4CE3E8-510F-4E51-99B4-091BB5D85EC1 - 6bb85feb7680b3d7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for Pfadi_Seesturm.StufenbereichViewModel.refresh() async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -12542,36 +12482,6 @@
             endingLineNumber = "115"
             landmarkName = "loadData(isPullToRefresh:force:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "34F63D70-57BA-4AA1-B03C-B9401FFFBF70 - 44453d8a6385729e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.StufenbereichViewModel.loadData(isPullToRefresh: Swift.Bool, force: Swift.Bool) async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "115"
-                  endingLineNumber = "115">
-               </Location>
-               <Location
-                  uuid = "34F63D70-57BA-4AA1-B03C-B9401FFFBF70 - eed8ff0bf32582c0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) await resume partial function for Pfadi_Seesturm.StufenbereichViewModel.loadData(isPullToRefresh: Swift.Bool, force: Swift.Bool) async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "115"
-                  endingLineNumber = "115">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -12700,36 +12610,6 @@
             endingLineNumber = "229"
             landmarkName = "deleteAllAnAbmeldungen()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "649B0E3B-C7FC-45D4-853D-CFAE2FE77AFC - 5b9b1bff31ff4a94"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for Pfadi_Seesturm.StufenbereichViewModel.deleteAllAnAbmeldungen() async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "232"
-                  endingLineNumber = "232">
-               </Location>
-               <Location
-                  uuid = "649B0E3B-C7FC-45D4-853D-CFAE2FE77AFC - 72a1b4216b108e92"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.StufenbereichViewModel.deleteAllAnAbmeldungen() async -&gt; ()"
-                  moduleName = "Pfadi Seesturm.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/account/stufenbereich/StufenbereichViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "232"
-                  endingLineNumber = "232">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -36,7 +36,7 @@ struct StufenbereichAnAbmeldungSheet: View {
                         Text("Keine \(interaction.nomenMehrzahl)")
                             .frame(maxWidth: .infinity, alignment: .center)
                             .multilineTextAlignment(.center)
-                            .font(.caption)
+                            .font(.callout)
                             .padding()
                     }
                     else {
@@ -47,17 +47,17 @@ struct StufenbereichAnAbmeldungSheet: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .multilineTextAlignment(.leading)
                                     .fontWeight(.bold)
-                                    .font(.caption)
+                                    .font(.callout)
                                 Label("\(abmeldung.type.taetigkeit): \(abmeldung.createdString)", systemImage: abmeldung.type.icon)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .multilineTextAlignment(.leading)
-                                    .font(.caption)
+                                    .font(.footnote)
                                     .foregroundStyle(abmeldung.type.color)
                                     .labelStyle(.titleAndIcon)
                                 Text(abmeldung.bemerkungForDisplay)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .multilineTextAlignment(.leading)
-                                    .font(.caption)
+                                    .font(.footnote)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
