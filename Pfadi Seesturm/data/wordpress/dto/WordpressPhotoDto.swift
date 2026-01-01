@@ -34,18 +34,3 @@ extension [WordpressPhotoDto] {
         return filteredPhotos
     }
 }
-
-/*
-extension WordpressPhotoDto {
-    func toWordpressPhoto() -> WordpressPhoto {
-        return WordpressPhoto(
-            id: UUID(),
-            thumbnailUrl: thumbnail,
-            originalUrl: original,
-            orientation: orientation,
-            height: height ?? 9,
-            width: width ?? 16
-        )
-    }
-}
-*/

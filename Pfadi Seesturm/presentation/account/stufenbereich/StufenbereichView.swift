@@ -14,27 +14,6 @@ struct StufenbereichView: View {
     
     @State private var sheetItem: AnAbmeldungenSheetContent? = nil
     
-    /*
-    @State private var deleteAbmeldungenConfirmationDialogItem: GoogleCalendarEventWithAnAbmeldungen? = nil
-    private var showDeleteAbmeldungenConfirmationDialog: Binding<Bool> {
-        Binding(
-            get: { deleteAbmeldungenConfirmationDialogItem != nil },
-            set: { isShown in
-                if !isShown { deleteAbmeldungenConfirmationDialogItem = nil }
-            }
-        )
-    }
-    @State private var sendPushNotificationConfirmationDialogItem: GoogleCalendarEventWithAnAbmeldungen? = nil
-    private var showSendPushNotificationConfirmationDialog: Binding<Bool> {
-        Binding(
-            get: { sendPushNotificationConfirmationDialogItem != nil },
-            set: { isShown in
-                if !isShown { sendPushNotificationConfirmationDialogItem = nil }
-            }
-        )
-    }
-     */
-    
     @State private var viewModel: StufenbereichViewModel
     private let stufe: SeesturmStufe
     
