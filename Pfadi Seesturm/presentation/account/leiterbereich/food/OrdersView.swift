@@ -34,8 +34,8 @@ struct OrdersView: View {
                 }
             },
             onDeleteAllOrders: {
-                withAnimation {
-                    viewModel.showDeleteAllOrdersDialog = true
+                Task {
+                    await viewModel.deleteAllOrders()
                 }
             }
         )
@@ -51,16 +51,6 @@ struct OrdersView: View {
                 }
             )
             .presentationDetents([.medium])
-        }
-        .confirmationDialog("Möchtest du alle Bestellungen löschen?", isPresented: $viewModel.showDeleteAllOrdersDialog, titleVisibility: .visible) {
-            Button("Abbrechen", role: .cancel) {
-                // do nothing
-            }
-            Button("Löschen", role: .destructive) {
-                Task {
-                    await viewModel.deleteAllOrders()
-                }
-            }
         }
         .actionSnackbar(
             action: $viewModel.deleteAllOrdersState,
@@ -98,6 +88,8 @@ struct OrdersView: View {
 }
 
 private struct OrdersContentView: View {
+    
+    @State private var showDeleteAllOrdersDialog: Bool = false
     
     private let ordersState: UiState<[FoodOrder]>
     private let deleteAllOrdersState: ActionState<Void>
@@ -198,10 +190,18 @@ private struct OrdersContentView: View {
                     }
                     else {
                         Button {
-                            onDeleteAllOrders()
+                            showDeleteAllOrdersDialog = true
                         } label: {
                             Image(systemName: "trash")
                                 .tint(Color.SEESTURM_GREEN)
+                        }
+                        .confirmationDialog("Möchtest du alle Bestellungen löschen?", isPresented: $showDeleteAllOrdersDialog, titleVisibility: .visible) {
+                            Button("Abbrechen", role: .cancel) {
+                                // do nothing
+                            }
+                            Button("Löschen", role: .destructive) {
+                                onDeleteAllOrders()
+                            }
                         }
                     }
                 }

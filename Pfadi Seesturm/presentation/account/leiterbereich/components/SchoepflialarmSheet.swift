@@ -9,18 +9,17 @@ import SwiftUI
 
 struct SchoepflialarmSheet: View {
     
+    @State private var showConfirmationDialog: Bool = false
+    
     private let schoepflialarmResult: UiState<Schoepflialarm>
     private let user: FirebaseHitobitoUser
     private let newSchoepflialarmMessage: Binding<String>
-    private let onSubmit: () -> Void
-    private let onConfirm: () async -> Void
+    private let onSendSchoepflialarm: (SchoepflialarmMessageType) async -> Void
     private let onReaction: (SchoepflialarmReactionType) async -> Void
     private let isReactionButtonLoading: (SchoepflialarmReactionType) -> Bool
     private let onPushNotificationToggle: (Bool) -> Void
     private let isPushNotificationToggleOn: Bool
     private let pushNotificationToggleState: ActionState<SeesturmFCMNotificationTopic>
-    private let confirmationDialogText: String
-    private let isConfirmationDialogPresented: Binding<Bool>
     private let sendSchoepflialarmState: Binding<ActionState<Void>>
     private let sendSchoepflialarmReactionState: Binding<ActionState<SchoepflialarmReactionType>>
     private let togglePushNotificationState: Binding<ActionState<SeesturmFCMNotificationTopic>>
@@ -29,15 +28,12 @@ struct SchoepflialarmSheet: View {
         schoepflialarmResult: UiState<Schoepflialarm>,
         user: FirebaseHitobitoUser,
         newSchoepflialarmMessage: Binding<String>,
-        onSubmit: @escaping () -> Void,
-        onConfirm: @escaping () async -> Void,
+        onSendSchoepflialarm: @escaping (SchoepflialarmMessageType) async -> Void,
         onReaction: @escaping (SchoepflialarmReactionType) async -> Void,
         isReactionButtonLoading: @escaping (SchoepflialarmReactionType) -> Bool,
         onPushNotificationToggle: @escaping (Bool) -> Void,
         isPushNotificationToggleOn: Bool,
         pushNotificationToggleState: ActionState<SeesturmFCMNotificationTopic>,
-        confirmationDialogText: String,
-        isConfirmationDialogPresented: Binding<Bool>,
         sendSchoepflialarmState: Binding<ActionState<Void>>,
         sendSchoepflialarmReactionState: Binding<ActionState<SchoepflialarmReactionType>>,
         togglePushNotificationState: Binding<ActionState<SeesturmFCMNotificationTopic>>
@@ -45,18 +41,31 @@ struct SchoepflialarmSheet: View {
         self.schoepflialarmResult = schoepflialarmResult
         self.user = user
         self.newSchoepflialarmMessage = newSchoepflialarmMessage
-        self.onSubmit = onSubmit
-        self.onConfirm = onConfirm
+        self.onSendSchoepflialarm = onSendSchoepflialarm
         self.onReaction = onReaction
         self.isReactionButtonLoading = isReactionButtonLoading
         self.onPushNotificationToggle = onPushNotificationToggle
         self.isPushNotificationToggleOn = isPushNotificationToggleOn
         self.pushNotificationToggleState = pushNotificationToggleState
-        self.confirmationDialogText = confirmationDialogText
-        self.isConfirmationDialogPresented = isConfirmationDialogPresented
         self.sendSchoepflialarmState = sendSchoepflialarmState
         self.sendSchoepflialarmReactionState = sendSchoepflialarmReactionState
         self.togglePushNotificationState = togglePushNotificationState
+    }
+    
+    private var schoepflialarmMessageType: SchoepflialarmMessageType {
+        let message = newSchoepflialarmMessage.wrappedValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !message.isEmpty else {
+            return .generic
+        }
+        return .custom(message: message)
+    }
+    private var confirmationDialogText: String {
+        switch schoepflialarmMessageType {
+        case .generic:
+            return "Der Schöpflialarm wird ohne Nachricht gesendet."
+        case .custom(_):
+            return "Möchtest du den Schöpflialarm wirklich senden?"
+        }
     }
     
     private var isReactionButtonDisabled: Bool {
@@ -274,11 +283,24 @@ struct SchoepflialarmSheet: View {
                             }
                         SeesturmButton(
                             type: .secondary,
-                            action: .sync(action: onSubmit),
+                            action: .sync(action: { showConfirmationDialog = true }),
                             title: nil,
                             icon: .system(name: "arrow.up"),
                             isLoading: sendSchoepflialarmState.wrappedValue.isLoading,
                             disabled: isSendingSchoepflialarmDisabled
+                        )
+                        .confirmationDialog(
+                            confirmationDialogText,
+                            isPresented: $showConfirmationDialog,
+                            titleVisibility: .visible,
+                            actions: {
+                                Button("Abbrechen", role: .cancel) { }
+                                Button("Senden", role: .destructive) {
+                                    Task {
+                                        await onSendSchoepflialarm(schoepflialarmMessageType)
+                                    }
+                                }
+                            }
                         )
                     }
                     .padding()
@@ -291,21 +313,6 @@ struct SchoepflialarmSheet: View {
             .navigationTitle("Schöpflialarm")
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.customBackground)
-            .confirmationDialog(
-                confirmationDialogText,
-                isPresented: isConfirmationDialogPresented,
-                titleVisibility: .visible,
-                actions: {
-                    Button("Abbrechen", role: .cancel) {
-                        // do nothing
-                    }
-                    Button("Senden", role: .destructive) {
-                        Task {
-                            await onConfirm()
-                        }
-                    }
-                }
-            )
             .actionSnackbar(
                 action: sendSchoepflialarmState,
                 events: [
@@ -360,15 +367,12 @@ struct SchoepflialarmSheet: View {
         schoepflialarmResult: .loading(subState: .loading),
         user: DummyData.user1,
         newSchoepflialarmMessage: .constant("Hallo"),
-        onSubmit: {},
-        onConfirm: {},
+        onSendSchoepflialarm: { _ in },
         onReaction: { _ in },
         isReactionButtonLoading: { _ in false },
         onPushNotificationToggle: { _ in },
         isPushNotificationToggleOn: true,
         pushNotificationToggleState: .idle,
-        confirmationDialogText: "",
-        isConfirmationDialogPresented: .constant(false),
         sendSchoepflialarmState: .constant(.idle),
         sendSchoepflialarmReactionState: .constant(.idle),
         togglePushNotificationState: .constant(.idle)
@@ -379,15 +383,12 @@ struct SchoepflialarmSheet: View {
         schoepflialarmResult: .error(message: "Schlimmer Fehler"),
         user: DummyData.user1,
         newSchoepflialarmMessage: .constant("Hallo"),
-        onSubmit: {},
-        onConfirm: {},
+        onSendSchoepflialarm: { _ in },
         onReaction: { _ in },
         isReactionButtonLoading: { _ in false },
         onPushNotificationToggle: { _ in },
         isPushNotificationToggleOn: true,
         pushNotificationToggleState: .idle,
-        confirmationDialogText: "",
-        isConfirmationDialogPresented: .constant(false),
         sendSchoepflialarmState: .constant(.idle),
         sendSchoepflialarmReactionState: .constant(.idle),
         togglePushNotificationState: .constant(.idle)
@@ -398,15 +399,12 @@ struct SchoepflialarmSheet: View {
         schoepflialarmResult: .success(data: DummyData.schoepflialarm),
         user: DummyData.user1,
         newSchoepflialarmMessage: .constant("Hallo"),
-        onSubmit: {},
-        onConfirm: {},
+        onSendSchoepflialarm: { _ in },
         onReaction: { _ in },
         isReactionButtonLoading: { _ in false },
         onPushNotificationToggle: { _ in },
         isPushNotificationToggleOn: false,
         pushNotificationToggleState: .idle,
-        confirmationDialogText: "",
-        isConfirmationDialogPresented: .constant(false),
         sendSchoepflialarmState: .constant(.loading(action: ())),
         sendSchoepflialarmReactionState: .constant(.idle),
         togglePushNotificationState: .constant(.idle)

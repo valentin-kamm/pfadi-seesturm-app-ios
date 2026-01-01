@@ -39,7 +39,12 @@ struct AktivitaetBearbeitenView: View {
             title: $viewModel.title,
             description: $viewModel.description,
             aktivitaetForPreview: viewModel.aktivitaetForPreview,
-            onSubmit: viewModel.trySubmit,
+            onTrySubmit: viewModel.trySubmit,
+            onSubmit: {
+                Task {
+                    await viewModel.submit()
+                }
+            },
             onShowPreviewSheet: {
                 withAnimation {
                     viewModel.showPreviewSheet = true
@@ -49,7 +54,10 @@ struct AktivitaetBearbeitenView: View {
                 withAnimation {
                     viewModel.showTemplatesSheet = true
                 }
-            }
+            },
+            confirmationDialogTitle: viewModel.confirmationDialogTitle,
+            showConfirmationDialog: $viewModel.showConfirmationDialog,
+            confirmationDialogConfirmButtonText: viewModel.confirmationDialogConfirmButtonText
         )
         .task {
             await viewModel.fetchAktivitaetIfNecessary()
@@ -68,20 +76,6 @@ struct AktivitaetBearbeitenView: View {
                 )
             ]
         )
-        .confirmationDialog(
-            viewModel.confirmationDialogTitle,
-            isPresented: $viewModel.showConfirmationDialog,
-            titleVisibility: .visible
-        ) {
-            Button("Abbrechen", role: .cancel) {
-                // do nothing
-            }
-            Button(viewModel.confirmationDialogConfirmButtonText, role: .destructive) {
-                Task {
-                    await viewModel.submit()
-                }
-            }
-        }
         .sheet(isPresented: viewModel.previewSheetBinding) {
             NavigationStack(path: .constant(NavigationPath())) {
                 if let aktivitaet = viewModel.aktivitaetForPreview {
@@ -134,9 +128,13 @@ private struct AktivitaetBearbeitenContentView: View {
     private let title: Binding<String>
     private let description: Binding<String>
     private let aktivitaetForPreview: GoogleCalendarEvent?
+    private let onTrySubmit: () -> Void
     private let onSubmit: () -> Void
     private let onShowPreviewSheet: () -> Void
     private let onShowTemplatesSheet: () -> Void
+    private let confirmationDialogTitle: String
+    private let showConfirmationDialog: Binding<Bool>
+    private let confirmationDialogConfirmButtonText: String
     
     init(
         mode: AktivitaetBearbeitenMode,
@@ -151,9 +149,13 @@ private struct AktivitaetBearbeitenContentView: View {
         title: Binding<String>,
         description: Binding<String>,
         aktivitaetForPreview: GoogleCalendarEvent?,
+        onTrySubmit: @escaping () -> Void,
         onSubmit: @escaping () -> Void,
         onShowPreviewSheet: @escaping () -> Void,
-        onShowTemplatesSheet: @escaping () -> Void
+        onShowTemplatesSheet: @escaping () -> Void,
+        confirmationDialogTitle: String,
+        showConfirmationDialog: Binding<Bool>,
+        confirmationDialogConfirmButtonText: String
     ) {
         self.mode = mode
         self.stufe = stufe
@@ -167,9 +169,13 @@ private struct AktivitaetBearbeitenContentView: View {
         self.title = title
         self.description = description
         self.aktivitaetForPreview = aktivitaetForPreview
+        self.onTrySubmit = onTrySubmit
         self.onSubmit = onSubmit
         self.onShowPreviewSheet = onShowPreviewSheet
         self.onShowTemplatesSheet = onShowTemplatesSheet
+        self.confirmationDialogTitle = confirmationDialogTitle
+        self.showConfirmationDialog = showConfirmationDialog
+        self.confirmationDialogConfirmButtonText = confirmationDialogConfirmButtonText
     }
     
     private enum AktivitaetBearbeitenFormFields: String, FocusControlItem {
@@ -327,7 +333,7 @@ private struct AktivitaetBearbeitenContentView: View {
                     Section {
                         SeesturmButton(
                             type: .primary,
-                            action: .sync(action: onSubmit),
+                            action: .sync(action: onTrySubmit),
                             title: mode.buttonTitle,
                             colors: .custom(contentColor: stufe.onHighContrastColor, buttonColor: stufe.highContrastColor),
                             isLoading: publishAktivitaetState.isLoading,
@@ -337,6 +343,16 @@ private struct AktivitaetBearbeitenContentView: View {
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
+                        .confirmationDialog(
+                            confirmationDialogTitle,
+                            isPresented: showConfirmationDialog,
+                            titleVisibility: .visible
+                        ) {
+                            Button("Abbrechen", role: .cancel) { }
+                            Button(confirmationDialogConfirmButtonText, role: .destructive) {
+                                onSubmit()
+                            }
+                        }
                     }
                 }
             }
@@ -371,9 +387,13 @@ private struct AktivitaetBearbeitenContentView: View {
             title: .constant(""),
             description: .constant(""),
             aktivitaetForPreview: nil,
+            onTrySubmit: {},
             onSubmit: {},
             onShowPreviewSheet: {},
-            onShowTemplatesSheet: {}
+            onShowTemplatesSheet: {},
+            confirmationDialogTitle: "",
+            showConfirmationDialog: .constant(false),
+            confirmationDialogConfirmButtonText: ""
         )
     }
 }
@@ -392,9 +412,13 @@ private struct AktivitaetBearbeitenContentView: View {
             title: .constant(""),
             description: .constant(""),
             aktivitaetForPreview: nil,
+            onTrySubmit: {},
             onSubmit: {},
             onShowPreviewSheet: {},
-            onShowTemplatesSheet: {}
+            onShowTemplatesSheet: {},
+            confirmationDialogTitle: "",
+            showConfirmationDialog: .constant(false),
+            confirmationDialogConfirmButtonText: ""
         )
     }
 }
@@ -413,9 +437,13 @@ private struct AktivitaetBearbeitenContentView: View {
             title: .constant(""),
             description: .constant(""),
             aktivitaetForPreview: DummyData.aktivitaet1,
+            onTrySubmit: {},
             onSubmit: {},
             onShowPreviewSheet: {},
-            onShowTemplatesSheet: {}
+            onShowTemplatesSheet: {},
+            confirmationDialogTitle: "",
+            showConfirmationDialog: .constant(false),
+            confirmationDialogConfirmButtonText: ""
         )
     }
 }

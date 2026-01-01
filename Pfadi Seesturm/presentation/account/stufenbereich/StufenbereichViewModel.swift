@@ -60,7 +60,6 @@ class StufenbereichViewModel {
     
     // global actions
     var deleteAllAbmeldungenState: ActionState<Void> = .idle
-    var showDeleteAllAbmeldungenConfirmationDialog: Bool = false
     
     // other state
     private var _selectedDate: Date = {

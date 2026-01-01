@@ -17,15 +17,12 @@ class LeiterbereichViewModel {
     var usersState: UiState<[FirebaseHitobitoUser]> = .loading(subState: .idle)
     
     // account interactions
-    var showSignOutConfirmationDialog: Bool = false
-    var showDeleteAccountConfirmationDialog: Bool = false
     var showEditProfileSheet: Bool = false
     
     // food
     var ordersStateDto: UiState<[FoodOrderDto]> = .loading(subState: .idle)
     var showInsertFoodSheet: Bool = false
     var addNewOrderState: ActionState<Void> = .idle
-    var showDeleteAllOrdersDialog: Bool = false
     var deleteAllOrdersState: ActionState<Void> = .idle
     var modifyOrderErrorMessage: String? = nil
     var newFoodItemDescription: String = ""
@@ -39,7 +36,6 @@ class LeiterbereichViewModel {
     var toggleSchoepflialarmReactionsPushNotificationState: ActionState<SeesturmFCMNotificationTopic> = .idle
     var showNotificationSettingsAlert: Bool = false
     var showLocationSettingsAlert: Bool = false
-    var showConfirmSchoepflialarmAlert: Bool = false
     var showSchoepflialarmSheet: Bool = false
     var schoepflialarmMessage: String = ""
     
@@ -331,23 +327,6 @@ extension LeiterbereichViewModel {
             }
         }
     }
-    private var schoepflialarmMessageType: SchoepflialarmMessageType {
-        let message = schoepflialarmMessage.trimmingCharacters(in: .whitespacesAndNewlines)
-        switch message.isEmpty {
-        case true:
-            return .generic
-        case false:
-            return .custom(message: message)
-        }
-    }
-    var schoepflialarmConfirmationText: String {
-        switch schoepflialarmMessageType {
-        case .generic:
-            return "Der Schöpflialarm wird ohne Nachricht gesendet."
-        case .custom(_):
-            return "Möchtest du den Schöpflialarm wirklich senden?"
-        }
-    }
     
     func observeSchoepflialarm() async {
         withAnimation {
@@ -384,19 +363,13 @@ extension LeiterbereichViewModel {
         }
     }
     
-    func trySendSchoepflialarm() {
-        withAnimation {
-            showConfirmSchoepflialarmAlert = true
-        }
-    }
-    
-    func sendSchoepflialarm() async {
+    func sendSchoepflialarm(type: SchoepflialarmMessageType) async {
         
         withAnimation {
             sendSchoepflialarmState = .loading(action: ())
         }
         let result = await schoepflialarmService.sendSchöpflialarm(
-            messageType: schoepflialarmMessageType,
+            messageType: type,
             user: user
         )
         switch result {

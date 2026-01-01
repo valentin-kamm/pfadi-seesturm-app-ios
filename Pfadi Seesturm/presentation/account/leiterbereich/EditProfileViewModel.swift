@@ -28,7 +28,6 @@ class EditProfileViewModel {
     var imageUploadState: ProgressActionState<Void> = .idle
     
     // track image deleting state
-    var showDeleteImageConfirmationDialog: Bool = false
     var imageDeleteState: ActionState<Void> = .idle
     
     var imageSelectionStateBinding: Binding<PickedGalleryImage?> {

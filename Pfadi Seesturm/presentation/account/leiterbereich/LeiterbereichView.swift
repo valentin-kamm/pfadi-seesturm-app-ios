@@ -99,36 +99,6 @@ struct LeiterbereichView: View {
             onRetryTermine: viewModel.fetchNext3Events,
             showEditProfileSheet: $viewModel.showEditProfileSheet
         )
-        .confirmationDialog(
-            "Möchtest du dich wirklich abmelden?",
-            isPresented: $viewModel.showSignOutConfirmationDialog,
-            titleVisibility: .visible,
-            actions: {
-                Button("Abbrechen", role: .cancel) {
-                    // do nothing
-                }
-                Button("Abmelden", role: .destructive) {
-                    Task {
-                        await authState.signOut(user: user)
-                    }
-                }
-            }
-        )
-        .confirmationDialog(
-            "Möchtest du deinen Account wirklich löschen?",
-            isPresented: $viewModel.showDeleteAccountConfirmationDialog,
-            titleVisibility: .visible,
-            actions: {
-                Button("Abbrechen", role: .cancel) {
-                    // do nothing
-                }
-                Button("Löschen", role: .destructive) {
-                    Task {
-                        await authState.deleteAccount(user: user)
-                    }
-                }
-            }
-        )
         .alert(
             "Push-Nachrichten nicht aktiviert",
             isPresented: $viewModel.showNotificationSettingsAlert,
@@ -171,13 +141,11 @@ struct LeiterbereichView: View {
             await viewModel.loadData()
         }
         .sheet(isPresented: $viewModel.showSchoepflialarmSheet) {
-            
             SchoepflialarmSheet(
                 schoepflialarmResult: viewModel.schoepflialarmResult,
                 user: user,
                 newSchoepflialarmMessage: $viewModel.schoepflialarmMessage,
-                onSubmit: viewModel.trySendSchoepflialarm,
-                onConfirm: viewModel.sendSchoepflialarm,
+                onSendSchoepflialarm: viewModel.sendSchoepflialarm,
                 onReaction: viewModel.sendSchoepflialarmReaction,
                 isReactionButtonLoading: { reaction in
                     switch viewModel.sendSchoepflialarmReactionState {
@@ -194,8 +162,6 @@ struct LeiterbereichView: View {
                 },
                 isPushNotificationToggleOn: isPushNotificationsToggleOn,
                 pushNotificationToggleState: viewModel.toggleSchoepflialarmReactionsPushNotificationState,
-                confirmationDialogText: viewModel.schoepflialarmConfirmationText,
-                isConfirmationDialogPresented: $viewModel.showConfirmSchoepflialarmAlert,
                 sendSchoepflialarmState: $viewModel.sendSchoepflialarmState,
                 sendSchoepflialarmReactionState: $viewModel.sendSchoepflialarmReactionState,
                 togglePushNotificationState: $viewModel.toggleSchoepflialarmReactionsPushNotificationState
@@ -205,8 +171,17 @@ struct LeiterbereichView: View {
         .sheet(isPresented: $viewModel.showEditProfileSheet) {
             EditProfileView(
                 viewModel: EditProfileViewModel(),
-                leiterbereichViewModel: viewModel,
-                user: user
+                user: user,
+                onSignOut: {
+                    Task {
+                        await authState.signOut(user: user)
+                    }
+                },
+                onDeleteAccount: {
+                    Task {
+                        await authState.deleteAccount(user: user)
+                    }
+                }
             )
         }
     }

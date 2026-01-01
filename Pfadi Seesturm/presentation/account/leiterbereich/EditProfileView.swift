@@ -10,12 +10,26 @@ import PhotosUI
 
 struct EditProfileView: View {
     
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var authState: AuthViewModel
-    @State private var viewModel: EditProfileViewModel
-    private let leiterbereichViewModel: LeiterbereichViewModel
-    private let user: FirebaseHitobitoUser
-    
     @State private var shouldShowFullscreenProfilePicture: Bool = false
+    
+    @State private var viewModel: EditProfileViewModel
+    private let user: FirebaseHitobitoUser
+    private let onSignOut: () -> Void
+    private let onDeleteAccount: () -> Void
+    
+    init(
+        viewModel: EditProfileViewModel,
+        user: FirebaseHitobitoUser,
+        onSignOut: @escaping () -> Void,
+        onDeleteAccount: @escaping () -> Void
+    ) {
+        self.viewModel = viewModel
+        self.user = user
+        self.onSignOut = onSignOut
+        self.onDeleteAccount = onDeleteAccount
+    }
     
     private var fullscreenProfilePicture: Binding<PhotoSliderViewItem?> {
         Binding(
@@ -33,16 +47,6 @@ struct EditProfileView: View {
         )
     }
     
-    init(
-        viewModel: EditProfileViewModel,
-        leiterbereichViewModel: LeiterbereichViewModel,
-        user: FirebaseHitobitoUser
-    ) {
-        self.viewModel = viewModel
-        self.leiterbereichViewModel = leiterbereichViewModel
-        self.user = user
-    }
-    
     var body: some View {
         NavigationStack(path: .constant(NavigationPath())) {
             EditProfileContentView(
@@ -50,14 +54,16 @@ struct EditProfileView: View {
                 profilePictureType: viewModel.isCircularImageViewLoading ? .loading : .idle(user: user),
                 photosPickerItem: $viewModel.photosPickerItem,
                 imageUploadState: viewModel.imageUploadState,
-                onDeleteProfilePicture: {
-                    viewModel.showDeleteImageConfirmationDialog = true
-                },
                 onSignOut: {
-                    leiterbereichViewModel.showSignOutConfirmationDialog = true
+                    dismiss()
+                    onSignOut()
                 },
                 onDeleteAccount: {
-                    leiterbereichViewModel.showDeleteAccountConfirmationDialog = true
+                    dismiss()
+                    onDeleteAccount()
+                },
+                onDeleteProfilePicture: {
+                    deleteProfilePicture()
                 },
                 onOpenFullscreenProfilePicture: {
                     shouldShowFullscreenProfilePicture = true
@@ -89,12 +95,6 @@ struct EditProfileView: View {
         }
         .fullScreenCover(item: fullscreenProfilePicture) { item in
             PhotoSliderView(mode: .single(image: item))
-        }
-        .confirmationDialog("Möchtest du dein Profilbild wirklich löschen?", isPresented: $viewModel.showDeleteImageConfirmationDialog, titleVisibility: .visible) {
-            Button("Abbrechen", role: .cancel) {}
-            Button("Löschen", role: .destructive) {
-                deleteProfilePicture()
-            }
         }
         .actionSnackbar(
             action: $viewModel.imageDeleteState,
@@ -167,13 +167,17 @@ struct EditProfileView: View {
 
 private struct EditProfileContentView: View {
     
+    @State private var showDeleteImageConfirmationDialog: Bool = false
+    @State private var showSignOutConfirmationDialog: Bool = false
+    @State private var showDeleteAccountConfirmationDialog: Bool = false
+    
     private let user: FirebaseHitobitoUser
     private let profilePictureType: CircleProfilePictureViewType
     private let photosPickerItem: Binding<PhotosPickerItem?>
     private let imageUploadState: ProgressActionState<Void>
-    private let onDeleteProfilePicture: () -> Void
     private let onSignOut: () -> Void
     private let onDeleteAccount: () -> Void
+    private let onDeleteProfilePicture: () -> Void
     private let onOpenFullscreenProfilePicture: () -> Void
     
     init(
@@ -181,18 +185,18 @@ private struct EditProfileContentView: View {
         profilePictureType: CircleProfilePictureViewType,
         photosPickerItem: Binding<PhotosPickerItem?>,
         imageUploadState: ProgressActionState<Void>,
-        onDeleteProfilePicture: @escaping () -> Void,
         onSignOut: @escaping () -> Void,
         onDeleteAccount: @escaping () -> Void,
+        onDeleteProfilePicture: @escaping () -> Void,
         onOpenFullscreenProfilePicture: @escaping () -> Void
     ) {
         self.user = user
         self.profilePictureType = profilePictureType
         self.photosPickerItem = photosPickerItem
         self.imageUploadState = imageUploadState
-        self.onDeleteProfilePicture = onDeleteProfilePicture
         self.onSignOut = onSignOut
         self.onDeleteAccount = onDeleteAccount
+        self.onDeleteProfilePicture = onDeleteProfilePicture
         self.onOpenFullscreenProfilePicture = onOpenFullscreenProfilePicture
     }
     
@@ -238,20 +242,52 @@ private struct EditProfileContentView: View {
                     }
                     .disabled(imageUploadState.isLoading)
                     Button("Profilbild löschen", systemImage: "trash", role: .destructive) {
-                        onDeleteProfilePicture()
+                        showDeleteImageConfirmationDialog = true
                     }
                     .disabled(user.profilePictureUrl == nil)
                     .foregroundStyle(Color.SEESTURM_RED)
+                    .confirmationDialog("Möchtest du dein Profilbild wirklich löschen?", isPresented: $showDeleteImageConfirmationDialog, titleVisibility: .visible) {
+                        Button("Abbrechen", role: .cancel) {}
+                        Button("Löschen", role: .destructive) {
+                            onDeleteProfilePicture()
+                        }
+                    }
                 }
                 Section {
                     Button("Abmelden", systemImage: "rectangle.portrait.and.arrow.right") {
-                        onSignOut()
+                        showSignOutConfirmationDialog = true
                     }
+                    .confirmationDialog(
+                        "Möchtest du dich wirklich abmelden?",
+                        isPresented: $showSignOutConfirmationDialog,
+                        titleVisibility: .visible,
+                        actions: {
+                            Button("Abbrechen", role: .cancel) {
+                                // do nothing
+                            }
+                            Button("Abmelden", role: .destructive) {
+                                onSignOut()
+                            }
+                        }
+                    )
                     .foregroundStyle(Color.SEESTURM_GREEN)
                     Button("App-Account löschen", systemImage: "person.badge.minus", role: .destructive) {
-                        onDeleteAccount()
+                        showDeleteAccountConfirmationDialog = true
                     }
                     .foregroundStyle(Color.SEESTURM_RED)
+                    .confirmationDialog(
+                        "Möchtest du deinen Account wirklich löschen?",
+                        isPresented: $showDeleteAccountConfirmationDialog,
+                        titleVisibility: .visible,
+                        actions: {
+                            Button("Abbrechen", role: .cancel) {
+                                // do nothing
+                            }
+                            Button("Löschen", role: .destructive) {
+                                onDeleteAccount()
+                            }
+                        }
+                    )
                 }
             }
             .frame(maxWidth: .infinity, alignment: .center)
@@ -273,9 +309,9 @@ private struct EditProfileContentView: View {
             profilePictureType: .idle(user: DummyData.user3),
             photosPickerItem: .constant(nil),
             imageUploadState: .idle,
-            onDeleteProfilePicture: {},
             onSignOut: {},
             onDeleteAccount: {},
+            onDeleteProfilePicture: {},
             onOpenFullscreenProfilePicture: {}
         )
         .background(Color.customBackground)
@@ -291,9 +327,9 @@ private struct EditProfileContentView: View {
             profilePictureType: .loading,
             photosPickerItem: .constant(nil),
             imageUploadState: .loading(action: (), progress: 0.66),
-            onDeleteProfilePicture: {},
             onSignOut: {},
             onDeleteAccount: {},
+            onDeleteProfilePicture: {},
             onOpenFullscreenProfilePicture: {}
         )
         .background(Color.customBackground)

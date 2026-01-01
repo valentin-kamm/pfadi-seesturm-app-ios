@@ -9,6 +9,9 @@ import SwiftUI
 
 struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
     
+    @State private var showDeleteAbmeldungenConfirmationDialog: Bool = false
+    @State private var showSendPushNotificationConfirmationDialog: Bool = false
+    
     private let aktivitaet: GoogleCalendarEventWithAnAbmeldungen
     private let stufe: SeesturmStufe
     private let isBearbeitenButtonLoading: Bool
@@ -111,7 +114,7 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                             item: "Push-Nachricht senden",
                             icon: .custom(systemName: "bell.badge"),
                             action: {
-                                onSendPushNotification()
+                                showSendPushNotificationConfirmationDialog = true
                             },
                             disabled: aktivitaet.event.hasStarted
                         ),
@@ -120,7 +123,7 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                             item: "An- und Abmeldungen löschen",
                             icon: .custom(systemName: "trash"),
                             action: {
-                                onDeleteAnAbmeldungen()
+                                showDeleteAbmeldungenConfirmationDialog = true
                             },
                             disabled: !aktivitaet.event.hasEnded || aktivitaet.anAbmeldungen.isEmpty
                         )
@@ -133,6 +136,26 @@ struct StufenbereichAnAbmeldungCell<D: NavigationDestination>: View {
                     disabled: isBearbeitenButtonLoading
                 )
                 .frame(maxWidth: .infinity, alignment: .center)
+                .confirmationDialog(
+                    "Die An- und Abmeldungen für die Aktivität vom \(aktivitaet.event.startDateFormatted) werden gelöscht. Fortfahren?",
+                    isPresented: $showDeleteAbmeldungenConfirmationDialog,
+                    titleVisibility: .visible
+                ) {
+                    Button("Abbrechen", role: .cancel) {}
+                    Button("Löschen", role: .destructive) {
+                        onDeleteAnAbmeldungen()
+                    }
+                }
+                .confirmationDialog(
+                    "Für die Aktivität vom \(aktivitaet.event.startDateFormatted) wird eine Push-Nachricht versendet. Fortfahren?",
+                    isPresented: $showSendPushNotificationConfirmationDialog,
+                    titleVisibility: .visible
+                ) {
+                    Button("Abbrechen", role: .cancel) {}
+                    Button("Senden", role: .destructive) {
+                        onSendPushNotification()
+                    }
+                }
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
