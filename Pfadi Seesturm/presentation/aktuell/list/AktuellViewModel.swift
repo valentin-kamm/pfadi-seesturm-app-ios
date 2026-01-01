@@ -11,7 +11,7 @@ import Observation
 @MainActor
 class AktuellViewModel {
     
-    var eventsState: InfiniteScrollUiState<[WordpressPost]> = .loading(subState: .idle)
+    var aktuellState: InfiniteScrollUiState<[WordpressPost]> = .loading(subState: .idle)
     var totalPostsAvailable: Int = 0
     
     private let service: AktuellService
@@ -25,7 +25,7 @@ class AktuellViewModel {
     private let numberOfPostsPerPage: Int = 5
     
     private var postsLoadedCount: Int {
-        switch eventsState {
+        switch aktuellState {
         case .success(let data, subState: _):
             return data.count
         default:
@@ -33,7 +33,7 @@ class AktuellViewModel {
         }
     }
     var hasMorePosts: Bool {
-        switch eventsState {
+        switch aktuellState {
         case .success(_, _):
             return postsLoadedCount < totalPostsAvailable
         default:
@@ -45,7 +45,7 @@ class AktuellViewModel {
         
         if !isPullToRefresh {
             withAnimation {
-                eventsState = .loading(subState: .loading)
+                aktuellState = .loading(subState: .loading)
             }
         }
         let result = await service.fetchPosts(start: 0, length: numberOfPostsPerPage)
@@ -54,16 +54,16 @@ class AktuellViewModel {
             switch e {
             case .cancelled:
                 withAnimation {
-                    eventsState = .loading(subState: .retry)
+                    aktuellState = .loading(subState: .retry)
                 }
             default:
                 withAnimation {
-                    eventsState = .error(message: "Posts konnten nicht geladen werden. \(e.defaultMessage)")
+                    aktuellState = .error(message: "Posts konnten nicht geladen werden. \(e.defaultMessage)")
                 }
             }
         case .success(let d):
             withAnimation {
-                eventsState = .success(data: d.posts, subState: .success)
+                aktuellState = .success(data: d.posts, subState: .success)
                 totalPostsAvailable = d.postCount
             }
         }
@@ -72,7 +72,7 @@ class AktuellViewModel {
     func getMorePosts() async {
         
         withAnimation {
-            eventsState = eventsState.updateSubState(.loading)
+            aktuellState = aktuellState.updateSubState(.loading)
         }
         
         let result = await service.fetchMorePosts(start: postsLoadedCount, length: numberOfPostsPerPage)
@@ -81,16 +81,16 @@ class AktuellViewModel {
             switch e {
             case .cancelled:
                 withAnimation {
-                    eventsState = .loading(subState: .retry)
+                    aktuellState = .loading(subState: .retry)
                 }
             default:
                 withAnimation {
-                    eventsState = eventsState.updateSubState(.error(message: "Es konnten nicht mehr Posts geladen werden. \(e.defaultMessage)"))
+                    aktuellState = aktuellState.updateSubState(.error(message: "Es konnten nicht mehr Posts geladen werden. \(e.defaultMessage)"))
                 }
             }
         case .success(let d):
             withAnimation {
-                eventsState = eventsState.updateDataAndSubState({ oldData in
+                aktuellState = aktuellState.updateDataAndSubState({ oldData in
                     return oldData + d.posts
                 }, .success)
                 totalPostsAvailable = d.postCount

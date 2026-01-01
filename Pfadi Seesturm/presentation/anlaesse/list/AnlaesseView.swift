@@ -128,28 +128,22 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
     }
     
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+        List {
+            Group {
                 switch eventsState {
-                case .loading:
-                    Section(header:
-                                BasicStickyHeader(title: "August 2025")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                    ) {
-                        ForEach(0..<2) { index in
-                            AnlassLoadingCardView()
-                                .padding(.top, index == 0 ? 16 : 0)
-                        }
-                    }
-                    Section(header:
-                                BasicStickyHeader(title: "September 2025")
-                        .redacted(reason: .placeholder)
-                        .loadingBlinking()
-                    ) {
-                        ForEach(0..<7) { index in
-                            AnlassLoadingCardView()
-                                .padding(.top, index == 0 ? 16 : 0)
+                case .loading(_):
+                    ForEach(0..<3) { headerIndex in
+                        Section {
+                            ForEach(0..<3) { index in
+                                AnlassLoadingCardView()
+                                    .id("AnlässeLoadingCell\(headerIndex)\(index)")
+                                    .padding(.top, index == 0 ? 16 : 0)
+                            }
+                        } header: {
+                            BasicStickyHeader(title: "August XXXX")
+                                .id("AnlässeLoadingHeader\(headerIndex)")
+                                .redacted(reason: .placeholder)
+                                .loadingBlinking()
                         }
                     }
                 case .error(let message):
@@ -157,10 +151,12 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
                         errorDescription: message,
                         action: .sync(action: onRetry)
                     )
+                    .id("AnlässeErrorCell")
                     .padding(.vertical)
                 case .success(let events, let subState):
                     if events.isEmpty {
                         Text("Keine bevorstehenden Anlässe")
+                            .id("AnlässeEmptyCell")
                             .padding(.horizontal)
                             .padding(.vertical, 75)
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -176,39 +172,48 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
                             )
                             Section {
                                 ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
-                                    NavigationLink(value: navigationDestination(event)) {
-                                        AnlassCardView(
-                                            event: event,
-                                            calendar: calendar
-                                        )
-                                        .padding(.top, index == 0 ? 16 : 0)
-                                    }
-                                        .foregroundStyle(Color.primary)
+                                    AnlassCardView(
+                                        event: event,
+                                        calendar: calendar
+                                    )
+                                    .id("AnlässeCell\(event.id)")
+                                    .padding(.top, index == 0 ? 16 : 0)
+                                    .background(
+                                        NavigationLink(
+                                            value: navigationDestination(event)
+                                        ) {
+                                            EmptyView()
+                                        }
+                                            .opacity(0)
+                                    )
                                 }
                             } header: {
                                 BasicStickyHeader(title: title)
-                                    .background(Color.customBackground)
+                                    .id("AnlässeHeader\(startDate)")
                             }
                         }
                         if hasMoreEvents {
                             switch subState {
-                            case .error(let message):
-                                ErrorCardView(
-                                    errorDescription: message,
-                                    action: .sync(action: onFetchMoreEvents)
-                                )
-                                .padding(.bottom)
                             case .loading, .success:
                                 AnlassLoadingCardView()
+                                    .id("AnlässeLoadingMoreCell\(events.count)")
                                     .onAppear {
                                         if subState.infiniteScrollTaskShouldRun {
                                             onFetchMoreEvents()
                                         }
                                     }
-                                    .id(events.count)
+                            case .error(let message):
+                                ErrorCardView(
+                                    errorDescription: message,
+                                    action: .sync(action: onFetchMoreEvents)
+                                )
+                                .id("AnlässeLoadingMoreErrorCell")
+                                .padding(.bottom)
                             }
                         }
                         Text("Stand Kalender: \(eventsLastUpdated)\n(Alle gezeigten Zeiten in MEZ/MESZ)")
+                            .id("AnlässeKalenderStandFooter")
+                            .frame(maxWidth: .infinity, alignment: .center)
                             .multilineTextAlignment(.center)
                             .font(.footnote)
                             .foregroundStyle(Color.secondary)
@@ -217,7 +222,11 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
                     }
                 }
             }
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
         }
+        .listStyle(.plain)
         .scrollDisabled(eventsState.scrollingDisabled)
         .navigationTitle(calendar.isLeitungsteam ? "Termine Leitungsteam" : "Anlässe")
         .navigationBarTitleDisplayMode(.large)

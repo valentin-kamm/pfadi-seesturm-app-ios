@@ -25,7 +25,7 @@ struct AktuellView: View {
         NavigationStack(path: appState.path(for: .aktuell)) {
             GeometryReader { geometry in
                 AktuellContentView(
-                    eventsState: viewModel.eventsState,
+                    aktuellState: viewModel.aktuellState,
                     onRetry: {
                         Task {
                             await viewModel.getPosts(isPullToRefresh: false)
@@ -45,7 +45,7 @@ struct AktuellView: View {
                     }.value
                 }
                 .task {
-                    if viewModel.eventsState.taskShouldRun {
+                    if viewModel.aktuellState.taskShouldRun {
                         await viewModel.getPosts(isPullToRefresh: false)
                     }
                 }
@@ -61,20 +61,20 @@ struct AktuellView: View {
 
 private struct AktuellContentView: View {
     
-    private let eventsState: InfiniteScrollUiState<[WordpressPost]>
+    private let aktuellState: InfiniteScrollUiState<[WordpressPost]>
     private let onRetry: () -> Void
     private let hasMorePosts: Bool
     private let onGetMorePosts: () -> Void
     private let width: CGFloat
     
     init(
-        eventsState: InfiniteScrollUiState<[WordpressPost]>,
+        aktuellState: InfiniteScrollUiState<[WordpressPost]>,
         onRetry: @escaping () -> Void,
         hasMorePosts: Bool,
         onGetMorePosts: @escaping () -> Void,
         width: CGFloat
     ) {
-        self.eventsState = eventsState
+        self.aktuellState = aktuellState
         self.onRetry = onRetry
         self.hasMorePosts = hasMorePosts
         self.onGetMorePosts = onGetMorePosts
@@ -82,17 +82,19 @@ private struct AktuellContentView: View {
     }
     
     var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                switch eventsState {
+        List {
+            Group {
+                switch aktuellState {
                 case .loading(_):
                     Section {
-                        ForEach(0..<4) {index in
+                        ForEach(0..<4) { index in
                             AktuellLoadingCardView()
+                                .id("AktuellListViewLoadingCell\(index)")
                                 .padding(.top, index == 0 ? 16 : 0)
                         }
                     } header: {
-                        BasicStickyHeader(title: "Pfadijahr 2024")
+                        BasicStickyHeader(title: "Pfadijahr XXXX")
+                            .id("AktuellListViewLoadingHeader")
                             .redacted(reason: .placeholder)
                             .loadingBlinking()
                     }
@@ -101,49 +103,61 @@ private struct AktuellContentView: View {
                         errorDescription: message,
                         action: .sync(action: onRetry)
                     )
+                    .id("AktuellListViewErrorCell")
                     .padding(.vertical)
                 case .success(let data, let subState):
                     ForEach(data.groupedByYear, id: \.0) { year, posts in
                         Section {
                             ForEach(Array(posts.enumerated()), id: \.element.id) { index, post in
-                                NavigationLink(value: AktuellNavigationDestination.detail(inputType: .object(object: post))) {
-                                    AktuellCardView(
-                                        post: post,
-                                        width: width
-                                    )
-                                    .padding(.top, index == 0 ? 16 : 0)
-                                }
-                                .foregroundStyle(Color.primary)
+                                AktuellCardView(
+                                    post: post,
+                                    width: width
+                                )
+                                .id("AktuellListViewCell\(post.id)")
+                                .padding(.top, index == 0 ? 16 : 0)
+                                .background(
+                                    NavigationLink(
+                                        value: AktuellNavigationDestination.detail(inputType: .object(object: post))
+                                    ) {
+                                        EmptyView()
+                                    }
+                                    .opacity(0)
+                                )
                             }
                         } header: {
                             BasicStickyHeader(title: "Pfadijahr \(year)")
-                                .background(Color.customBackground)
+                                .id("AktuellListViewHeader\(year)")
                         }
                     }
                     if hasMorePosts {
                         switch subState {
                         case .loading, .success:
                             AktuellLoadingCardView()
-                            .onAppear {
-                                if subState.infiniteScrollTaskShouldRun {
-                                    onGetMorePosts()
+                                .id("AktuellListViewLoadingMoreCell\(data.count)")
+                                .onAppear {
+                                    if subState.infiniteScrollTaskShouldRun {
+                                        onGetMorePosts()
+                                    }
                                 }
-                            }
-                            .id(data.count)
                         case .error(let message):
                             ErrorCardView(
                                 errorDescription: message,
                                 action: .sync(action: onGetMorePosts)
                             )
+                            .id("AktuellListViewLoadingMoreErrorCell")
                             .padding(.bottom)
                         }
                     }
                 }
             }
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
         }
+        .listStyle(.plain)
         .navigationTitle("Aktuell")
         .navigationBarTitleDisplayMode(.large)
-        .scrollDisabled(eventsState.scrollingDisabled)
+        .scrollDisabled(aktuellState.scrollingDisabled)
         .background(Color.customBackground)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -159,7 +173,7 @@ private struct AktuellContentView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         GeometryReader { geometry in
             AktuellContentView(
-                eventsState: .loading(subState: .loading),
+                aktuellState: .loading(subState: .loading),
                 onRetry: {},
                 hasMorePosts: true,
                 onGetMorePosts: {},
@@ -172,7 +186,7 @@ private struct AktuellContentView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         GeometryReader { geometry in
             AktuellContentView(
-                eventsState: .error(message: "Schwerer Fehler"),
+                aktuellState: .error(message: "Schwerer Fehler"),
                 onRetry: {},
                 hasMorePosts: true,
                 onGetMorePosts: {},
@@ -185,7 +199,7 @@ private struct AktuellContentView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         GeometryReader { geometry in
             AktuellContentView(
-                eventsState: .success(
+                aktuellState: .success(
                     data: [
                         DummyData.aktuellPost1,
                         DummyData.aktuellPost2
@@ -204,7 +218,7 @@ private struct AktuellContentView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         GeometryReader { geometry in
             AktuellContentView(
-                eventsState: .success(
+                aktuellState: .success(
                     data: [
                         DummyData.aktuellPost1,
                         DummyData.aktuellPost2
@@ -223,7 +237,7 @@ private struct AktuellContentView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         GeometryReader { geometry in
             AktuellContentView(
-                eventsState: .success(
+                aktuellState: .success(
                     data: [
                         DummyData.aktuellPost1,
                         DummyData.aktuellPost2
