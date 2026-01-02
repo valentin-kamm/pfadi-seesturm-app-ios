@@ -8,7 +8,7 @@ import InfomaniakRichHTMLEditor
 import UIKit
 import SwiftUI
 
-enum SeesturmHTMLToolbarAction: Int, CaseIterable {
+enum SeesturmHTMLToolbarAction: Int, CaseIterable, Identifiable {
     
     case dismissKeyboard
     case undo
@@ -21,6 +21,10 @@ enum SeesturmHTMLToolbarAction: Int, CaseIterable {
     case orderedList
     case unorderedList
     case removeFormat
+    
+    var id: Int {
+        self.rawValue
+    }
          
     static let actionGroups: [[Self]] = [
         [.dismissKeyboard],
@@ -53,8 +57,8 @@ enum SeesturmHTMLToolbarAction: Int, CaseIterable {
         }
     }
     
-    var icon: UIImage? {
-        let systemName: String = switch self {
+    var iconName: String {
+        switch self {
         case .dismissKeyboard:
             "keyboard.chevron.compact.down"
         case .undo:
@@ -78,7 +82,37 @@ enum SeesturmHTMLToolbarAction: Int, CaseIterable {
         case .removeFormat:
             "xmark.circle"
         }
-        return UIImage(systemName: systemName)
+    }
+    
+    var title: String {
+        switch self {
+        case .dismissKeyboard:
+            "Tastatur ausblenden"
+        case .undo:
+            "Rückgängig"
+        case .redo:
+            "Erneut ausführen"
+        case .bold:
+            "Fett"
+        case .italic:
+            "Kursiv"
+        case .underline:
+            "Unterstrichen"
+        case .strikethrough:
+            "Durchgestrichen"
+        case .link:
+            "Link einfügen"
+        case .orderedList:
+            "Geordnete Liste"
+        case .unorderedList:
+            "Ungeordnete Liste"
+        case .removeFormat:
+            "Formattierung entfernen"
+        }
+    }
+    
+    var icon: UIImage {
+        UIImage(systemName: iconName)!
     }
     
     var buttonTint: UIColor {
