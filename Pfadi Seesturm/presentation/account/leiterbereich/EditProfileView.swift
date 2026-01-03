@@ -69,11 +69,9 @@ struct EditProfileView: View {
                     shouldShowFullscreenProfilePicture = true
                 }
             )
-            .background(Color.customBackground)
             .navigationTitle("Account")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .background(Color.customBackground)
         .tint(Color.SEESTURM_GREEN)
         .fullScreenCover(item: viewModel.imageSelectionStateBinding) { data in
             GeometryReader { geometry in
@@ -314,7 +312,6 @@ private struct EditProfileContentView: View {
             onDeleteProfilePicture: {},
             onOpenFullscreenProfilePicture: {}
         )
-        .background(Color.customBackground)
         .navigationTitle("Account")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -332,7 +329,6 @@ private struct EditProfileContentView: View {
             onDeleteProfilePicture: {},
             onOpenFullscreenProfilePicture: {}
         )
-        .background(Color.customBackground)
         .navigationTitle("Account")
         .navigationBarTitleDisplayMode(.inline)
     }

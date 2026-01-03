@@ -27,7 +27,8 @@ extension WordpressDocumentDto {
             thumbnailHeight: thumbnailHeight,
             title: title,
             documentUrl: url,
-            published: DateTimeUtil.shared.formatDate(
+            published: publishedDate,
+            publishedFormatted: DateTimeUtil.shared.formatDate(
                 date: publishedDate,
                 format: "EEEE, d. MMMM yyyy",
                 timeZone: .current,

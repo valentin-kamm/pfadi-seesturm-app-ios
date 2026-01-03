@@ -174,14 +174,48 @@ private class ZoomableViewController<Content: UIView>: UIViewController, UIScrol
         )
     }
     
-    func updateContentSize(_ newSize: CGSize) {
+    func updateContentSize(_ newContentSize: CGSize) {
         
-        guard newSize != contentSize else { return }
-        contentSize = newSize
-
-        content.frame = CGRect(origin: .zero, size: newSize)
-        scrollView.contentSize = newSize
+        guard newContentSize != contentSize else { return }
+        
+        let currentZoomScale = scrollView.zoomScale
+        let sizeRatio = newContentSize.height / contentSize.height
+        let wasZoomed = currentZoomScale != 1
+        
+        let visibleRect = CGRect(
+            x: scrollView.contentOffset.x + scrollView.contentInset.left,
+            y: scrollView.contentOffset.y + scrollView.contentInset.top,
+            width: scrollView.bounds.width,
+            height: scrollView.bounds.height
+        )
+        
+        let normalizedCenterX = (visibleRect.midX) / (contentSize.width * currentZoomScale)
+        let normalizedCenterY = (visibleRect.midY) / (contentSize.height * currentZoomScale)
+        
+        // temporarily reset zoom scale to avoid mismatch between content size and zoom scale
+        if wasZoomed {
+            scrollView.setZoomScale(1, animated: false)
+        }
+        
+        contentSize = newContentSize
+        content.frame = CGRect(origin: .zero, size: newContentSize)
+        scrollView.contentSize = newContentSize
+        
+        let newZoomScale = currentZoomScale * sizeRatio
+        
+        if wasZoomed {
+            scrollView.setZoomScale(newZoomScale, animated: false)
+        }
+        
         centerContent()
+        
+        if wasZoomed {
+            let newCenterX = normalizedCenterX * (newContentSize.width * newZoomScale)
+            let newCenterY = normalizedCenterY * (newContentSize.height * newZoomScale)
+            let newOffsetX = newCenterX - scrollView.bounds.width / 2 - scrollView.contentInset.left
+            let newOffsetY = newCenterY - scrollView.bounds.height / 2 - scrollView.contentInset.top
+            scrollView.contentOffset = CGPoint(x: newOffsetX, y: newOffsetY)
+        }
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {

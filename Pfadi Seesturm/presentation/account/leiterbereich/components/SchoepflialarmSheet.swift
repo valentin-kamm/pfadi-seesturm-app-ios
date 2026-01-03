@@ -312,7 +312,6 @@ struct SchoepflialarmSheet: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: Alignment.topLeading)
             .navigationTitle("Schöpflialarm")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.customBackground)
             .actionSnackbar(
                 action: sendSchoepflialarmState,
                 events: [

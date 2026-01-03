@@ -53,7 +53,7 @@ struct DocumentCardView: View {
                     .font(.title2)
                     .allowsTightening(true)
                     .lineLimit(2)
-                Label(document.published.uppercased(), systemImage: "calendar")
+                Label(document.publishedFormatted.uppercased(), systemImage: "calendar")
                     .lineLimit(2)
                     .font(.caption)
                     .foregroundStyle(Color.secondary)

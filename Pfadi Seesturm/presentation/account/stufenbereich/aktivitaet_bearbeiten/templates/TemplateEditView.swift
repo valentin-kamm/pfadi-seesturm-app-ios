@@ -59,7 +59,6 @@ struct TemplateEditView: View {
             }
             .navigationTitle(mode.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.customBackground)
             .actionSnackbar(
                 action: editState,
                 events: [

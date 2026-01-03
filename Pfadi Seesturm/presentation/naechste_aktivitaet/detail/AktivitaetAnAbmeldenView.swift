@@ -64,7 +64,7 @@ struct AktivitaetAnAbmeldenView: View {
             .navigationDestination(for: AktivitaetAnAbmeldenNavigationDestination.self) { destination in
                 switch destination {
                 case .gespeichertePersonen:
-                    GespeichertePersonenView()
+                    GespeichertePersonenView(location: .sheet)
                 }
             }
             
@@ -171,16 +171,19 @@ private struct AktivitaetAnAbmeldenContentView: View {
                 } header: {
                     Text("Bemerkung (optional)")
                 }
-                Section {
-                    Picker("An-/Abmeldung", selection: sheetMode) {
-                        ForEach(stufe.allowedAktivitaetInteractions) { interaction in
-                            Label(interaction.nomen, systemImage: interaction.icon)
-                                .labelStyle(.titleAndIcon)
-                                .tag(interaction)
+                if stufe.allowedAktivitaetInteractions.count > 1 {
+                    Section {
+                        Picker("An-/Abmeldung", selection: sheetMode) {
+                            ForEach(stufe.allowedAktivitaetInteractions) { interaction in
+                                Label(interaction.nomen, systemImage: interaction.icon)
+                                    .labelStyle(.titleAndIcon)
+                                    .tag(interaction)
+                                    .tint(interaction.color)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .tint(sheetMode.wrappedValue.color)
                     }
-                    .pickerStyle(.menu)
-                    .tint(sheetMode.wrappedValue.color)
                 }
                 Section {
                     SeesturmButton(
@@ -199,7 +202,6 @@ private struct AktivitaetAnAbmeldenContentView: View {
                 }
             }
         }
-        .background(Color.customBackground)
         .navigationTitle("\(stufe.aktivitaetDescription) vom \(aktivitaet.startDayFormatted) \(aktivitaet.startMonthFormatted)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

@@ -22,6 +22,14 @@ struct GespeichertePersonenView: View {
     @State private var deletingError: String? = nil
     @State private var insertPersonState: ActionState<Void> = .idle
     
+    private let location: GespeichertePersonenViewLocation
+    
+    init(
+        location: GespeichertePersonenViewLocation = .normal
+    ) {
+        self.location = location
+    }
+    
     private var showSnackbar: Binding<Bool> {
         Binding(
             get: { deletingError != nil },
@@ -53,7 +61,8 @@ struct GespeichertePersonenView: View {
             },
             onShowSheet: {
                 showInsertSheet = true
-            }
+            },
+            location: location
         )
         .sheet(isPresented: $showInsertSheet) {
             GespeichertePersonHinzufuegenView(
@@ -79,15 +88,27 @@ private struct GespeichertePersonenContentView: View {
     private let personen: [GespeichertePerson]
     private let onDelete: (IndexSet) -> Void
     private let onShowSheet: () -> Void
+    private let location: GespeichertePersonenViewLocation
     
     init(
         personen: [GespeichertePerson],
         onDelete: @escaping (IndexSet) -> Void,
-        onShowSheet: @escaping () -> Void
+        onShowSheet: @escaping () -> Void,
+        location: GespeichertePersonenViewLocation
     ) {
         self.personen = personen
         self.onDelete = onDelete
         self.onShowSheet = onShowSheet
+        self.location = location
+    }
+    
+    private var backgroundColor: Color {
+        switch location {
+        case .normal:
+            .customBackground
+        case .sheet:
+            .clear
+        }
     }
     
     var body: some View {
@@ -103,7 +124,7 @@ private struct GespeichertePersonenContentView: View {
                 Text("Gespeicherte Personen")
             }
         }
-        .background(Color.customBackground)
+        .background(backgroundColor)
         .toolbar {
             if !personen.isEmpty {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -141,12 +162,18 @@ private struct GespeichertePersonenContentView: View {
     }
 }
 
+enum GespeichertePersonenViewLocation {
+    case normal
+    case sheet
+}
+
 #Preview("Empty") {
     NavigationStack(path: .constant(NavigationPath())) {
         GespeichertePersonenContentView(
             personen: [],
             onDelete: { _ in },
-            onShowSheet: {}
+            onShowSheet: {},
+            location: .normal
         )
     }
 }
@@ -159,7 +186,8 @@ private struct GespeichertePersonenContentView: View {
                 DummyData.gespeichertePerson3
             ],
             onDelete: { _ in },
-            onShowSheet: {}
+            onShowSheet: {},
+            location: .normal
         )
     }
 }

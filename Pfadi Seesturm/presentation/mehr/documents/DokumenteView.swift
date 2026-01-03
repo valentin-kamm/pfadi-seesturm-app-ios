@@ -83,7 +83,12 @@ private struct DocumentsContentView: View {
                         .foregroundStyle(Color.secondary)
                 }
                 else {
-                    ForEach(Array(documents.enumerated()), id: \.element.id) { index, document in
+                    let sortedDocuments =
+                        documentType == .luuchtturm
+                        ? documents.sorted { $0.title > $1.title }
+                        : documents.sorted { $0.published > $1.published }
+
+                    ForEach(Array(sortedDocuments.enumerated()), id: \.element.id) { index, document in
                         if let documentUrl = URL(string: document.documentUrl) {
                             Link(destination: documentUrl) {
                                 DocumentCardView(document: document)

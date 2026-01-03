@@ -597,7 +597,8 @@ struct DummyData {
         thumbnailHeight: 300,
         title: "Infobroschüre Pfadi Thurgau",
         documentUrl: "https://seesturm.ch/wp-content/uploads/2022/04/190404_Infobroschuere-Pfadi-Thurgau.pdf",
-        published: "test 2022-04-22T13:26:20+00:00"
+        published: Date(),
+        publishedFormatted: "test 2022-04-22T13:26:20+00:00"
     )
     static let document2 = WordpressDocument(
         id: "123",
@@ -606,7 +607,8 @@ struct DummyData {
         thumbnailHeight: 300,
         title: "Infobroschüre Pfadi Thurgau",
         documentUrl: "https://seesturm.ch/wp-content/uploads/2022/04/190404_Infobroschuere-Pfadi-Thurgau.pdf",
-        published: "test 2022-04-22T13:26:20+00:00"
+        published: Date(),
+        publishedFormatted: "test 2022-04-22T13:26:20+00:00"
     )
     
     static let gespeichertePerson1 = GespeichertePerson(

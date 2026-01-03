@@ -114,7 +114,6 @@ struct GespeichertePersonHinzufuegenView: View {
             }
             .navigationTitle("Person hinzufügen")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.customBackground)
             .customSnackbar(
                 show: showSnackbar,
                 type: .error,

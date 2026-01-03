@@ -88,6 +88,15 @@ private struct AktivitaetDetailContentView: View {
         self.onOpenSheet = onOpenSheet
     }
     
+    private var backgroundColor: Color {
+        switch type {
+        case .home, .display:
+            .customBackground
+        case .preview:
+            .clear
+        }
+    }
+    
     var body: some View {
         ScrollView {
             switch loadingState {
@@ -134,7 +143,7 @@ private struct AktivitaetDetailContentView: View {
                 )
             }
         }
-        .background(Color.customBackground)
+        .background(backgroundColor)
         .navigationTitle(type == .preview ? "Vorschau \(stufe.aktivitaetDescription)" : stufe.aktivitaetDescription)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

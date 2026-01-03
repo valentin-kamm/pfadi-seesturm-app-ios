@@ -42,6 +42,15 @@ struct TemplateListView: View {
         return false
     }
     
+    private var backgroundColor: Color {
+        switch mode {
+        case .use:
+            .clear
+        case .edit(_, _, _, _):
+            .customBackground
+        }
+    }
+    
     var body: some View {
         List {
             switch state {
@@ -113,7 +122,7 @@ struct TemplateListView: View {
         }
         .navigationTitle("Vorlagen \(stufe.name)")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color.customBackground)
+        .background(backgroundColor)
         .dynamicListStyle(isListPlain: state.isError)
         .scrollDisabled(scrollDisabled)
         .toolbar {

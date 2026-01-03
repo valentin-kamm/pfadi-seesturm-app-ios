@@ -4,6 +4,7 @@
 //
 //  Created by Valentin Kamm on 01.02.2025.
 //
+import SwiftUI
 
 struct WordpressDocument: Identifiable {
     var id: String
@@ -12,5 +13,6 @@ struct WordpressDocument: Identifiable {
     var thumbnailHeight: Int
     var title: String
     var documentUrl: String
-    var published: String
+    var published: Date
+    var publishedFormatted: String
 }

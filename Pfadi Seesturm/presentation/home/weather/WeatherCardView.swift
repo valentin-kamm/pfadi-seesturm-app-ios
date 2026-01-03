@@ -129,9 +129,13 @@ struct WeatherCardView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             if let attributionUrl = URL(string: weather.attributionURL) {
                 Link(destination: attributionUrl) {
-                    Label("Weather", systemImage: "apple.logo")
-                        .labelStyle(.titleAndIcon)
+                    HStack(alignment: .firstTextBaseline, spacing: 2) {
+                        Group {
+                            Image(systemName: "apple.logo")
+                            Text("Weather")
+                        }
                         .font(.footnote)
+                    }
                 }
                 .foregroundStyle(Color.secondary)
                 .buttonStyle(PlainButtonStyle())
