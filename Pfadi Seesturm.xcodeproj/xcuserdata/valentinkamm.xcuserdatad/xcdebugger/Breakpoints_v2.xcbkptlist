@@ -6702,8 +6702,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "266"
-            endingLineNumber = "266"
+            startingLineNumber = "262"
+            endingLineNumber = "262"
             landmarkName = "observeTemplates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6718,8 +6718,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "262"
-            endingLineNumber = "262"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "observeTemplates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6734,8 +6734,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
             landmarkName = "observeTemplates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -13655,22 +13655,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "374D5CFC-0B87-4CEC-8611-BED7253CDDB2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
-            landmarkName = "aktivitaetForPreview"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "FB965D13-A51B-45DA-97D0-515052ACE978"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -13678,8 +13662,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "aktivitaetForPublishing"
             landmarkType = "24">
          </BreakpointContent>

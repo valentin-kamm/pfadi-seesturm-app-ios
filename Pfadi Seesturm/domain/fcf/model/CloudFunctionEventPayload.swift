@@ -85,7 +85,7 @@ extension CloudFunctionEventPayload {
             createdFormatted: nowString,
             modifiedFormatted: nowString,
             isAllDay: isAllDay,
-            firstDayOfMonthOfStartDate: try DateTimeUtil.shared.getFirstDayOfMonth(of: start),
+            firstDayOfMonthOfStartDate: try DateTimeUtil.shared.getFirstDayOfMonth(of: startDate),
             start: startDate,
             end: endDate,
             startDateFormatted: DateTimeUtil.shared.formatDate(

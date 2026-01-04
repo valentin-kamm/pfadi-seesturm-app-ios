@@ -66,8 +66,7 @@ class AktivitaetBearbeitenViewModel {
         )
     }
     var aktivitaetForPublishing: CloudFunctionEventPayload {
-        
-        let x = CloudFunctionEventPayload(
+        return CloudFunctionEventPayload(
             summary: self.title.trimmingCharacters(in: .whitespacesAndNewlines),
             description: self.description.trimmingCharacters(in: .whitespacesAndNewlines),
             location: self.location.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -75,12 +74,9 @@ class AktivitaetBearbeitenViewModel {
             start: self.isAllDay ? Calendar.current.startOfDay(for: self.start) : self.start,
             end: self.isAllDay ? Calendar.current.startOfDay(for: self.end) : self.end
         )
-        
-        return x
     }
     var aktivitaetForPreview: GoogleCalendarEvent? {
-        let y = try? aktivitaetForPublishing.toGoogleCalendarEvent()
-        return y
+        try? aktivitaetForPublishing.toGoogleCalendarEvent()
     }
     private var publishingValidationStatus: AktivitaetValidationStatus {
         
