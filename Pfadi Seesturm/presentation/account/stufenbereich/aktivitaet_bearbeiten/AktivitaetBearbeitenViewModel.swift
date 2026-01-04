@@ -18,6 +18,7 @@ class AktivitaetBearbeitenViewModel {
     var location: String = ""
     var start: Date = DateTimeUtil.shared.nextSaturday(at: 14, timeZone: TimeZone(identifier: "Europe/Zurich")!)
     var end: Date = DateTimeUtil.shared.nextSaturday(at: 16, timeZone: TimeZone(identifier: "Europe/Zurich")!)
+    var isAllDay: Bool = false
     var sendPushNotification: Bool = true
     var showConfirmationDialog: Bool = false
     var showPreviewSheet: Bool = false
@@ -65,16 +66,21 @@ class AktivitaetBearbeitenViewModel {
         )
     }
     var aktivitaetForPublishing: CloudFunctionEventPayload {
-        return CloudFunctionEventPayload(
+        
+        let x = CloudFunctionEventPayload(
             summary: self.title.trimmingCharacters(in: .whitespacesAndNewlines),
             description: self.description.trimmingCharacters(in: .whitespacesAndNewlines),
             location: self.location.trimmingCharacters(in: .whitespacesAndNewlines),
-            start: self.start,
-            end: self.end
+            isAllDay: self.isAllDay,
+            start: self.isAllDay ? Calendar.current.startOfDay(for: self.start) : self.start,
+            end: self.isAllDay ? Calendar.current.startOfDay(for: self.end) : self.end
         )
+        
+        return x
     }
     var aktivitaetForPreview: GoogleCalendarEvent? {
-        try? aktivitaetForPublishing.toGoogleCalendarEvent()
+        let y = try? aktivitaetForPublishing.toGoogleCalendarEvent()
+        return y
     }
     private var publishingValidationStatus: AktivitaetValidationStatus {
         
@@ -89,7 +95,7 @@ class AktivitaetBearbeitenViewModel {
         }
         
         // warnings
-        if abs(Calendar.current.dateComponents([.hour], from: aktivitaet.start, to: aktivitaet.end).hour ?? 2) < 2 {
+        if abs(Calendar.current.dateComponents([.hour], from: aktivitaet.start, to: aktivitaet.end).hour ?? 2) < 2 && !self.isAllDay {
             return .warning(message: "Die Aktivität ist kürzer als 2 Stunden. Möchtest du die Aktivität trotzdem \(selectedSheetMode.verb)?")
         }
         if aktivitaet.start < Date.now {
@@ -144,12 +150,13 @@ class AktivitaetBearbeitenViewModel {
                 }
             case .success(let d):
                 withAnimation {
-                    title = d.title
-                    description = d.description ?? ""
-                    location = d.location ?? ""
-                    start = d.start
-                    end = d.end
-                    aktivitaetState = .success(data: ())
+                    self.title = d.title
+                    self.description = d.description ?? ""
+                    self.location = d.location ?? ""
+                    self.start = d.start
+                    self.end = d.end
+                    self.isAllDay = d.isAllDay
+                    self.aktivitaetState = .success(data: ())
                 }
             }
         }

@@ -10,7 +10,7 @@ struct CloudFunctionEventPayload {
     let summary: String
     let description: String
     let location: String
-    let isAllDay: Bool = false
+    let isAllDay: Bool
     let start: Date
     let end: Date
 }
@@ -38,7 +38,7 @@ extension CloudFunctionEventPayload {
             end: GoogleCalendarEventStartEndDto(
                 dateTime: isAllDay ? nil : try DateTimeUtil.shared.getIso8601DateString(date: end, timeZone: timeZoneForEvent),
                 date: isAllDay ? DateTimeUtil.shared.formatDate(
-                    date: try DateTimeUtil.shared.newDate(byAdding: .day, value: -1, to: end),
+                    date: try DateTimeUtil.shared.newDate(byAdding: .day, value: 1, to: end),
                     format: "yyyy-MM-dd",
                     timeZone: timeZoneForEvent,
                     type: .absolute
@@ -60,9 +60,24 @@ extension CloudFunctionEventPayload {
             type: .relative(withTime: true)
         )
         
+        let startDate: Date
+        if !isAllDay {
+            startDate = start
+        }
+        else {
+            startDate = Calendar.current.startOfDay(for: start)
+        }
+        let endDate: Date
+        if !isAllDay {
+            endDate = end
+        }
+        else {
+            endDate = Calendar.current.startOfDay(for: end)
+        }
+        
         return GoogleCalendarEvent(
             id: UUID().uuidString,
-            title: summary,
+            title: summary.trimmingCharacters(in: .whitespacesAndNewlines),
             description: description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : description.trimmingCharacters(in: .whitespacesAndNewlines),
             location: location.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : location.trimmingCharacters(in: .whitespacesAndNewlines),
             created: now,
@@ -71,29 +86,29 @@ extension CloudFunctionEventPayload {
             modifiedFormatted: nowString,
             isAllDay: isAllDay,
             firstDayOfMonthOfStartDate: try DateTimeUtil.shared.getFirstDayOfMonth(of: start),
-            start: start,
-            end: end,
+            start: startDate,
+            end: endDate,
             startDateFormatted: DateTimeUtil.shared.formatDate(
-                date: start,
+                date: startDate,
                 format: "dd. MMMM yyyy",
                 timeZone: targetDisplayTimezone,
                 type: .absolute
             ),
             startDayFormatted: DateTimeUtil.shared.formatDate(
-                date: start,
+                date: startDate,
                 format: "dd.",
                 timeZone: targetDisplayTimezone,
                 type: .absolute
             ),
             startMonthFormatted: DateTimeUtil.shared.formatDate(
-                date: start,
+                date: startDate,
                 format: "MMM",
                 timeZone: targetDisplayTimezone,
                 type: .absolute
             ),
-            endDateFormatted: DateTimeUtil.shared.getEventEndDateString(startDate: start, endDate: end, timeZone: targetDisplayTimezone),
-            timeFormatted: DateTimeUtil.shared.getEventTimeString(isAllDay: isAllDay, startDate: start, endDate: end, timeZone: targetDisplayTimezone),
-            fullDateTimeFormatted: DateTimeUtil.shared.getEventFullDateTimeString(isAllDay: isAllDay, startDate: start, endDate: end, timezone: targetDisplayTimezone)
+            endDateFormatted: DateTimeUtil.shared.getEventEndDateString(startDate: startDate, endDate: endDate, timeZone: targetDisplayTimezone),
+            timeFormatted: DateTimeUtil.shared.getEventTimeString(isAllDay: isAllDay, startDate: startDate, endDate: endDate, timeZone: targetDisplayTimezone),
+            fullDateTimeFormatted: try DateTimeUtil.shared.getEventFullDateTimeString(isAllDay: isAllDay, startDate: startDate, endDate: endDate, timezone: targetDisplayTimezone)
         )
     }
 }

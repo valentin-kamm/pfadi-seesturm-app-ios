@@ -34,6 +34,7 @@ struct AktivitaetBearbeitenView: View {
             onReadAktivitaetRetry: viewModel.fetchAktivitaetIfNecessary,
             start: $viewModel.start,
             end: $viewModel.end,
+            isAllDay: $viewModel.isAllDay,
             location: $viewModel.location,
             sendPushNotification: $viewModel.sendPushNotification,
             title: $viewModel.title,
@@ -123,6 +124,7 @@ private struct AktivitaetBearbeitenContentView: View {
     private let onReadAktivitaetRetry: () async -> Void
     private let start: Binding<Date>
     private let end: Binding<Date>
+    private let isAllDay: Binding<Bool>
     private let location: Binding<String>
     private let sendPushNotification: Binding<Bool>
     private let title: Binding<String>
@@ -144,6 +146,7 @@ private struct AktivitaetBearbeitenContentView: View {
         onReadAktivitaetRetry: @escaping () async -> Void,
         start: Binding<Date>,
         end: Binding<Date>,
+        isAllDay: Binding<Bool>,
         location: Binding<String>,
         sendPushNotification: Binding<Bool>,
         title: Binding<String>,
@@ -164,6 +167,7 @@ private struct AktivitaetBearbeitenContentView: View {
         self.onReadAktivitaetRetry = onReadAktivitaetRetry
         self.start = start
         self.end = end
+        self.isAllDay = isAllDay
         self.location = location
         self.sendPushNotification = sendPushNotification
         self.title = title
@@ -185,6 +189,15 @@ private struct AktivitaetBearbeitenContentView: View {
         var id: AktivitaetBearbeitenFormFields { self }
     }
     
+    private var displayedDatePickerComponents: DatePicker.Components {
+        if isAllDay.wrappedValue {
+            return [.date]
+        }
+        else {
+            return [.date, .hourAndMinute]
+        }
+    }
+    
     var body: some View {
         FocusControlView(allFields: AktivitaetBearbeitenFormFields.allCases) { focused in
             List {
@@ -197,6 +210,9 @@ private struct AktivitaetBearbeitenContentView: View {
                             .loadingBlinking()
                         Text(Constants.PLACEHOLDER_TEXT)
                             .lineLimit(1)
+                            .redacted(reason: .placeholder)
+                            .loadingBlinking()
+                        Text("Ganztägig")
                             .redacted(reason: .placeholder)
                             .loadingBlinking()
                     } header: {
@@ -251,17 +267,19 @@ private struct AktivitaetBearbeitenContentView: View {
                     .listRowBackground(Color.clear)
                 case .success(_):
                     Section {
-                        DatePicker("Start", selection: start, displayedComponents: [.date, .hourAndMinute])
+                        DatePicker("Start", selection: start, displayedComponents: displayedDatePickerComponents)
                             .datePickerStyle(.compact)
                             .disabled(publishAktivitaetState.isLoading)
                             .tint(Color.SEESTURM_GREEN)
                             .environment(\.timeZone, TimeZone(identifier: "Europe/Zurich")!)
-                        DatePicker("Ende", selection: end, displayedComponents: [.date, .hourAndMinute])
+                        DatePicker("Ende", selection: end, displayedComponents: displayedDatePickerComponents)
                             .datePickerStyle(.compact)
                             .disabled(publishAktivitaetState.isLoading)
                             .tint(Color.SEESTURM_GREEN)
                             .environment(\.timeZone, TimeZone(identifier: "Europe/Zurich")!)
-                        
+                        Toggle("Ganztägig", isOn: isAllDay)
+                            .tint(stufe.highContrastColor)
+                            .disabled(publishAktivitaetState.isLoading)
                     } header: {
                         Text("Zeit")
                     } footer: {
@@ -382,6 +400,7 @@ private struct AktivitaetBearbeitenContentView: View {
             onReadAktivitaetRetry: {},
             start: .constant(Date()),
             end: .constant(Date()),
+            isAllDay: .constant(false),
             location: .constant(""),
             sendPushNotification: .constant(false),
             title: .constant(""),
@@ -407,6 +426,7 @@ private struct AktivitaetBearbeitenContentView: View {
             onReadAktivitaetRetry: {},
             start: .constant(Date()),
             end: .constant(Date()),
+            isAllDay: .constant(false),
             location: .constant(""),
             sendPushNotification: .constant(false),
             title: .constant(""),
@@ -432,6 +452,7 @@ private struct AktivitaetBearbeitenContentView: View {
             onReadAktivitaetRetry: {},
             start: .constant(Date()),
             end: .constant(Date()),
+            isAllDay: .constant(false),
             location: .constant(""),
             sendPushNotification: .constant(false),
             title: .constant(""),

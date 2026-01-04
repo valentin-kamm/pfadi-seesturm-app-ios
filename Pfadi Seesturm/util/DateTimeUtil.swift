@@ -81,7 +81,11 @@ class DateTimeUtil {
     }
     
     // function to format a date range
-    func formatDateRange(startDate: Date, endDate: Date, timeZone: TimeZone, withTime: Bool) -> String {
+    func formatDateRange(startDate: Date, endDate: Date, timeZone: TimeZone, withTime: Bool) throws -> String {
+        
+        guard startDate <= endDate else {
+            throw PfadiSeesturmError.dateError(message: "Das Startdatum muss vor dem Enddatum sein.")
+        }
         
         let formatter = DateIntervalFormatter()
         formatter.locale = Locale(identifier: "de_CH")
@@ -208,10 +212,10 @@ class DateTimeUtil {
         return "\(startTimeString) bis \(endTimeString) Uhr"
     }
     
-    func getEventFullDateTimeString(isAllDay: Bool, startDate: Date, endDate: Date, timezone: TimeZone) -> String {
+    func getEventFullDateTimeString(isAllDay: Bool, startDate: Date, endDate: Date, timezone: TimeZone) throws -> String {
         
         if isAllDay {
-            let dateRangeString = DateTimeUtil.shared.formatDateRange(
+            let dateRangeString = try DateTimeUtil.shared.formatDateRange(
                 startDate: startDate,
                 endDate: endDate,
                 timeZone: timezone,
@@ -220,7 +224,7 @@ class DateTimeUtil {
             return "\(dateRangeString), ganztägig"
         }
         
-        return DateTimeUtil.shared.formatDateRange(
+        return try DateTimeUtil.shared.formatDateRange(
             startDate: startDate,
             endDate: endDate,
             timeZone: timezone,
@@ -390,25 +394,25 @@ class DateTimeUtil {
             ))
         }
         Section {
-            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+            Text(try! DateTimeUtil.shared.getEventFullDateTimeString(
                 isAllDay: false,
                 startDate: heute,
                 endDate: morgen,
                 timezone: timeZone
             ))
-            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+            Text(try! DateTimeUtil.shared.getEventFullDateTimeString(
                 isAllDay: true,
                 startDate: heute,
                 endDate: morgen,
                 timezone: timeZone
             ))
-            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+            Text(try! DateTimeUtil.shared.getEventFullDateTimeString(
                 isAllDay: false,
                 startDate: heute,
                 endDate: heuteSpäter,
                 timezone: timeZone
             ))
-            Text(DateTimeUtil.shared.getEventFullDateTimeString(
+            Text(try! DateTimeUtil.shared.getEventFullDateTimeString(
                 isAllDay: true,
                 startDate: heute,
                 endDate: heuteSpäter,

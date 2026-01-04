@@ -83,7 +83,7 @@ extension GoogleCalendarEventDto {
                 endDate: endDate,
                 timeZone: targetDisplayTimezone
             ),
-            fullDateTimeFormatted: DateTimeUtil.shared.getEventFullDateTimeString(
+            fullDateTimeFormatted: try DateTimeUtil.shared.getEventFullDateTimeString(
                 isAllDay: isAllDay,
                 startDate: startDate,
                 endDate: endDate,

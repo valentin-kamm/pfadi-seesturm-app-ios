@@ -6702,8 +6702,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
+            startingLineNumber = "266"
+            endingLineNumber = "266"
             landmarkName = "observeTemplates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6718,8 +6718,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "262"
+            endingLineNumber = "262"
             landmarkName = "observeTemplates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -6734,8 +6734,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "248"
-            endingLineNumber = "248"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
             landmarkName = "observeTemplates()"
             landmarkType = "7">
          </BreakpointContent>
@@ -7054,8 +7054,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -7518,8 +7518,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -7534,8 +7534,8 @@
             filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "init(selectedSheetMode:service:stufe:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8391,22 +8391,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AC97A9DD-ECC0-4CB5-BBB9-865E146043F3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "aktivitaetForPublishing"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "45FA01CC-4DFB-49ED-9455-604020B5B37B"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -9008,7 +8992,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "221"
             endingLineNumber = "221"
-            landmarkName = "insertNewAktivitaetTemplate(stufe:description:)"
+            landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9024,7 +9008,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "222"
             endingLineNumber = "222"
-            landmarkName = "insertNewAktivitaetTemplate(stufe:description:)"
+            landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -9040,7 +9024,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "223"
             endingLineNumber = "223"
-            landmarkName = "insertNewAktivitaetTemplate(stufe:description:)"
+            landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -13650,6 +13634,174 @@
             endingLineNumber = "196"
             landmarkName = "updateContentSize(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DFBC4820-5105-4064-AC6F-376D27E104B7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/util/DateTimeUtil.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "formatDateRange(startDate:endDate:timeZone:withTime:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "374D5CFC-0B87-4CEC-8611-BED7253CDDB2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "aktivitaetForPreview"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FB965D13-A51B-45DA-97D0-515052ACE978"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/account/stufenbereich/aktivitaet_bearbeiten/AktivitaetBearbeitenViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "aktivitaetForPublishing"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "677FF851-7650-40AC-A7B5-9AE17DF511CC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "addNewAktivitaet(event:stufe:withNotification:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "677FF851-7650-40AC-A7B5-9AE17DF511CC - e39e54261187c3cf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for Pfadi_Seesturm.StufenbereichService.addNewAktivitaet(event: Pfadi_Seesturm.CloudFunctionEventPayload, stufe: Pfadi_Seesturm.SeesturmStufe, withNotification: Swift.Bool) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Swift.String, Pfadi_Seesturm.CloudFunctionsError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/StufenbereichService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90">
+               </Location>
+               <Location
+                  uuid = "677FF851-7650-40AC-A7B5-9AE17DF511CC - 57b1040bf2150015"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for Pfadi_Seesturm.StufenbereichService.addNewAktivitaet(event: Pfadi_Seesturm.CloudFunctionEventPayload, stufe: Pfadi_Seesturm.SeesturmStufe, withNotification: Swift.Bool) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Swift.String, Pfadi_Seesturm.CloudFunctionsError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/StufenbereichService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90">
+               </Location>
+               <Location
+                  uuid = "677FF851-7650-40AC-A7B5-9AE17DF511CC - 31c37dc13272e3c8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Pfadi_Seesturm.StufenbereichService.addNewAktivitaet(event: Pfadi_Seesturm.CloudFunctionEventPayload, stufe: Pfadi_Seesturm.SeesturmStufe, withNotification: Swift.Bool) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Swift.String, Pfadi_Seesturm.CloudFunctionsError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/StufenbereichService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F88D9916-B680-4CE2-BB77-8ED9B11453E8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "updateExistingAktivitaet(eventId:event:stufe:withNotification:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F88D9916-B680-4CE2-BB77-8ED9B11453E8 - c23b87678bdaf393"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for Pfadi_Seesturm.StufenbereichService.updateExistingAktivitaet(eventId: Swift.String, event: Pfadi_Seesturm.CloudFunctionEventPayload, stufe: Pfadi_Seesturm.SeesturmStufe, withNotification: Swift.Bool) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Swift.String, Pfadi_Seesturm.CloudFunctionsError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/StufenbereichService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "116"
+                  endingLineNumber = "116">
+               </Location>
+               <Location
+                  uuid = "F88D9916-B680-4CE2-BB77-8ED9B11453E8 - dc07492bde15d96f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for Pfadi_Seesturm.StufenbereichService.updateExistingAktivitaet(eventId: Swift.String, event: Pfadi_Seesturm.CloudFunctionEventPayload, stufe: Pfadi_Seesturm.SeesturmStufe, withNotification: Swift.Bool) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Swift.String, Pfadi_Seesturm.CloudFunctionsError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/StufenbereichService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "116"
+                  endingLineNumber = "116">
+               </Location>
+               <Location
+                  uuid = "F88D9916-B680-4CE2-BB77-8ED9B11453E8 - eee749a1cda396e8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Pfadi_Seesturm.StufenbereichService.updateExistingAktivitaet(eventId: Swift.String, event: Pfadi_Seesturm.CloudFunctionEventPayload, stufe: Pfadi_Seesturm.SeesturmStufe, withNotification: Swift.Bool) async -&gt; Pfadi_Seesturm.SeesturmResult&lt;Swift.String, Pfadi_Seesturm.CloudFunctionsError&gt;"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/domain/account/service/StufenbereichService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "116"
+                  endingLineNumber = "116">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
