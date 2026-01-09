@@ -4,7 +4,6 @@
 //
 //  Created by Valentin Kamm on 18.10.2024.
 //
-
 import SwiftUI
 import Kingfisher
 
@@ -29,7 +28,17 @@ struct PhotoSliderView: View {
         }
     }
     
+    private var navigationTitle: String {
+        switch mode {
+        case .single(_):
+            ""
+        case .multi(let images, _):
+            "\(imageIndex + 1) von \(images.count)"
+        }
+    }
+    
     var body: some View {
+        
         NavigationStack(path: .constant(NavigationPath())) {
             GeometryReader { geometry in
                 PhotoSliderContentView(
@@ -43,14 +52,6 @@ struct PhotoSliderView: View {
                 .onChange(of: geometry.size) { _, newValue in
                     self.screenSize = newValue
                 }
-                .toolbar(toolbarVisibility)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Schliessen") {
-                            dismiss()
-                        }
-                    }
-                }
                 .onTapGesture {
                     withAnimation {
                         if case .visible = toolbarVisibility {
@@ -62,8 +63,20 @@ struct PhotoSliderView: View {
                     }
                 }
             }
+            .ignoresSafeArea()
+            .background(Color.customBackground)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbar(toolbarVisibility)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(navigationTitle)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Schliessen") {
+                        dismiss()
+                    }
+                }
+            }
         }
-        .background(Color.customBackground)
         .unlockRotation()
     }
 }
@@ -84,13 +97,17 @@ private struct PhotoSliderContentView: View {
         self.screenSize = screenSize
     }
     
-    private var navigationTitle: String {
-        switch mode {
-        case .single(_):
-            ""
-        case .multi(let images, _):
-            "\(imageIndex + 1) von \(images.count)"
-        }
+    private var scrollBinding: Binding<Int?> {
+        Binding(
+            get: {
+                imageIndex
+            },
+            set: {
+                if let newIndex = $0 {
+                    imageIndex = newIndex
+                }
+            }
+        )
     }
     private var images: [PhotoSliderViewItem] {
         switch mode {
@@ -100,67 +117,68 @@ private struct PhotoSliderContentView: View {
             images
         }
     }
-    private var indexDisplayMode: PageTabViewStyle.IndexDisplayMode {
+    private var scrollDisabled: Bool {
         switch mode {
         case .single(_):
-            .never
+            return true
         case .multi(_, _):
-            .always
+            return false
         }
     }
     
     var body: some View {
-        ZStack {
-            TabView(selection: $imageIndex) {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack(spacing: 0) {
                 ForEach(Array(images.enumerated()), id: \.element.id) { index, image in
-                    if let url = image.url {
-                        ZoomableContainer(
-                            viewSize: screenSize,
-                            contentAspectRatio: image.aspectRatio
-                        ) {
-                            KFImage(url)
-                                .cancelOnDisappear(true)
-                                .placeholder { progress in
-                                    ZStack(alignment: .top) {
-                                        Rectangle()
-                                            .fill(Color.skeletonPlaceholderColor)
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                                        ProgressView(value: progress.fractionCompleted, total: 1.0)
-                                            .progressViewStyle(.linear)
-                                            .tint(Color.SEESTURM_GREEN)
-                                            .frame(maxWidth: .infinity, alignment: .center)
+                    Group {
+                        if let url = image.url {
+                            ZoomableContainer(
+                                viewSize: screenSize,
+                                contentAspectRatio: image.aspectRatio
+                            ) {
+                                KFImage(url)
+                                    .cancelOnDisappear(true)
+                                    .placeholder { progress in
+                                        ZStack(alignment: .top) {
+                                            Rectangle()
+                                                .fill(Color.skeletonPlaceholderColor)
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                                            ProgressView(value: progress.fractionCompleted, total: 1.0)
+                                                .progressViewStyle(.linear)
+                                                .tint(Color.SEESTURM_GREEN)
+                                                .frame(maxWidth: .infinity, alignment: .center)
+                                        }
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                                     }
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                                }
-                                .resizable()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                                .aspectRatio(image.aspectRatio, contentMode: .fit)
-                        }
-                        .tag(index)
-                    }
-                    else {
-                        Rectangle()
-                            .fill(Color.skeletonPlaceholderColor)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .aspectRatio(image.aspectRatio, contentMode: .fit)
-                            .overlay {
-                                Image(systemName: "photo")
                                     .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 50, height: 50)
-                                    .foregroundStyle(Color.SEESTURM_GREEN)
+                                    .aspectRatio(image.aspectRatio, contentMode: .fit)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                             }
-                            .tag(index)
+                        }
+                        else {
+                            Rectangle()
+                                .fill(Color.skeletonPlaceholderColor)
+                                .aspectRatio(image.aspectRatio, contentMode: .fit)
+                                .overlay {
+                                    Image(systemName: "photo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundStyle(Color.SEESTURM_GREEN)
+                                }
+                        }
                     }
+                    .id(index)
+                    .containerRelativeFrame(.horizontal)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: indexDisplayMode))
-            .navigationTitle(navigationTitle)
+            .scrollTargetLayout()
         }
-        .frame(width: screenSize.width, height: screenSize.height, alignment: .center)
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.customBackground)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .scrollTargetBehavior(.paging)
+        .scrollPosition(id: scrollBinding)
+        .scrollBounceBehavior(.always)
+        .scrollDisabled(scrollDisabled)
     }
 }
 
@@ -204,18 +222,12 @@ enum PhotoSliderViewMode {
         PhotoSliderViewItem(from: photo)
     }
     
-    NavigationStack(path: .constant(NavigationPath())) {
-        GeometryReader { geometry in
-            PhotoSliderContentView(
-                mode: .multi(
-                    images: images,
-                    initialIndex: 0
-                ),
-                imageIndex: $index,
-                screenSize: geometry.size
-            )
-        }
-    }
+    PhotoSliderView(
+        mode: .multi(
+            images: images,
+            initialIndex: 0
+        )
+    )
 }
 
 #Preview("Single") {
@@ -230,13 +242,5 @@ enum PhotoSliderViewMode {
     )
     let item = PhotoSliderViewItem(from: wordpressPhoto)
     
-    NavigationStack(path: .constant(NavigationPath())) {
-        GeometryReader { geometry in
-            PhotoSliderContentView(
-                mode: .single(image: item),
-                imageIndex: .constant(0),
-                screenSize: geometry.size
-            )
-        }
-    }
+    PhotoSliderView(mode: .single(image: item))
 }
