@@ -12,9 +12,10 @@ enum AccountNavigationDestination: NavigationDestination {
     case anlaesse
     case anlassDetail(inputType: DetailInputType<String, GoogleCalendarEvent>)
     case stufenbereich(stufe: SeesturmStufe)
-    case displayAktivitaet(stufe: SeesturmStufe, aktivitaet: GoogleCalendarEvent, type: AktivitaetDetailViewType)
-    case aktivitaetBearbeiten(mode: AktivitaetBearbeitenMode, stufe: SeesturmStufe)
+    case displayAktivitaet(stufe: SeesturmStufe, aktivitaet: GoogleCalendarEvent)
+    case aktivitaetBearbeiten(type: EventToManageType)
     case templates(stufe: SeesturmStufe)
+    case manageTermin(calendar: SeesturmCalendar, mode: EventManagementMode)
 }
 
 private struct AccountNavigationDestinations: ViewModifier {
@@ -39,16 +40,12 @@ private struct AccountNavigationDestinations: ViewModifier {
     func body(content: Content) -> some View {
         content.navigationDestination(for: AccountNavigationDestination.self) { destination in
             switch destination {
-            case .displayAktivitaet(let stufe, let aktivitaet, let type):
+            case .displayAktivitaet(let stufe, let aktivitaet):
                 AktivitaetDetailView(
-                    viewModel: AktivitaetDetailViewModel(
-                        input: .object(object: aktivitaet),
-                        service: wordpressModule.naechsteAktivitaetService,
-                        stufe: stufe,
-                        userId: nil
-                    ),
                     stufe: stufe,
-                    type: type
+                    type: .stufenbereich(event: aktivitaet),
+                    userId: nil,
+                    service: wordpressModule.naechsteAktivitaetService
                 )
             case .anlaesse:
                 AnlaesseView(
@@ -87,15 +84,13 @@ private struct AccountNavigationDestinations: ViewModifier {
                     viewModel: leiterbereichViewModel,
                     user: user
                 )
-            case .aktivitaetBearbeiten(let mode, let stufe):
-                AktivitaetBearbeitenView(
-                    viewModel: AktivitaetBearbeitenViewModel(
-                        selectedSheetMode: mode,
-                        service: accountModule.stufenbereichService,
-                        stufe: stufe
-                    ),
-                    mode: mode,
-                    stufe: stufe
+            case .aktivitaetBearbeiten(let type):
+                ManageEventView(
+                    viewModel: ManageEventViewModel(
+                        stufenbereichService: accountModule.stufenbereichService,
+                        anlaesseService: wordpressModule.anlaesseService,
+                        eventType: type
+                    )
                 )
             case .templates(let stufe):
                 TemplateEditListView(
@@ -104,6 +99,14 @@ private struct AccountNavigationDestinations: ViewModifier {
                         service: accountModule.stufenbereichService
                     ),
                     stufe: stufe
+                )
+            case .manageTermin(let calendar, let mode):
+                ManageEventView(
+                    viewModel: ManageEventViewModel(
+                        stufenbereichService: accountModule.stufenbereichService,
+                        anlaesseService: wordpressModule.anlaesseService,
+                        eventType: .termin(calendar: calendar, mode: mode)
+                    )
                 )
             }
         }

@@ -6,7 +6,15 @@
 //
 
 enum AktivitaetDetailViewType {
-    case home
-    case preview
-    case display
+    case home(input: DetailInputType<String, GoogleCalendarEvent?>)
+    case stufenbereich(event: GoogleCalendarEvent)
+    
+    var anAbmeldenButtonsDisabled: Bool {
+        switch self {
+        case .home(_):
+            return false
+        case .stufenbereich(_):
+            return true
+        }
+    }
 }

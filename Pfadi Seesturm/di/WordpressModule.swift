@@ -37,13 +37,16 @@ protocol WordpressModule {
 class WordpressModuleImpl: WordpressModule {
     
     private let firestoreRepository: FirestoreRepository
+    private let cloudFunctionsRepository: CloudFunctionsRepository
     private let modelContext: ModelContext
     
     init(
         firestoreRepository: FirestoreRepository,
+        cloudFunctionsRepository: CloudFunctionsRepository,
         modelContext: ModelContext
     ) {
         self.firestoreRepository = firestoreRepository
+        self.cloudFunctionsRepository = cloudFunctionsRepository
         self.modelContext = modelContext
     }
     
@@ -55,7 +58,10 @@ class WordpressModuleImpl: WordpressModule {
     lazy var aktuellService: AktuellService = AktuellService(repository: aktuellRepository)
     
     lazy var anlaesseRepository: AnlaesseRepository = AnlaesseRepositoryImpl(api: wordpressApi)
-    lazy var anlaesseService: AnlaesseService = AnlaesseService(repository: anlaesseRepository)
+    lazy var anlaesseService: AnlaesseService = AnlaesseService(
+        repository: anlaesseRepository,
+        cloudFunctionsRepository: cloudFunctionsRepository
+    )
     
     lazy var weatherRepository: WeatherRepository = WeatherRepositoryImpl(api: wordpressApi)
     lazy var weatherService: WeatherService = WeatherService(repository: weatherRepository)
@@ -84,6 +90,11 @@ struct WordpressModuleKey: EnvironmentKey {
             db: .firestore(),
             api: FirestoreApiImpl(
                 db: .firestore()
+            )
+        ),
+        cloudFunctionsRepository: CloudFunctionsRepositoryImpl(
+            api: CloudFunctionsApiImpl(
+                functions: .functions()
             )
         ),
         modelContext: ModelContext(seesturmModelContainer)

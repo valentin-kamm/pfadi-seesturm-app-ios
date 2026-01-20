@@ -8,18 +8,22 @@ import SwiftUI
 
 enum AnlaesseNavigationDestination: NavigationDestination {
     case detail(inputType: DetailInputType<String, GoogleCalendarEvent>)
+    case manageTermin(calendar: SeesturmCalendar, mode: EventManagementMode)
 }
 
 private struct AnlaesseNavigationDestinations: ViewModifier {
     
     private let wordpressModule: WordpressModule
+    private let accountModule: AccountModule
     private let calendar: SeesturmCalendar
     
     init(
         wordpressModule: WordpressModule,
+        accountModule: AccountModule,
         calendar: SeesturmCalendar
     ) {
         self.wordpressModule = wordpressModule
+        self.accountModule = accountModule
         self.calendar = calendar
     }
     
@@ -42,6 +46,14 @@ private struct AnlaesseNavigationDestinations: ViewModifier {
                 case .object(_):
                     termineDetailView
                 }
+            case .manageTermin(let calendar, let mode):
+                ManageEventView(
+                    viewModel: ManageEventViewModel(
+                        stufenbereichService: accountModule.stufenbereichService,
+                        anlaesseService: wordpressModule.anlaesseService,
+                        eventType: .termin(calendar: calendar, mode: mode)
+                    )
+                )
             }
         }
     }
@@ -51,11 +63,13 @@ extension View {
     
     func anlaesseNavigationDestinations(
         wordpressModule: WordpressModule,
+        accountModule: AccountModule,
         calendar: SeesturmCalendar
     ) -> some View {
         self.modifier(
             AnlaesseNavigationDestinations(
                 wordpressModule: wordpressModule,
+                accountModule: accountModule,
                 calendar: calendar
             )
         )

@@ -12,18 +12,18 @@ struct AktivitaetDetailCardView: View {
     private let stufe: SeesturmStufe
     private let aktivitaet: GoogleCalendarEvent?
     private let openSheet: (AktivitaetInteractionType) -> Void
-    private let type: AktivitaetDetailViewType
+    private let buttonsDisabled: Bool
     
     init(
         stufe: SeesturmStufe,
         aktivitaet: GoogleCalendarEvent?,
         openSheet: @escaping (AktivitaetInteractionType) -> Void,
-        type: AktivitaetDetailViewType
+        buttonsDisabled: Bool
     ) {
         self.stufe = stufe
         self.aktivitaet = aktivitaet
         self.openSheet = openSheet
-        self.type = type
+        self.buttonsDisabled = buttonsDisabled
     }
     
     var body: some View {
@@ -138,12 +138,12 @@ struct AktivitaetDetailCardView: View {
                             SeesturmButton(
                                 type: .secondary,
                                 action: .sync(action: {
-                                    self.openSheet(interaction)
+                                    openSheet(interaction)
                                 }),
                                 title: interaction.verb.capitalized,
                                 icon: .system(name: interaction.icon),
                                 colors: .custom(contentColor: .white, buttonColor: interaction.color),
-                                disabled: type != .home
+                                disabled: buttonsDisabled
                             )
                         }
                     }
@@ -201,7 +201,7 @@ struct AktivitaetDetailCardView: View {
         stufe: .pfadi,
         aktivitaet: nil,
         openSheet: { _ in },
-        type: .home
+        buttonsDisabled: false
     )
 }
 #Preview("With interaction") {
@@ -209,7 +209,7 @@ struct AktivitaetDetailCardView: View {
         stufe: .pfadi,
         aktivitaet: DummyData.aktivitaet1,
         openSheet: { _ in },
-        type: .home
+        buttonsDisabled: false
     )
 }
 #Preview("View only") {
@@ -217,6 +217,6 @@ struct AktivitaetDetailCardView: View {
         stufe: .pfadi,
         aktivitaet: DummyData.aktivitaet1,
         openSheet: { _ in },
-        type: .display
+        buttonsDisabled: true
     )
 }

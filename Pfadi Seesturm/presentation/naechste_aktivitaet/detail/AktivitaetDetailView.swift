@@ -16,26 +16,41 @@ struct AktivitaetDetailView: View {
     private let type: AktivitaetDetailViewType
     
     init(
-        viewModel: AktivitaetDetailViewModel,
         stufe: SeesturmStufe,
-        type: AktivitaetDetailViewType
+        type: AktivitaetDetailViewType,
+        userId: String?,
+        service: NaechsteAktivitaetService
     ) {
-        self.viewModel = viewModel
         self.stufe = stufe
         self.type = type
-    }
         
+        switch self.type {
+        case .home(let input):
+            self.viewModel = AktivitaetDetailViewModel(
+                input: input,
+                service: service,
+                stufe: stufe,
+                userId: userId
+            )
+        case .stufenbereich(let event):
+            self.viewModel = AktivitaetDetailViewModel(
+                input: .object(object: event),
+                service: service,
+                stufe: stufe,
+                userId: userId
+            )
+        }
+    }
+    
     var body: some View {
         AktivitaetDetailContentView(
-            type: type,
             stufe: stufe,
+            type: type,
             loadingState: viewModel.loadingState,
             onRetry: viewModel.getAktivitaet,
             onOpenSheet: { interaction in
-                withAnimation {
-                    viewModel.selectedSheetMode = interaction
-                    viewModel.showSheet = true
-                }
+                viewModel.selectedSheetMode = interaction
+                viewModel.showSheet = true
             }
         )
         .task {
@@ -68,33 +83,24 @@ struct AktivitaetDetailView: View {
 
 private struct AktivitaetDetailContentView: View {
     
-    private let type: AktivitaetDetailViewType
     private let stufe: SeesturmStufe
+    private let type: AktivitaetDetailViewType
     private let loadingState: UiState<GoogleCalendarEvent?>
     private let onRetry: () async -> Void
     private let onOpenSheet: (AktivitaetInteractionType) -> Void
     
     init(
-        type: AktivitaetDetailViewType,
         stufe: SeesturmStufe,
+        type: AktivitaetDetailViewType,
         loadingState: UiState<GoogleCalendarEvent?>,
         onRetry: @escaping () async -> Void,
         onOpenSheet: @escaping (AktivitaetInteractionType) -> Void
     ) {
-        self.type = type
         self.stufe = stufe
+        self.type = type
         self.loadingState = loadingState
         self.onRetry = onRetry
         self.onOpenSheet = onOpenSheet
-    }
-    
-    private var backgroundColor: Color {
-        switch type {
-        case .home, .display:
-            .customBackground
-        case .preview:
-            .clear
-        }
     }
     
     var body: some View {
@@ -139,19 +145,19 @@ private struct AktivitaetDetailContentView: View {
                     stufe: stufe,
                     aktivitaet: aktivitaet,
                     openSheet: onOpenSheet,
-                    type: type
+                    buttonsDisabled: type.anAbmeldenButtonsDisabled
                 )
             }
         }
-        .background(backgroundColor)
-        .navigationTitle(type == .preview ? "Vorschau \(stufe.aktivitaetDescription)" : stufe.aktivitaetDescription)
+        .background(Color.customBackground)
+        .navigationTitle(stufe.aktivitaetDescription)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 CalendarSubscriptionButton(calendar: stufe.calendar)
             }
             ToolbarItem(placement: .topBarTrailing) {
-                if type == .home {
+                if case .home(_) = type {
                     NavigationLink(value: HomeNavigationDestination.pushNotifications) {
                         Image(systemName: "bell.badge")
                     }
@@ -164,10 +170,10 @@ private struct AktivitaetDetailContentView: View {
 #Preview("Loading") {
     NavigationStack(path: .constant(NavigationPath())) {
         AktivitaetDetailContentView(
-            type: .home,
             stufe: .wolf,
+            type: .home(input: .id(id: "")),
             loadingState: .loading(subState: .loading),
-            onRetry: {},
+            onRetry: { },
             onOpenSheet: { _ in }
         )
     }
@@ -175,10 +181,10 @@ private struct AktivitaetDetailContentView: View {
 #Preview("Error") {
     NavigationStack(path: .constant(NavigationPath())) {
         AktivitaetDetailContentView(
-            type: .home,
             stufe: .biber,
+            type: .home(input: .id(id: "")),
             loadingState: .error(message: "Schwerer Fehler"),
-            onRetry: {},
+            onRetry: { },
             onOpenSheet: { _ in }
         )
     }
@@ -186,10 +192,10 @@ private struct AktivitaetDetailContentView: View {
 #Preview("Success") {
     NavigationStack(path: .constant(NavigationPath())) {
         AktivitaetDetailContentView(
-            type: .home,
             stufe: .pio,
+            type: .home(input: .id(id: "")),
             loadingState: .success(data: DummyData.aktivitaet1),
-            onRetry: {},
+            onRetry: { },
             onOpenSheet: { _ in }
         )
     }

@@ -46,7 +46,7 @@ private struct HomeNavigationDestinations: ViewModifier {
                     pushNotificationsNavigationDestination: HomeNavigationDestination.pushNotifications
                 )
             case .anlassDetail(let input):
-                TermineDetailView(
+                let termineDetailView = TermineDetailView(
                     viewModel: TermineDetailViewModel(
                         service: wordpressModule.anlaesseService,
                         input: input,
@@ -54,6 +54,13 @@ private struct HomeNavigationDestinations: ViewModifier {
                     ),
                     calendar: calendar
                 )
+                switch input {
+                case .id(let id):
+                    termineDetailView
+                        .id(id)
+                case .object(_):
+                    termineDetailView
+                }
             case .pushNotifications:
                 PushNotificationVerwaltenView(
                     viewModel: PushNotificationVerwaltenViewModel(
@@ -62,14 +69,10 @@ private struct HomeNavigationDestinations: ViewModifier {
                 )
             case .aktivitaetDetail(let input, let stufe):
                 let aktivitaetDetailView = AktivitaetDetailView(
-                    viewModel: AktivitaetDetailViewModel(
-                        input: input,
-                        service: wordpressModule.naechsteAktivitaetService,
-                        stufe: stufe,
-                        userId: authModule.authRepository.getCurrentUid()
-                    ),
                     stufe: stufe,
-                    type: .home
+                    type: .home(input: input),
+                    userId: authModule.authRepository.getCurrentUid(),
+                    service: wordpressModule.naechsteAktivitaetService
                 )
                 switch input {
                 case .id(let id):

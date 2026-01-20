@@ -54,6 +54,15 @@ class StufenbereichService: WordpressService {
         }
     }
     
+    func observeAktivitaetTemplates(stufen: Set<SeesturmStufe>) -> AsyncStream<SeesturmResult<[AktivitaetTemplate], RemoteDatabaseError>> {
+        return firestoreRepository.observeCollection(
+            type: AktivitaetTemplateDto.self,
+            collection: .aktivitaetTemplates,
+            filter: { query in
+                query.whereField("stufenId", in: stufen.map { $0.id })
+            }
+        ).map(transformAktivitaetTemplateString)
+    }
     func observeAktivitaetTemplates(stufe: SeesturmStufe) -> AsyncStream<SeesturmResult<[AktivitaetTemplate], RemoteDatabaseError>> {
         return firestoreRepository.observeCollection(
             type: AktivitaetTemplateDto.self,
@@ -79,19 +88,25 @@ class StufenbereichService: WordpressService {
         }
     }
     
-    func addNewAktivitaet(
+    func addMultipleAktivitaeten(
         event: CloudFunctionEventPayload,
-        stufe: SeesturmStufe,
+        stufen: Set<SeesturmStufe>,
         withNotification: Bool
-    ) async -> SeesturmResult<String, CloudFunctionsError> {
+    ) async -> SeesturmResult<Void, CloudFunctionsError> {
         
         do {
             let payload = try event.toCloudFunctionEventPayloadDto()
-            let eventResponse = try await cloudFunctionsRepository.addEvent(calendar: stufe.calendar, event: payload)
-            if withNotification {
-                let _ = try await cloudFunctionsRepository.sendPushNotification(type: .aktivitaetNew(stufe: stufe, eventId: eventResponse.eventId))
+            
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                for stufe in stufen {
+                    group.addTask {
+                        try await self.addAktivitaet(payload: payload, stufe: stufe, withNotification: withNotification)
+                    }
+                }
+                for try await _ in group { }
             }
-            return .success(eventResponse.eventId)
+            
+            return .success(())
         }
         catch _ as EncodingError {
             return .error(.invalidPayload)
@@ -104,12 +119,41 @@ class StufenbereichService: WordpressService {
         }
     }
     
+    func addNewAktivitaet(
+        event: CloudFunctionEventPayload,
+        stufe: SeesturmStufe,
+        withNotification: Bool
+    ) async -> SeesturmResult<Void, CloudFunctionsError> {
+        
+        do {
+            let payload = try event.toCloudFunctionEventPayloadDto()
+            try await addAktivitaet(payload: payload, stufe: stufe, withNotification: withNotification)
+            return .success(())
+        }
+        catch _ as EncodingError {
+            return .error(.invalidPayload)
+        }
+        catch _ as DecodingError {
+            return .error(.invalidResponse)
+        }
+        catch {
+            return .error(.unknown(message: error.localizedDescription))
+        }
+    }
+    
+    private func addAktivitaet(payload: CloudFunctionEventPayloadDto, stufe: SeesturmStufe, withNotification: Bool) async throws {
+        let eventResponse = try await cloudFunctionsRepository.addEvent(calendar: stufe.calendar, event: payload)
+        if withNotification {
+            let _ = try await cloudFunctionsRepository.sendPushNotification(type: .aktivitaetNew(stufe: stufe, eventId: eventResponse.eventId))
+        }
+    }
+    
     func updateExistingAktivitaet(
         eventId: String,
         event: CloudFunctionEventPayload,
         stufe: SeesturmStufe,
         withNotification: Bool
-    ) async -> SeesturmResult<String, CloudFunctionsError> {
+    ) async -> SeesturmResult<Void, CloudFunctionsError> {
         
         do {
             let payload = try event.toCloudFunctionEventPayloadDto()
@@ -117,7 +161,7 @@ class StufenbereichService: WordpressService {
             if withNotification {
                 let _ = try await cloudFunctionsRepository.sendPushNotification(type: .aktivitaetUpdate(stufe: stufe, eventId: response.eventId))
             }
-            return .success(response.eventId)
+            return .success(())
         }
         catch _ as EncodingError {
             return .error(.invalidPayload)

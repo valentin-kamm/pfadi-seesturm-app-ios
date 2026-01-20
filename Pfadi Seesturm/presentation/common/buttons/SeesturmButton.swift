@@ -18,6 +18,7 @@ struct SeesturmButton: View {
     private let disabled: Bool
     private let maxWidth: CGFloat?
     private let disabledAlpha: CGFloat
+    private let style: SeesturmButtonStyle
     
     init(
         type: SeesturmButtonType,
@@ -28,7 +29,8 @@ struct SeesturmButton: View {
         isLoading: Bool = false,
         disabled: Bool = false,
         maxWidth: CGFloat? = nil,
-        disabledAlpha: CGFloat = 0.6
+        disabledAlpha: CGFloat = 0.6,
+        style: SeesturmButtonStyle = .filled
     ) {
         self.type = type
         self.title = title
@@ -39,6 +41,7 @@ struct SeesturmButton: View {
         self.action = action
         self.maxWidth = maxWidth
         self.disabledAlpha = disabledAlpha
+        self.style = style
     }
     
     private var contentColor: Color {
@@ -117,7 +120,8 @@ struct SeesturmButton: View {
                 type: type,
                 buttonColor: buttonColor,
                 disabled: isLoading || disabled,
-                disabledAlpha: disabledAlpha
+                disabledAlpha: disabledAlpha,
+                style: style
             )
         )
         .disabled(isLoading || disabled)

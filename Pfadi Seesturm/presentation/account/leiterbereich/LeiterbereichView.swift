@@ -69,9 +69,17 @@ struct LeiterbereichView: View {
                 appState.appendToNavigationPath(
                     tab: .account,
                     destination: AccountNavigationDestination.aktivitaetBearbeiten(
-                        mode: .insert,
-                        stufe: stufe
+                        type: .aktivitaet(
+                            stufe: stufe,
+                            mode: .insert
+                        )
                     )
+                )
+            },
+            onNewMultiStufenAktivitaet: {
+                appState.appendToNavigationPath(
+                    tab: .account,
+                    destination: AccountNavigationDestination.aktivitaetBearbeiten(type: .multipleAktivitaeten)
                 )
             },
             onNavigateToTermine: {
@@ -199,6 +207,7 @@ private struct LeiterbereichContentView: View {
     private let isEditAccountButtonLoading: Bool
     private let onShowSchoepflialarmSheet: () -> Void
     private let onNeueAktivitaetButtonClick: (SeesturmStufe) -> Void
+    private let onNewMultiStufenAktivitaet: () -> Void
     private let onNavigateToTermine: () -> Void
     private let onAddStufe: (SeesturmStufe) -> Void
     private let onRemoveStufe: (SeesturmStufe) -> Void
@@ -216,6 +225,7 @@ private struct LeiterbereichContentView: View {
         isEditAccountButtonLoading: Bool,
         onShowSchoepflialarmSheet: @escaping () -> Void,
         onNeueAktivitaetButtonClick: @escaping (SeesturmStufe) -> Void,
+        onNewMultiStufenAktivitaet: @escaping () -> Void,
         onNavigateToTermine: @escaping () -> Void,
         onAddStufe: @escaping (SeesturmStufe) -> Void,
         onRemoveStufe: @escaping (SeesturmStufe) -> Void,
@@ -232,6 +242,7 @@ private struct LeiterbereichContentView: View {
         self.isEditAccountButtonLoading = isEditAccountButtonLoading
         self.onShowSchoepflialarmSheet = onShowSchoepflialarmSheet
         self.onNeueAktivitaetButtonClick = onNeueAktivitaetButtonClick
+        self.onNewMultiStufenAktivitaet = onNewMultiStufenAktivitaet
         self.onNavigateToTermine = onNavigateToTermine
         self.onAddStufe = onAddStufe
         self.onRemoveStufe = onRemoveStufe
@@ -323,9 +334,11 @@ private struct LeiterbereichContentView: View {
                 Section {
                     LeiterbereichStufenScrollView(
                         stufen: selectedStufen,
-                        screenWidth: geometry.size.width,
-                        onNeueAktivitaetButtonClick: onNeueAktivitaetButtonClick
+                        totalContentWidth: geometry.size.width - 32,
+                        onNeueAktivitaetButtonClick: onNeueAktivitaetButtonClick,
+                        onNewMultiStufenAktivitaet: onNewMultiStufenAktivitaet
                     )
+                    .padding()
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -430,6 +443,7 @@ private struct LeiterbereichContentView: View {
             isEditAccountButtonLoading: true,
             onShowSchoepflialarmSheet: {},
             onNeueAktivitaetButtonClick: { _ in },
+            onNewMultiStufenAktivitaet: {},
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
@@ -451,6 +465,7 @@ private struct LeiterbereichContentView: View {
             isEditAccountButtonLoading: false,
             onShowSchoepflialarmSheet: {},
             onNeueAktivitaetButtonClick: { _ in },
+            onNewMultiStufenAktivitaet: {},
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
@@ -472,6 +487,7 @@ private struct LeiterbereichContentView: View {
             isEditAccountButtonLoading: false,
             onShowSchoepflialarmSheet: {},
             onNeueAktivitaetButtonClick: { _ in },
+            onNewMultiStufenAktivitaet: {},
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },
@@ -488,11 +504,12 @@ private struct LeiterbereichContentView: View {
             termineState: .success(data: [DummyData.allDayMultiDayEvent, DummyData.allDayOneDayEvent, DummyData.multiDayEvent]),
             user: DummyData.user3,
             calendar: .termineLeitungsteam,
-            selectedStufen: [.biber, .wolf],
+            selectedStufen: [.wolf, .biber, .pio],
             isPushNotificationsToggleOn: false,
             isEditAccountButtonLoading: false,
             onShowSchoepflialarmSheet: {},
             onNeueAktivitaetButtonClick: { _ in },
+            onNewMultiStufenAktivitaet: {},
             onNavigateToTermine: {},
             onAddStufe: { _ in },
             onRemoveStufe: { _ in },

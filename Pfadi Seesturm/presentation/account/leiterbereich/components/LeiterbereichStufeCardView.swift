@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LeiterbereichStufeCardView<D: NavigationDestination>: View {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     private let width: CGFloat
     private let stufe: SeesturmStufe
     private let onButtonClick: () -> Void
@@ -28,7 +30,7 @@ struct LeiterbereichStufeCardView<D: NavigationDestination>: View {
     
     var body: some View {
         NavigationLink(value: navigationDestination) {
-            CustomCardView(shadowColor: .seesturmGreenCardViewShadowColor) {
+            CustomCardView(shadowColor: .seesturmGreenCardViewShadowColor, backgroundColor: .cardOnCardBackgroundColor(colorScheme)) {
                 ZStack(alignment: .trailing) {
                     VStack(alignment: .center, spacing: 8) {
                         stufe.icon
@@ -42,7 +44,7 @@ struct LeiterbereichStufeCardView<D: NavigationDestination>: View {
                         SeesturmButton(
                             type: .secondary,
                             action: .sync(action: onButtonClick),
-                            title: "Neue Aktivität",
+                            title: "Aktivität",
                             icon: .system(name: "plus"),
                             colors: .custom(contentColor: stufe.onHighContrastColor, buttonColor: stufe.highContrastColor)
                         )

@@ -98,6 +98,15 @@ struct FirebaseHitobitoUser: Codable, Hashable, Identifiable {
         )
         self.fcmToken = oldUser.fcmToken
     }
+    
+    var isAdmin: Bool {
+        switch self.role {
+        case .user:
+            return false
+        case .admin:
+            return true
+        }
+    }
 }
 
 extension [FirebaseHitobitoUser] {

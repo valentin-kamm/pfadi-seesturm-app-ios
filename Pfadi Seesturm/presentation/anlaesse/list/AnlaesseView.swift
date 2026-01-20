@@ -10,7 +10,9 @@ import SwiftUI
 struct AnlaesseView: View {
     
     @EnvironmentObject private var appState: AppStateViewModel
+    @EnvironmentObject private var authState: AuthViewModel
     @Environment(\.wordpressModule) private var wordpressModule: WordpressModule
+    @Environment(\.accountModule) private var accountModule: AccountModule
     
     @State private var viewModel: AnlaesseViewModel
     private let calendar: SeesturmCalendar
@@ -28,21 +30,38 @@ struct AnlaesseView: View {
             if calendar.isLeitungsteam {
                 AnlaesseIntermediateView(
                     viewModel: viewModel,
-                    calendar: calendar
-                ) { event in
-                    AccountNavigationDestination.anlassDetail(inputType: .object(object: event))
-                }
+                    calendar: calendar,
+                    authState: authState.authState,
+                    navigationDestination: { event in
+                        AccountNavigationDestination.anlassDetail(inputType: .object(object: event))
+                    },
+                    onManageEvent: { mode in
+                        appState.appendToNavigationPath(
+                            tab: .account,
+                            destination: AccountNavigationDestination.manageTermin(calendar: calendar, mode: mode)
+                        )
+                    }
+                )
             }
             else {
                 NavigationStack(path: appState.path(for: .anlässe)) {
                     AnlaesseIntermediateView(
                         viewModel: viewModel,
-                        calendar: calendar
-                    ) { event in
-                        AnlaesseNavigationDestination.detail(inputType: .object(object: event))
-                    }
+                        calendar: calendar,
+                        authState: authState.authState,
+                        navigationDestination: { event in
+                            AnlaesseNavigationDestination.detail(inputType: .object(object: event))
+                        },
+                        onManageEvent: { mode in
+                            appState.appendToNavigationPath(
+                                tab: .anlässe,
+                                destination: AnlaesseNavigationDestination.manageTermin(calendar: calendar, mode: mode)
+                            )
+                        }
+                    )
                     .anlaesseNavigationDestinations(
                         wordpressModule: wordpressModule,
+                        accountModule: accountModule,
                         calendar: calendar
                     )
                 }
@@ -55,16 +74,22 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
     
     private var viewModel: AnlaesseViewModel
     private let calendar: SeesturmCalendar
+    private let authState: SeesturmAuthState
     private let navigationDestination: (GoogleCalendarEvent) -> N
+    private let onManageEvent: (EventManagementMode) -> Void
     
     init(
         viewModel: AnlaesseViewModel,
         calendar: SeesturmCalendar,
-        navigationDestination: @escaping (GoogleCalendarEvent) -> N
+        authState: SeesturmAuthState,
+        navigationDestination: @escaping (GoogleCalendarEvent) -> N,
+        onManageEvent: @escaping (EventManagementMode) -> Void
     ) {
         self.viewModel = viewModel
         self.calendar = calendar
+        self.authState = authState
         self.navigationDestination = navigationDestination
+        self.onManageEvent = onManageEvent
     }
     
     var body: some View {
@@ -83,7 +108,10 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
                 Task {
                     await viewModel.getMoreEvents()
                 }
-            }
+            },
+            authState: authState,
+            onManageEvent: onManageEvent
+            
         )
         .task {
             if viewModel.eventsState.taskShouldRun {
@@ -95,7 +123,6 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
                 await viewModel.getEvents(isPullToRefresh: true)
             }.value
         }
-        
     }
 }
 
@@ -108,6 +135,8 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
     private let hasMoreEvents: Bool
     private let eventsLastUpdated: String
     private let onFetchMoreEvents: () -> Void
+    private let authState: SeesturmAuthState
+    private let onManageEvent: (EventManagementMode) -> Void
     
     init(
         eventsState: InfiniteScrollUiState<[GoogleCalendarEvent]>,
@@ -116,7 +145,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         onRetry: @escaping () -> Void,
         hasMoreEvents: Bool,
         eventsLastUpdated: String,
-        onFetchMoreEvents: @escaping () -> Void
+        onFetchMoreEvents: @escaping () -> Void,
+        authState: SeesturmAuthState,
+        onManageEvent: @escaping (EventManagementMode) -> Void
     ) {
         self.eventsState = eventsState
         self.calendar = calendar
@@ -125,6 +156,8 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         self.hasMoreEvents = hasMoreEvents
         self.eventsLastUpdated = eventsLastUpdated
         self.onFetchMoreEvents = onFetchMoreEvents
+        self.authState = authState
+        self.onManageEvent = onManageEvent
     }
     
     var body: some View {
@@ -235,6 +268,19 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             ToolbarItem(placement: .topBarTrailing) {
                 CalendarSubscriptionButton(calendar: calendar)
             }
+            if #available(iOS 26.0, *) {
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+            }
+            if authState.isAdminSignedIn {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        onManageEvent(.insert)
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundStyle(calendar.isLeitungsteam ? Color.SEESTURM_RED : Color.SEESTURM_GREEN)
+                    }
+                }
+            }
         }
     }
 }
@@ -248,7 +294,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             onRetry: {},
             hasMoreEvents: false,
             eventsLastUpdated: "",
-            onFetchMoreEvents: {}
+            onFetchMoreEvents: {},
+            authState: .signedOut(state: .idle),
+            onManageEvent: { _ in }
         )
     }
 }
@@ -261,7 +309,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             onRetry: {},
             hasMoreEvents: false,
             eventsLastUpdated: "",
-            onFetchMoreEvents: {}
+            onFetchMoreEvents: {},
+            authState: .signedOut(state: .idle),
+            onManageEvent: { _ in }
         )
     }
 }
@@ -274,7 +324,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             onRetry: {},
             hasMoreEvents: false,
             eventsLastUpdated: "",
-            onFetchMoreEvents: {}
+            onFetchMoreEvents: {},
+            authState: .signedOut(state: .idle),
+            onManageEvent: { _ in }
         )
     }
 }
@@ -295,7 +347,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             onRetry: {},
             hasMoreEvents: true,
             eventsLastUpdated: "",
-            onFetchMoreEvents: {}
+            onFetchMoreEvents: {},
+            authState: .signedOut(state: .idle),
+            onManageEvent: { _ in }
         )
     }
 }
@@ -316,7 +370,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             onRetry: {},
             hasMoreEvents: true,
             eventsLastUpdated: "",
-            onFetchMoreEvents: {}
+            onFetchMoreEvents: {},
+            authState: .signedInWithHitobito(user: DummyData.user1, state: .idle),
+            onManageEvent: { _ in }
         )
     }
 }
@@ -337,7 +393,9 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             onRetry: {},
             hasMoreEvents: false,
             eventsLastUpdated: "",
-            onFetchMoreEvents: {}
+            onFetchMoreEvents: {},
+            authState: .signedInWithHitobito(user: DummyData.user3, state: .idle),
+            onManageEvent: { _ in }
         )
     }
 }

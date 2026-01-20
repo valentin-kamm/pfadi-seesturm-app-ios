@@ -95,7 +95,7 @@ struct WeatherCardView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     TabView {
-                        CustomCardView(shadowColor: .clear, backgroundColor: .seesturmGray) {
+                        CustomCardView(backgroundColor: .cardOnCardBackgroundColor(colorScheme)) {
                             TemperaturePrecipitationChart(weather: weather)
                                 .padding(.horizontal)
                                 .padding(.vertical, 8)
@@ -103,7 +103,7 @@ struct WeatherCardView: View {
                         .padding(.horizontal)
                         .padding(.top)
                         .padding(.bottom, 50)
-                        CustomCardView(shadowColor: .clear, backgroundColor: .seesturmGray) {
+                        CustomCardView(backgroundColor: .cardOnCardBackgroundColor(colorScheme)) {
                             CloudCoverChart(weather: weather)
                                 .padding(.horizontal)
                                 .padding(.vertical, 8)
@@ -111,7 +111,7 @@ struct WeatherCardView: View {
                         .padding(.horizontal)
                         .padding(.top)
                         .padding(.bottom, 50)
-                        CustomCardView(shadowColor: .clear, backgroundColor: .seesturmGray) {
+                        CustomCardView(backgroundColor: .cardOnCardBackgroundColor(colorScheme)) {
                             WindChart(weather: weather)
                                 .padding(.horizontal)
                                 .padding(.vertical, 8)

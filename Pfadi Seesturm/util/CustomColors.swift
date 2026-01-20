@@ -15,6 +15,17 @@ extension Color {
     static var SEESTURM_YELLOW = Color(red: 248/255, green: 213/255, blue: 72/255)
     static var SEESTURM_BLUE = Color(red: 33/255, green: 84/255, blue: 155/255)
     
+    static func cardOnCardBackgroundColor(_ colorScheme: ColorScheme) -> Color {
+        switch colorScheme {
+        case .light:
+            return .customCardViewBackground
+        case .dark:
+            return .seesturmGray
+        @unknown default:
+            return .customCardViewBackground
+        }
+    }
+    
     // custom color for background of entire views
     static let customBackground = Color(
         UIColor { traitCollection in

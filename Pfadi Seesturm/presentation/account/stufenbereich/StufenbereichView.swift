@@ -56,8 +56,10 @@ struct StufenbereichView: View {
                 appState.appendToNavigationPath(
                     tab: .account,
                     destination: AccountNavigationDestination.aktivitaetBearbeiten(
-                        mode: .update(id: event.event.id),
-                        stufe: stufe
+                        type: .aktivitaet(
+                            stufe: stufe,
+                            mode: .update(eventId: event.event.id)
+                        )
                     )
                 )
             },
@@ -261,10 +263,9 @@ private struct StufenbereichContentView: View {
                                         onEditAktivitaet(event)
                                     },
                                     displayNavigationDestination: AccountNavigationDestination.displayAktivitaet(
-                                        stufe: stufe,
-                                        aktivitaet: event.event,
-                                        type: .display
-                                    )
+                                            stufe: stufe,
+                                            aktivitaet: event.event
+                                        )
                                 )
                                 .padding(.top, index == 0 ? 16 : 0)
                                 .listRowSeparator(.hidden)
@@ -316,7 +317,12 @@ private struct StufenbereichContentView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink(
-                    value: AccountNavigationDestination.aktivitaetBearbeiten(mode: .insert, stufe: stufe),
+                    value: AccountNavigationDestination.aktivitaetBearbeiten(
+                        type: .aktivitaet(
+                            stufe: stufe,
+                            mode: .insert
+                        )
+                    ),
                     label: {
                         Image(systemName: "plus")
                             .foregroundStyle(Color.SEESTURM_GREEN)

@@ -54,7 +54,7 @@ struct DummyData {
             "nachname": "Blatter",
             "pfadiname": "Elch",
             "email": "test@test3.ch",
-            "role": "hitobito_user",
+            "role": "hitobito_admin",
             "profilePictureUrl": "https://s3.eu-west-2.amazonaws.com/img.creativepool.com/files/candidate/portfolio/_w680/641887.jpg",
             "created": "2024-01-01T12:00:00Z",
             "createdFormatted": "01.01.2024",

@@ -67,7 +67,6 @@ struct AktivitaetAnAbmeldenView: View {
                     GespeichertePersonenView(location: .sheet)
                 }
             }
-            
         }
         .tint(Color.SEESTURM_GREEN)
     }
@@ -232,7 +231,7 @@ private struct AktivitaetAnAbmeldenContentView: View {
     }
 }
 
-enum AktivitaetAnAbmeldenNavigationDestination: Hashable {
+private enum AktivitaetAnAbmeldenNavigationDestination: Hashable {
     case gespeichertePersonen
 }
 

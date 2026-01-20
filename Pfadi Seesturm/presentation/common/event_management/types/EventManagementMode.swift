@@ -1,14 +1,14 @@
 //
-//  AktivitaetBearbeitenMode.swift
+//  EventManagementMode.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 08.06.2025.
 //
 
-enum AktivitaetBearbeitenMode: Hashable {
+enum EventManagementMode: Hashable {
     
-    case update(id: String)
     case insert
+    case update(eventId: String)
     
     var verb: String {
         switch self {
@@ -26,20 +26,12 @@ enum AktivitaetBearbeitenMode: Hashable {
             "aktualisiert"
         }
     }
-    var buttonTitle: String {
+    var nomen: String {
         switch self {
         case .insert:
             "Veröffentlichen"
         case .update(_):
             "Aktualisieren"
-        }
-    }
-    func navigationTitle(for stufe: SeesturmStufe) -> String {
-        switch self {
-        case .insert:
-            "Neue \(stufe.aktivitaetDescription)"
-        case .update(_):
-            "\(stufe.aktivitaetDescription) bearbeiten"
         }
     }
 }

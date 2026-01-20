@@ -10,89 +10,115 @@ import SwiftUI
 struct LeiterbereichStufenScrollView: View {
     
     private let stufen: [SeesturmStufe]
-    private let screenWidth: CGFloat
+    private let totalContentWidth: CGFloat
     private let onNeueAktivitaetButtonClick: (SeesturmStufe) -> Void
+    private let onNewMultiStufenAktivitaet: () -> Void
     
     init(
         stufen: [SeesturmStufe],
-        screenWidth: CGFloat,
-        onNeueAktivitaetButtonClick: @escaping (SeesturmStufe) -> Void
+        totalContentWidth: CGFloat,
+        onNeueAktivitaetButtonClick: @escaping (SeesturmStufe) -> Void,
+        onNewMultiStufenAktivitaet: @escaping () -> Void
     ) {
         self.stufen = stufen
-        self.screenWidth = screenWidth
+        self.totalContentWidth = totalContentWidth
         self.onNeueAktivitaetButtonClick = onNeueAktivitaetButtonClick
+        self.onNewMultiStufenAktivitaet = onNewMultiStufenAktivitaet
     }
     
-    private var cardWidth: CGFloat {
+    private var scrollViewItemWidth: CGFloat {
         if stufen.count <= 1 {
-            return screenWidth - 32
+            return totalContentWidth - 32
         }
         else if stufen.count == 2 {
-            return (screenWidth - 48) / 2
+            return (totalContentWidth - 48) / 2
         }
         else {
-            return 0.85 * (screenWidth - 48) / 2
+            return 0.95 * (totalContentWidth - 48) / 2
         }
     }
     
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack(alignment: .top, spacing: 16) {
-                if stufen.isEmpty {
-                    Text("Keine Stufe ausgewählt")
-                        .padding(.top)
-                        .frame(width: screenWidth, height: 160)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
-                        .multilineTextAlignment(.center)
-                }
-                else {
-                    ForEach(Array(stufen.sorted { $0.id < $1.id }.enumerated()), id: \.element.id) { index, stufe in
-                        LeiterbereichStufeCardView(
-                            width: cardWidth,
-                            stufe: stufe,
-                            onButtonClick: {
-                                onNeueAktivitaetButtonClick(stufe)
-                            },
-                            navigationDestination: AccountNavigationDestination.stufenbereich(stufe: stufe)
-                        )
-                        .padding(.leading, index == 0 ? 16 : 0)
-                        .padding(.trailing, index == stufen.count - 1 ? 16 : 0)
+        CustomCardView {
+            VStack(alignment: .center, spacing: 0) {
+                ScrollView(.horizontal) {
+                    HStack(alignment: .top, spacing: 16) {
+                        if stufen.isEmpty {
+                            Text("Keine Stufe ausgewählt")
+                                .padding()
+                                .frame(width: scrollViewItemWidth, height: 160)
+                                .multilineTextAlignment(.center)
+                        }
+                        else {
+                            ForEach(Array(stufen.sorted { $0.id < $1.id }.enumerated()), id: \.element.id) { index, stufe in
+                                LeiterbereichStufeCardView(
+                                    width: scrollViewItemWidth,
+                                    stufe: stufe,
+                                    onButtonClick: {
+                                        onNeueAktivitaetButtonClick(stufe)
+                                    },
+                                    navigationDestination: AccountNavigationDestination.stufenbereich(stufe: stufe)
+                                )
+                            }
+                        }
                     }
                 }
+                .scrollIndicators(.hidden)
+                .scrollDisabled(stufen.count < 1)
+                .contentMargins(.horizontal, 16)
+                SeesturmButton(
+                    type: .secondary,
+                    action: .sync(action: onNewMultiStufenAktivitaet),
+                    title: "Aktivität für mehrere Stufen",
+                    icon: .system(name: "plus"),
+                    colors: .custom(contentColor: .primary, buttonColor: .primary),
+                    //maxWidth: .infinity,
+                    style: .outlined
+                )
+                .padding(.horizontal)
             }
+            .padding(.bottom)
         }
-        .scrollIndicators(.hidden)
+        .frame(maxWidth: .infinity)
     }
 }
 
 #Preview {
     GeometryReader { geometry in
         
-        let width = geometry.size.width
+        let width = geometry.size.width - 32
         
-        VStack(alignment: .center, spacing: 16) {
-            LeiterbereichStufenScrollView(
-                stufen: [],
-                screenWidth: width,
-                onNeueAktivitaetButtonClick: { _ in }
-            )
-            LeiterbereichStufenScrollView(
-                stufen: [.biber],
-                screenWidth: width,
-                onNeueAktivitaetButtonClick: { _ in }
-            )
-            LeiterbereichStufenScrollView(
-                stufen: [.biber, .wolf],
-                screenWidth: width,
-                onNeueAktivitaetButtonClick: { _ in }
-            )
-            LeiterbereichStufenScrollView(
-                stufen: [.biber, .wolf, .pfadi, .pio],
-                screenWidth: width,
-                onNeueAktivitaetButtonClick: { _ in }
-            )
+        ScrollView {
+            VStack(alignment: .center, spacing: 16) {
+                LeiterbereichStufenScrollView(
+                    stufen: [],
+                    totalContentWidth: width,
+                    onNeueAktivitaetButtonClick: { _ in },
+                    onNewMultiStufenAktivitaet: {}
+                )
+                .padding(.horizontal)
+                LeiterbereichStufenScrollView(
+                    stufen: [.biber],
+                    totalContentWidth: width,
+                    onNeueAktivitaetButtonClick: { _ in },
+                    onNewMultiStufenAktivitaet: {}
+                )
+                .padding(.horizontal)
+                LeiterbereichStufenScrollView(
+                    stufen: [.biber, .wolf],
+                    totalContentWidth: width,
+                    onNeueAktivitaetButtonClick: { _ in },
+                    onNewMultiStufenAktivitaet: {}
+                )
+                .padding(.horizontal)
+                LeiterbereichStufenScrollView(
+                    stufen: [.biber, .wolf, .pfadi, .pio],
+                    totalContentWidth: width,
+                    onNeueAktivitaetButtonClick: { _ in },
+                    onNewMultiStufenAktivitaet: {}
+                )
+                .padding(.horizontal)
+            }
         }
     }
 }

@@ -55,4 +55,13 @@ extension SeesturmAuthState {
             return false
         }
     }
+    
+    var isAdminSignedIn: Bool {
+        switch self {
+        case .signedOut(_):
+            return false
+        case .signedInWithHitobito(let user, _):
+            return user.isAdmin
+        }
+    }
 }

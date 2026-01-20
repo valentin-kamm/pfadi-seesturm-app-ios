@@ -22,7 +22,6 @@ struct TemplateEditListView: View {
     var body: some View {
         TemplateListView(
             state: viewModel.templatesState,
-            stufe: stufe,
             mode: .edit(
                 onAddClick: {
                     withAnimation {
@@ -37,6 +36,7 @@ struct TemplateEditListView: View {
                 editState: viewModel.editState,
                 deleteState: viewModel.deleteState
             ),
+            navigationTitle: "Vorlagen \(stufe.name)",
             onElementClick: { template in
                 withAnimation {
                     viewModel.editSheetTemplate = template

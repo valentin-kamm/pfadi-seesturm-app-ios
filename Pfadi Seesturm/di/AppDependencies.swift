@@ -52,6 +52,7 @@ final class AppDependencies {
         )
         self.wordpressModule = WordpressModuleImpl(
             firestoreRepository: firestoreModule.firestoreRepository,
+            cloudFunctionsRepository: fcfModule.fcfRepository,
             modelContext: modelContext
         )
         self.accountModule = AccountModuleImpl(

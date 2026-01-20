@@ -8,9 +8,14 @@
 class AnlaesseService: WordpressService {
     
     private let repository: AnlaesseRepository
+    private let cloudFunctionsRepository: CloudFunctionsRepository
     
-    init(repository: AnlaesseRepository) {
+    init(
+        repository: AnlaesseRepository,
+        cloudFunctionsRepository: CloudFunctionsRepository
+    ) {
         self.repository = repository
+        self.cloudFunctionsRepository = cloudFunctionsRepository
     }
     
     func fetchEvents(
@@ -43,5 +48,48 @@ class AnlaesseService: WordpressService {
             fetchAction: { try await self.repository.getNextThreeEvents(calendar: calendar) },
             transform: { try $0.toGoogleCalendarEvents() }
         )
+    }
+    
+    func addEvent(
+        event: CloudFunctionEventPayload,
+        calendar: SeesturmCalendar
+    ) async -> SeesturmResult<Void, CloudFunctionsError> {
+        
+        do {
+            let payload = try event.toCloudFunctionEventPayloadDto()
+            let _ = try await cloudFunctionsRepository.addEvent(calendar: calendar, event: payload)
+            return .success(())
+        }
+        catch _ as EncodingError {
+            return .error(.invalidPayload)
+        }
+        catch _ as DecodingError {
+            return .error(.invalidResponse)
+        }
+        catch {
+            return .error(.unknown(message: error.localizedDescription))
+        }
+    }
+    
+    func updateEvent(
+        eventId: String,
+        event: CloudFunctionEventPayload,
+        calendar: SeesturmCalendar
+    ) async -> SeesturmResult<Void, CloudFunctionsError> {
+        
+        do {
+            let payload = try event.toCloudFunctionEventPayloadDto()
+            let _ = try await cloudFunctionsRepository.updateEvent(calendar: calendar, eventId: eventId, event: payload)
+            return .success(())
+        }
+        catch _ as EncodingError {
+            return .error(.invalidPayload)
+        }
+        catch _ as DecodingError {
+            return .error(.invalidResponse)
+        }
+        catch {
+            return .error(.unknown(message: error.localizedDescription))
+        }
     }
 }

@@ -10,19 +10,19 @@ import RichText
 struct TemplateListView: View {
     
     private let state: UiState<[AktivitaetTemplate]>
-    private let stufe: SeesturmStufe
     private let mode: TemplateListViewMode
+    private let navigationTitle: String
     private let onClick: (AktivitaetTemplate) -> Void
     
     init(
         state: UiState<[AktivitaetTemplate]>,
-        stufe: SeesturmStufe,
         mode: TemplateListViewMode,
+        navigationTitle: String,
         onElementClick: @escaping (AktivitaetTemplate) -> Void
     ) {
         self.state = state
-        self.stufe = stufe
         self.mode = mode
+        self.navigationTitle = navigationTitle
         self.onClick = onElementClick
     }
     
@@ -120,7 +120,7 @@ struct TemplateListView: View {
                 }
             }
         }
-        .navigationTitle("Vorlagen \(stufe.name)")
+        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .background(backgroundColor)
         .dynamicListStyle(isListPlain: state.isError)
@@ -179,8 +179,8 @@ struct TemplateListView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         TemplateListView(
             state: .loading(subState: .loading),
-            stufe: .pio,
             mode: .use,
+            navigationTitle: "Vorlagen \(SeesturmStufe.pio.name)",
             onElementClick: { _ in }
         )
     }
@@ -189,8 +189,8 @@ struct TemplateListView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         TemplateListView(
             state: .error(message: "Schwerer Fehler"),
-            stufe: .pio,
             mode: .use,
+            navigationTitle: "Vorlagen \(SeesturmStufe.pio.name)",
             onElementClick: { _ in }
         )
     }
@@ -199,13 +199,13 @@ struct TemplateListView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         TemplateListView(
             state: .success(data: []),
-            stufe: .pio,
             mode: .edit(
                 onAddClick: {},
                 onDelete: { _ in },
                 editState: .idle,
                 deleteState: .idle
             ),
+            navigationTitle: "Vorlagen \(SeesturmStufe.pio.name)",
             onElementClick: { _ in }
         )
     }
@@ -214,13 +214,13 @@ struct TemplateListView: View {
     NavigationStack(path: .constant(NavigationPath())) {
         TemplateListView(
             state: .success(data: [DummyData.aktivitaetTemplate1, DummyData.aktivitaetTemplate2]),
-            stufe: .pio,
             mode: .edit(
                 onAddClick: {},
                 onDelete: { _ in },
                 editState: .idle,
                 deleteState: .idle
             ),
+            navigationTitle: "Vorlagen \(SeesturmStufe.pio.name)",
             onElementClick: { _ in }
         )
     }
