@@ -17,6 +17,7 @@ struct HomeView: View {
     @Environment(\.fcmModule) private var fcmModule: FCMModule
     @Environment(\.firestoreModule) private var firestoreModule: FirestoreModule
     @Environment(\.authModule) private var authModule: AuthModule
+    @Environment(\.accountModule) private var accountModule: AccountModule
     
     @State private var viewModel: HomeViewModel
     private let calendar: SeesturmCalendar
@@ -80,9 +81,11 @@ struct HomeView: View {
                     defaultErrorMessage: "Eine Stufe konnte nicht entfernt/hinzugefügt werden. Unbekannter Fehler."
                 )
                 .homeNavigationDestinations(
+                    appState: appState,
                     wordpressModule: wordpressModule,
                     fcmModule: fcmModule,
                     authModule: authModule,
+                    accountModule: accountModule,
                     calendar: calendar
                 )
             }

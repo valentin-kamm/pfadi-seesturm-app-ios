@@ -13,24 +13,26 @@ enum AccountNavigationDestination: NavigationDestination {
     case anlassDetail(inputType: DetailInputType<String, GoogleCalendarEvent>)
     case stufenbereich(stufe: SeesturmStufe)
     case displayAktivitaet(stufe: SeesturmStufe, aktivitaet: GoogleCalendarEvent)
-    case aktivitaetBearbeiten(type: EventToManageType)
+    case manageEvent(type: EventToManageType)
     case templates(stufe: SeesturmStufe)
-    case manageTermin(calendar: SeesturmCalendar, mode: EventManagementMode)
 }
 
 private struct AccountNavigationDestinations: ViewModifier {
     
+    private let appState: AppStateViewModel
     private let wordpressModule: WordpressModule
     private let accountModule: AccountModule
     private let calendar: SeesturmCalendar
     private let leiterbereichViewModel: LeiterbereichViewModel
     
     init(
+        appState: AppStateViewModel,
         wordpressModule: WordpressModule,
         accountModule: AccountModule,
         calendar: SeesturmCalendar,
         leiterbereichViewModel: LeiterbereichViewModel
     ) {
+        self.appState = appState
         self.wordpressModule = wordpressModule
         self.accountModule = accountModule
         self.calendar = calendar
@@ -56,20 +58,38 @@ private struct AccountNavigationDestinations: ViewModifier {
                     calendar: calendar
                 )
             case .anlassDetail(let input):
-                let termineDetailView = TermineDetailView(
-                    viewModel: TermineDetailViewModel(
-                        service: wordpressModule.anlaesseService,
-                        input: input,
-                        calendar: calendar
-                    ),
-                    calendar: calendar
-                )
                 switch input {
                 case .id(let id):
-                    termineDetailView
-                        .id(id)
-                case .object(_):
-                    termineDetailView
+                    TermineDetailView(
+                        viewModel: TermineDetailViewModel(
+                            service: wordpressModule.anlaesseService,
+                            input: input,
+                            calendar: calendar
+                        ),
+                        calendar: calendar,
+                        onEditEvent: {
+                            appState.appendToNavigationPath(
+                                tab: .account,
+                                destination: AccountNavigationDestination.manageEvent(type: .termin(calendar: calendar, mode: .update(eventId: id)))
+                            )
+                        }
+                    )
+                    .id(id)
+                case .object(let event):
+                    TermineDetailView(
+                        viewModel: TermineDetailViewModel(
+                            service: wordpressModule.anlaesseService,
+                            input: input,
+                            calendar: calendar
+                        ),
+                        calendar: calendar,
+                        onEditEvent: {
+                            appState.appendToNavigationPath(
+                                tab: .account,
+                                destination: AccountNavigationDestination.manageEvent(type: .termin(calendar: calendar, mode: .update(eventId: event.id)))
+                            )
+                        }
+                    )
                 }
             case .stufenbereich(let stufe):
                 StufenbereichView(
@@ -84,7 +104,7 @@ private struct AccountNavigationDestinations: ViewModifier {
                     viewModel: leiterbereichViewModel,
                     user: user
                 )
-            case .aktivitaetBearbeiten(let type):
+            case .manageEvent(let type):
                 ManageEventView(
                     viewModel: ManageEventViewModel(
                         stufenbereichService: accountModule.stufenbereichService,
@@ -100,14 +120,6 @@ private struct AccountNavigationDestinations: ViewModifier {
                     ),
                     stufe: stufe
                 )
-            case .manageTermin(let calendar, let mode):
-                ManageEventView(
-                    viewModel: ManageEventViewModel(
-                        stufenbereichService: accountModule.stufenbereichService,
-                        anlaesseService: wordpressModule.anlaesseService,
-                        eventType: .termin(calendar: calendar, mode: mode)
-                    )
-                )
             }
         }
     }
@@ -116,6 +128,7 @@ private struct AccountNavigationDestinations: ViewModifier {
 extension View {
     
     func accountNavigationDestinations(
+        appState: AppStateViewModel,
         wordpressModule: WordpressModule,
         accountModule: AccountModule,
         calendar: SeesturmCalendar,
@@ -123,6 +136,7 @@ extension View {
     ) -> some View {
         self.modifier(
             AccountNavigationDestinations(
+                appState: appState,
                 wordpressModule: wordpressModule,
                 accountModule: accountModule,
                 calendar: calendar,

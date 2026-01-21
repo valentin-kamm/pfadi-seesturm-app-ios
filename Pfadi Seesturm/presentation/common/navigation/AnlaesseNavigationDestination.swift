@@ -13,15 +13,18 @@ enum AnlaesseNavigationDestination: NavigationDestination {
 
 private struct AnlaesseNavigationDestinations: ViewModifier {
     
+    private let appState: AppStateViewModel
     private let wordpressModule: WordpressModule
     private let accountModule: AccountModule
     private let calendar: SeesturmCalendar
     
     init(
+        appState: AppStateViewModel,
         wordpressModule: WordpressModule,
         accountModule: AccountModule,
         calendar: SeesturmCalendar
     ) {
+        self.appState = appState
         self.wordpressModule = wordpressModule
         self.accountModule = accountModule
         self.calendar = calendar
@@ -31,20 +34,38 @@ private struct AnlaesseNavigationDestinations: ViewModifier {
         content.navigationDestination(for: AnlaesseNavigationDestination.self) { destination in
             switch destination {
             case .detail(let input):
-                let termineDetailView = TermineDetailView(
-                    viewModel: TermineDetailViewModel(
-                        service: wordpressModule.anlaesseService,
-                        input: input,
-                        calendar: calendar
-                    ),
-                    calendar: calendar
-                )
                 switch input {
                 case .id(let id):
-                    termineDetailView
-                        .id(id)
-                case .object(_):
-                    termineDetailView
+                    TermineDetailView(
+                        viewModel: TermineDetailViewModel(
+                            service: wordpressModule.anlaesseService,
+                            input: input,
+                            calendar: calendar
+                        ),
+                        calendar: calendar,
+                        onEditEvent: {
+                            appState.appendToNavigationPath(
+                                tab: .anlässe,
+                                destination: AnlaesseNavigationDestination.manageTermin(calendar: calendar, mode: .update(eventId: id))
+                            )
+                        }
+                    )
+                    .id(id)
+                case .object(let event):
+                    TermineDetailView(
+                        viewModel: TermineDetailViewModel(
+                            service: wordpressModule.anlaesseService,
+                            input: input,
+                            calendar: calendar
+                        ),
+                        calendar: calendar,
+                        onEditEvent: {
+                            appState.appendToNavigationPath(
+                                tab: .anlässe,
+                                destination: AnlaesseNavigationDestination.manageTermin(calendar: calendar, mode: .update(eventId: event.id))
+                            )
+                        }
+                    )
                 }
             case .manageTermin(let calendar, let mode):
                 ManageEventView(
@@ -62,12 +83,14 @@ private struct AnlaesseNavigationDestinations: ViewModifier {
 extension View {
     
     func anlaesseNavigationDestinations(
+        appState: AppStateViewModel,
         wordpressModule: WordpressModule,
         accountModule: AccountModule,
         calendar: SeesturmCalendar
     ) -> some View {
         self.modifier(
             AnlaesseNavigationDestinations(
+                appState: appState,
                 wordpressModule: wordpressModule,
                 accountModule: accountModule,
                 calendar: calendar

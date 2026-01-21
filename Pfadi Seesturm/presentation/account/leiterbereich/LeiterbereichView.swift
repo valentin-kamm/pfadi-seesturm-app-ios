@@ -68,7 +68,7 @@ struct LeiterbereichView: View {
             onNeueAktivitaetButtonClick: { stufe in
                 appState.appendToNavigationPath(
                     tab: .account,
-                    destination: AccountNavigationDestination.aktivitaetBearbeiten(
+                    destination: AccountNavigationDestination.manageEvent(
                         type: .aktivitaet(
                             stufe: stufe,
                             mode: .insert
@@ -79,7 +79,9 @@ struct LeiterbereichView: View {
             onNewMultiStufenAktivitaet: {
                 appState.appendToNavigationPath(
                     tab: .account,
-                    destination: AccountNavigationDestination.aktivitaetBearbeiten(type: .multipleAktivitaeten)
+                    destination: AccountNavigationDestination.manageEvent(
+                        type: .multipleAktivitaeten
+                    )
                 )
             },
             onNavigateToTermine: {

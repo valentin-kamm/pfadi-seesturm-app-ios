@@ -10,21 +10,28 @@ import RichText
 
 struct TermineDetailView: View {
     
+    @EnvironmentObject private var authState: AuthViewModel
+    
     @State private var viewModel: TermineDetailViewModel
     private let calendar: SeesturmCalendar
+    private let onEditEvent: (() -> Void)?
     
     init(
         viewModel: TermineDetailViewModel,
-        calendar: SeesturmCalendar
+        calendar: SeesturmCalendar,
+        onEditEvent: (() -> Void)?
     ) {
         self.viewModel = viewModel
         self.calendar = calendar
+        self.onEditEvent = onEditEvent
     }
     
     var body: some View {
         TermineDetailContentView(
             terminState: viewModel.terminState,
             calendar: calendar,
+            authState: authState.authState,
+            onEditEvent: onEditEvent,
             onRetry: {
                 await viewModel.fetchEvent()
             }
@@ -41,16 +48,20 @@ private struct TermineDetailContentView: View {
     
     private let terminState: UiState<GoogleCalendarEvent>
     private let calendar: SeesturmCalendar
+    private let onEditEvent: (() -> Void)?
     private let onRetry: () async -> Void
     
     init(
         terminState: UiState<GoogleCalendarEvent>,
         calendar: SeesturmCalendar,
+        authState: SeesturmAuthState,
+        onEditEvent: (() -> Void)?,
         onRetry: @escaping () async -> Void
     ) {
         self.terminState = terminState
         self.calendar = calendar
         self.onRetry = onRetry
+        self.onEditEvent = authState.isAdminSignedIn ? onEditEvent : nil
     }
     
     var body: some View {
@@ -143,6 +154,18 @@ private struct TermineDetailContentView: View {
                 CalendarSubscriptionButton(calendar: calendar)
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            if let onEdit = onEditEvent, case .success(_) = terminState {
+                SeesturmButton(
+                    type: .secondary,
+                    action: .sync(action: onEdit),
+                    title: "Bearbeiten",
+                    icon: .system(name: "pencil"),
+                    colors: .custom(contentColor: .white, buttonColor: calendar.isLeitungsteam ? .SEESTURM_RED : .SEESTURM_GREEN)
+                )
+                .padding()
+            }
+        }
     }
 }
 
@@ -151,6 +174,8 @@ private struct TermineDetailContentView: View {
         TermineDetailContentView(
             terminState: .loading(subState: .loading),
             calendar: .termine,
+            authState: .signedOut(state: .idle),
+            onEditEvent: nil,
             onRetry: {}
         )
     }
@@ -160,6 +185,8 @@ private struct TermineDetailContentView: View {
         TermineDetailContentView(
             terminState: .error(message: "Schwerer Fehler"),
             calendar: .termine,
+            authState: .signedOut(state: .idle),
+            onEditEvent: nil,
             onRetry: {}
         )
     }
@@ -169,6 +196,8 @@ private struct TermineDetailContentView: View {
         TermineDetailContentView(
             terminState: .success(data: DummyData.multiDayEvent),
             calendar: .termine,
+            authState: .signedOut(state: .idle),
+            onEditEvent: nil,
             onRetry: {}
         )
     }
@@ -178,6 +207,8 @@ private struct TermineDetailContentView: View {
         TermineDetailContentView(
             terminState: .success(data: DummyData.oneDayEvent),
             calendar: .termine,
+            authState: .signedInWithHitobito(user: DummyData.user3, state: .idle),
+            onEditEvent: {},
             onRetry: {}
         )
     }
@@ -187,6 +218,8 @@ private struct TermineDetailContentView: View {
         TermineDetailContentView(
             terminState: .success(data: DummyData.allDayMultiDayEvent),
             calendar: .termineLeitungsteam,
+            authState: .signedOut(state: .idle),
+            onEditEvent: nil,
             onRetry: {}
         )
     }
@@ -196,6 +229,8 @@ private struct TermineDetailContentView: View {
         TermineDetailContentView(
             terminState: .success(data: DummyData.allDayOneDayEvent),
             calendar: .termineLeitungsteam,
+            authState: .signedInWithHitobito(user: DummyData.user3, state: .idle),
+            onEditEvent: {},
             onRetry: {}
         )
     }

@@ -43,7 +43,8 @@ struct ManageEventPreviewView: View {
                             input: .object(object: event),
                             calendar: calendar
                         ),
-                        calendar: calendar
+                        calendar: calendar,
+                        onEditEvent: nil
                     )
                 }
             }

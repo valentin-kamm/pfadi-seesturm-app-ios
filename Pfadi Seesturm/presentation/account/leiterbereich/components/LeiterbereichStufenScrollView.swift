@@ -72,7 +72,6 @@ struct LeiterbereichStufenScrollView: View {
                     title: "Aktivität für mehrere Stufen",
                     icon: .system(name: "plus"),
                     colors: .custom(contentColor: .primary, buttonColor: .primary),
-                    //maxWidth: .infinity,
                     style: .outlined
                 )
                 .padding(.horizontal)

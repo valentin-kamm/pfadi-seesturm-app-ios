@@ -104,6 +104,7 @@ struct MainTabView : View {
                         calendar: .termineLeitungsteam
                     )
                     .accountNavigationDestinations(
+                        appState: appState,
                         wordpressModule: wordpressModule,
                         accountModule: accountModule,
                         calendar: .termineLeitungsteam,

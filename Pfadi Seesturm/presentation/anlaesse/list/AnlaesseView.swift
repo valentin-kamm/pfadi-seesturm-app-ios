@@ -31,14 +31,14 @@ struct AnlaesseView: View {
                 AnlaesseIntermediateView(
                     viewModel: viewModel,
                     calendar: calendar,
-                    authState: authState.authState,
+                    canEditEvents: authState.authState.isAdminSignedIn,
                     navigationDestination: { event in
                         AccountNavigationDestination.anlassDetail(inputType: .object(object: event))
                     },
                     onManageEvent: { mode in
                         appState.appendToNavigationPath(
                             tab: .account,
-                            destination: AccountNavigationDestination.manageTermin(calendar: calendar, mode: mode)
+                            destination: AccountNavigationDestination.manageEvent(type: .termin(calendar: calendar, mode: mode))
                         )
                     }
                 )
@@ -48,7 +48,7 @@ struct AnlaesseView: View {
                     AnlaesseIntermediateView(
                         viewModel: viewModel,
                         calendar: calendar,
-                        authState: authState.authState,
+                        canEditEvents: authState.authState.isAdminSignedIn,
                         navigationDestination: { event in
                             AnlaesseNavigationDestination.detail(inputType: .object(object: event))
                         },
@@ -60,6 +60,7 @@ struct AnlaesseView: View {
                         }
                     )
                     .anlaesseNavigationDestinations(
+                        appState: appState,
                         wordpressModule: wordpressModule,
                         accountModule: accountModule,
                         calendar: calendar
@@ -74,20 +75,20 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
     
     private var viewModel: AnlaesseViewModel
     private let calendar: SeesturmCalendar
-    private let authState: SeesturmAuthState
+    private let canEditEvents: Bool
     private let navigationDestination: (GoogleCalendarEvent) -> N
     private let onManageEvent: (EventManagementMode) -> Void
     
     init(
         viewModel: AnlaesseViewModel,
         calendar: SeesturmCalendar,
-        authState: SeesturmAuthState,
+        canEditEvents: Bool,
         navigationDestination: @escaping (GoogleCalendarEvent) -> N,
         onManageEvent: @escaping (EventManagementMode) -> Void
     ) {
         self.viewModel = viewModel
         self.calendar = calendar
-        self.authState = authState
+        self.canEditEvents = canEditEvents
         self.navigationDestination = navigationDestination
         self.onManageEvent = onManageEvent
     }
@@ -109,7 +110,7 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
                     await viewModel.getMoreEvents()
                 }
             },
-            authState: authState,
+            canEditEvents: canEditEvents,
             onManageEvent: onManageEvent
             
         )
@@ -135,7 +136,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
     private let hasMoreEvents: Bool
     private let eventsLastUpdated: String
     private let onFetchMoreEvents: () -> Void
-    private let authState: SeesturmAuthState
+    private let canEditEvents: Bool
     private let onManageEvent: (EventManagementMode) -> Void
     
     init(
@@ -146,7 +147,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         hasMoreEvents: Bool,
         eventsLastUpdated: String,
         onFetchMoreEvents: @escaping () -> Void,
-        authState: SeesturmAuthState,
+        canEditEvents: Bool,
         onManageEvent: @escaping (EventManagementMode) -> Void
     ) {
         self.eventsState = eventsState
@@ -156,7 +157,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         self.hasMoreEvents = hasMoreEvents
         self.eventsLastUpdated = eventsLastUpdated
         self.onFetchMoreEvents = onFetchMoreEvents
-        self.authState = authState
+        self.canEditEvents = canEditEvents
         self.onManageEvent = onManageEvent
     }
     
@@ -271,7 +272,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             if #available(iOS 26.0, *) {
                 ToolbarSpacer(.fixed, placement: .topBarTrailing)
             }
-            if authState.isAdminSignedIn {
+            if canEditEvents {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         onManageEvent(.insert)
@@ -295,7 +296,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             hasMoreEvents: false,
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
-            authState: .signedOut(state: .idle),
+            canEditEvents: false,
             onManageEvent: { _ in }
         )
     }
@@ -310,7 +311,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             hasMoreEvents: false,
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
-            authState: .signedOut(state: .idle),
+            canEditEvents: false,
             onManageEvent: { _ in }
         )
     }
@@ -325,7 +326,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             hasMoreEvents: false,
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
-            authState: .signedOut(state: .idle),
+            canEditEvents: false,
             onManageEvent: { _ in }
         )
     }
@@ -348,7 +349,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             hasMoreEvents: true,
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
-            authState: .signedOut(state: .idle),
+            canEditEvents: false,
             onManageEvent: { _ in }
         )
     }
@@ -371,7 +372,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             hasMoreEvents: true,
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
-            authState: .signedInWithHitobito(user: DummyData.user1, state: .idle),
+            canEditEvents: true,
             onManageEvent: { _ in }
         )
     }
@@ -394,7 +395,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             hasMoreEvents: false,
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
-            authState: .signedInWithHitobito(user: DummyData.user3, state: .idle),
+            canEditEvents: true,
             onManageEvent: { _ in }
         )
     }

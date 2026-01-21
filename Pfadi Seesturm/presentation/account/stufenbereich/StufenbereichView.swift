@@ -55,7 +55,7 @@ struct StufenbereichView: View {
             onEditAktivitaet: { event in
                 appState.appendToNavigationPath(
                     tab: .account,
-                    destination: AccountNavigationDestination.aktivitaetBearbeiten(
+                    destination: AccountNavigationDestination.manageEvent(
                         type: .aktivitaet(
                             stufe: stufe,
                             mode: .update(eventId: event.event.id)
@@ -317,7 +317,7 @@ private struct StufenbereichContentView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink(
-                    value: AccountNavigationDestination.aktivitaetBearbeiten(
+                    value: AccountNavigationDestination.manageEvent(
                         type: .aktivitaet(
                             stufe: stufe,
                             mode: .insert
