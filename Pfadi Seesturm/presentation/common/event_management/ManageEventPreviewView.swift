@@ -94,7 +94,7 @@ private struct ManageAktivitaetenPreviewView: View {
                     )
                 ) {
                     ForEach(Array(stufen).sorted { $0.id < $1.id }, id: \.self) { stufe in
-                        Text(stufe.name)
+                        Text(stufe.nameShort)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -127,24 +127,6 @@ private struct ManageTerminPreviewView: View {
             }
             .padding(.top)
             .foregroundStyle(Color.primary)
-        }
-    }
-}
-
-enum EventPreviewType {
-    
-    case aktivitaet(stufe: SeesturmStufe)
-    case multipleAktivitaeten(stufen: Set<SeesturmStufe>)
-    case termin(calendar: SeesturmCalendar)
-    
-    var navigationTitle: String {
-        switch self {
-        case .aktivitaet(let stufe):
-            "Vorschau \(stufe.aktivitaetDescription)"
-        case .multipleAktivitaeten(_):
-            "Vorschau Aktivitäten"
-        case .termin(_):
-            "Vorschau Anlass"
         }
     }
 }

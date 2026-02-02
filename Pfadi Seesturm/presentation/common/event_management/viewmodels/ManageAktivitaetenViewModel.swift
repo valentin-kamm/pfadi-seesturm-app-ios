@@ -9,7 +9,7 @@ import Observation
 
 @Observable
 @MainActor
-class ManageAktivitaetenViewModel {
+class ManageAktivitaetenViewModel: EventManagementController, MultiStufenCapableEventController, PushNotificationCapableEventController, TemplatesCapableEventController {
     
     var templatesState: UiState<[AktivitaetTemplate]> = .loading(subState: .idle)
     var selectedStufen: Set<SeesturmStufe> = Set(SeesturmStufe.allCases)
@@ -22,6 +22,10 @@ class ManageAktivitaetenViewModel {
         service: StufenbereichService
     ) {
         self.service = service
+    }
+    
+    var eventPreviewType: EventPreviewType {
+        .multipleAktivitaeten(stufen: self.selectedStufen)
     }
     
     func validateEvent(event: CloudFunctionEventPayload, isAllDay: Bool, trimmedDescription: String, mode: EventManagementMode) -> EventValidationStatus {

@@ -107,13 +107,7 @@ private struct HomeNavigationDestinations: ViewModifier {
                     aktivitaetDetailView
                 }
             case .manageTermin(let eventId):
-                ManageEventView(
-                    viewModel: ManageEventViewModel(
-                        stufenbereichService: accountModule.stufenbereichService,
-                        anlaesseService: wordpressModule.anlaesseService,
-                        eventType: .termin(calendar: calendar, mode: .update(eventId: eventId))
-                    )
-                )
+                ManageEventView(eventType: .termin(calendar: calendar, mode: .update(eventId: eventId)))
             }
         }
     }

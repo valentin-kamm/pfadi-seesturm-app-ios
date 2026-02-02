@@ -8,10 +8,58 @@ import SwiftUI
 
 struct ManageEventView: View {
     
-    @State private var viewModel: ManageEventViewModel
+    @Environment(\.accountModule) private var accountModule: AccountModule
+    @Environment(\.wordpressModule) private var wordpressModule: WordpressModule
+    
+    private let eventType: EventToManageType
     
     init(
-        viewModel: ManageEventViewModel
+        eventType: EventToManageType
+    ) {
+        self.eventType = eventType
+    }
+    
+    var body: some View {
+        switch eventType {
+        case .aktivitaet(let stufe, _):
+            ManageEventDIView(
+                viewModel: ManageEventViewModel(
+                    eventType: eventType,
+                    controller: ManageAktivitaetViewModel(
+                        service: accountModule.stufenbereichService,
+                        stufe: stufe
+                    )
+                )
+            )
+        case .multipleAktivitaeten:
+            ManageEventDIView(
+                viewModel: ManageEventViewModel(
+                    eventType: eventType,
+                    controller: ManageAktivitaetenViewModel(
+                        service: accountModule.stufenbereichService
+                    )
+                )
+            )
+        case .termin(let calendar, _):
+            ManageEventDIView(
+                viewModel: ManageEventViewModel(
+                    eventType: eventType,
+                    controller: ManageTerminViewModel(
+                        service: wordpressModule.anlaesseService,
+                        calendar: calendar
+                    )
+                )
+            )
+        }
+    }
+}
+
+private struct ManageEventDIView<C: EventManagementController>: View {
+    
+    @State private var viewModel: ManageEventViewModel<C>
+    
+    init(
+        viewModel: ManageEventViewModel<C>
     ) {
         self.viewModel = viewModel
     }
@@ -253,23 +301,8 @@ private struct ManageEventContentView: View {
                             Text("Beschreibung")
                         }
                         
-                        Section {
-                            if eventForPreview != nil {
-                                Button("Vorschau") {
-                                    onShowPreviewSheet()
-                                }
-                                .foregroundStyle(Color.primary)
-                            }
-                            if let binding = pushNotificationBinding {
-                                Toggle("Push-Nachricht senden", isOn: binding)
-                                    .tint(eventType.accentColor)
-                            }
-                        } header: {
-                            Text(mode.nomen)
-                        }
-                        
-                        Section {
-                            if let binding = selectedStufen {
+                        if let binding = selectedStufen {
+                            Section {
                                 ForEach(SeesturmStufe.allCases.sorted { $0.id < $1.id }) { stufe in
                                     Button {
                                         if binding.wrappedValue.contains(stufe) {
@@ -292,8 +325,26 @@ private struct ManageEventContentView: View {
                                             }
                                         }
                                     }
+                                    
                                 }
+                            } header: {
+                                Text("Stufen auswählen")
                             }
+                        }
+                        
+                        Section {
+                            if eventForPreview != nil {
+                                Button("Vorschau") {
+                                    onShowPreviewSheet()
+                                }
+                                .foregroundStyle(Color.primary)
+                            }
+                            if let binding = pushNotificationBinding {
+                                Toggle("Push-Nachricht senden", isOn: binding)
+                                    .tint(eventType.accentColor)
+                            }
+                        } header: {
+                            Text(mode.nomen)
                         }
                         
                         Section {

@@ -68,13 +68,7 @@ private struct AnlaesseNavigationDestinations: ViewModifier {
                     )
                 }
             case .manageTermin(let calendar, let mode):
-                ManageEventView(
-                    viewModel: ManageEventViewModel(
-                        stufenbereichService: accountModule.stufenbereichService,
-                        anlaesseService: wordpressModule.anlaesseService,
-                        eventType: .termin(calendar: calendar, mode: mode)
-                    )
-                )
+                ManageEventView(eventType: .termin(calendar: calendar, mode: mode))
             }
         }
     }

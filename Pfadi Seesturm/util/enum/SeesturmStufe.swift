@@ -69,6 +69,19 @@ enum SeesturmStufe: String, Codable, Hashable, CaseIterable, Identifiable {
         }
     }
     
+    var nameShort: String {
+        switch self {
+        case .biber:
+            "Biber"
+        case .wolf:
+            "Wolf"
+        case .pfadi:
+            "Pfadi"
+        case .pio:
+            "Pio"
+        }
+    }
+    
     var aktivitaetDescription: String {
         switch self {
         case .biber:

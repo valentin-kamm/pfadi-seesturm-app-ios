@@ -13511,22 +13511,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "278CC780-4725-486C-9E2F-0266F8D65EE1"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/presentation/common/event_management/viewmodels/ManageEventViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "279"
-            endingLineNumber = "279"
-            landmarkName = "fetchEvent(fetch:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "65C9BA90-1A2C-49BB-9C5C-3C5CB95F12CA"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -13534,8 +13518,8 @@
             filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "340"
-            endingLineNumber = "340"
+            startingLineNumber = "391"
+            endingLineNumber = "391"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

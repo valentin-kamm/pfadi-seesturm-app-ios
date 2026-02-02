@@ -9,7 +9,7 @@ import Observation
 
 @Observable
 @MainActor
-class ManageTerminViewModel {
+class ManageTerminViewModel: EventManagementController, UpdateCapableEventController {
     
     private let service: AnlaesseService
     let calendar: SeesturmCalendar
@@ -22,7 +22,11 @@ class ManageTerminViewModel {
         self.calendar = calendar
     }
     
-    func validateEvent(event: CloudFunctionEventPayload, trimmedDescription: String, mode: EventManagementMode) -> EventValidationStatus {
+    var eventPreviewType: EventPreviewType {
+        .termin(calendar: self.calendar)
+    }
+    
+    func validateEvent(event: CloudFunctionEventPayload, isAllDay: Bool, trimmedDescription: String, mode: EventManagementMode) -> EventValidationStatus {
         
         // errors
         if event.end < event.start {

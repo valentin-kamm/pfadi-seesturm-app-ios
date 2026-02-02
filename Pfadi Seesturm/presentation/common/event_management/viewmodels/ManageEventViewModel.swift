@@ -9,7 +9,7 @@ import Observation
 
 @Observable
 @MainActor
-class ManageEventViewModel {
+class ManageEventViewModel<C: EventManagementController> {
     
     var eventState: UiState<Void>
     var publishEventState: ActionState<Void> = .idle
@@ -29,32 +29,29 @@ class ManageEventViewModel {
     private var trimmedDescription = ""
     
     let eventType: EventToManageType
-    private let subViewModel: ManageEventSubViewModelType
+    private let controller: C
     let mode: EventManagementMode
     
     init(
-        stufenbereichService: StufenbereichService,
-        anlaesseService: AnlaesseService,
-        eventType: EventToManageType
+        eventType: EventToManageType,
+        controller: C
     ) {
         self.eventType = eventType
+        self.controller = controller
         
         switch self.eventType {
         case .aktivitaet(let stufe, let mode):
             self.mode = mode
-            self.subViewModel = .aktivitaet(vm: ManageAktivitaetViewModel(service: stufenbereichService, stufe: stufe))
             self.title = stufe.aktivitaetDescription
             self.start = DateTimeUtil.shared.nextSaturday(at: 14, timeZone: TimeZone(identifier: "Europe/Zurich")!)
             self.end = DateTimeUtil.shared.nextSaturday(at: 16, timeZone: TimeZone(identifier: "Europe/Zurich")!)
         case .multipleAktivitaeten:
             self.mode = .insert
-            self.subViewModel = .multipleAktivitaeten(vm: ManageAktivitaetenViewModel(service: stufenbereichService))
             self.title = ""
             self.start = DateTimeUtil.shared.nextSaturday(at: 14, timeZone: TimeZone(identifier: "Europe/Zurich")!)
             self.end = DateTimeUtil.shared.nextSaturday(at: 16, timeZone: TimeZone(identifier: "Europe/Zurich")!)
-        case .termin(let calendar, let mode):
+        case .termin(_, let mode):
             self.mode = mode
-            self.subViewModel = .termin(vm: ManageTerminViewModel(service: anlaesseService, calendar: calendar))
             self.title = ""
             let calendar = Calendar.current
             let now = Date()
@@ -86,48 +83,25 @@ class ManageEventViewModel {
         try? self.eventForPublishing.toGoogleCalendarEvent()
     }
     private var publishingValidationStatus: EventValidationStatus {
-        
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            return vm.validateEvent(event: self.eventForPublishing, isAllDay: self.isAllDay, trimmedDescription: self.trimmedDescription, mode: self.mode)
-        case .multipleAktivitaeten(let vm):
-            return vm.validateEvent(event: self.eventForPublishing, isAllDay: self.isAllDay, trimmedDescription: self.trimmedDescription, mode: self.mode)
-        case .termin(let vm):
-            return vm.validateEvent(event: self.eventForPublishing, trimmedDescription: self.trimmedDescription, mode: self.mode)
-        }
+        controller.validateEvent(event: self.eventForPublishing, isAllDay: self.isAllDay, trimmedDescription: self.trimmedDescription, mode: self.mode)
     }
     
     var eventPreviewType: EventPreviewType {
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            .aktivitaet(stufe: vm.stufe)
-        case .multipleAktivitaeten(let vm):
-            .multipleAktivitaeten(stufen: vm.selectedStufen)
-        case .termin(let vm):
-            .termin(calendar: vm.calendar)
-        }
+        controller.eventPreviewType
     }
     
     var templatesState: UiState<[AktivitaetTemplate]>? {
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            return vm.templatesState
-        case .multipleAktivitaeten(let vm):
-            return vm.templatesState
-        case .termin(_):
+        guard let c = self.controller as? TemplatesCapableEventController else {
             return nil
         }
+        return c.templatesState
     }
     
     private var sendPushNotification: Bool {
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            return vm.sendPushNotification
-        case .multipleAktivitaeten(let vm):
-            return vm.sendPushNotification
-        case .termin(_):
+        guard let c = self.controller as? PushNotificationCapableEventController else {
             return false
         }
+        return c.sendPushNotification
     }
     
     var confirmationDialogTitle: String {
@@ -169,90 +143,57 @@ class ManageEventViewModel {
         )
     }
     var showTemplatesSheet: Binding<Bool>? {
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            return Binding(
-                get: { vm.showTemplatesSheet },
-                set: { vm.showTemplatesSheet = $0 }
-            )
-        case .multipleAktivitaeten(let vm):
-            return Binding(
-                get: { vm.showTemplatesSheet },
-                set: { vm.showTemplatesSheet = $0 }
-            )
-        case .termin(_):
+        guard let c = self.controller as? TemplatesCapableEventController else {
             return nil
         }
+        return Binding(
+            get: { c.showTemplatesSheet },
+            set: { c.showTemplatesSheet = $0 }
+        )
     }
     var pushNotificationBinding: Binding<Bool>? {
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            return Binding(
-                get: { vm.sendPushNotification },
-                set: { vm.sendPushNotification = $0 }
-            )
-        case .multipleAktivitaeten(let vm):
-            return Binding(
-                get: { vm.sendPushNotification },
-                set: { vm.sendPushNotification = $0 }
-            )
-        case .termin(_):
+        guard let c = self.controller as? PushNotificationCapableEventController else {
             return nil
         }
+        return Binding(
+            get: { c.sendPushNotification },
+            set: { c.sendPushNotification = $0 }
+        )
     }
     var selectedStufenBinding: Binding<Set<SeesturmStufe>>? {
-        switch self.subViewModel {
-        case .multipleAktivitaeten(let vm):
-            return Binding(
-                get: { vm.selectedStufen },
-                set: { vm.selectedStufen = $0 }
-            )
-        case .termin(_), .aktivitaet(_):
+        guard let c = self.controller as? MultiStufenCapableEventController else {
             return nil
         }
+        return Binding(
+            get: { c.selectedStufen },
+            set: { c.selectedStufen = $0 }
+        )
     }
     
     var onShowTemplatesSheet: (() -> Void)? {
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            return { vm.showTemplatesSheet = true }
-        case .multipleAktivitaeten(let vm):
-            return { vm.showTemplatesSheet = true }
-        case .termin(_):
+        guard let c = self.controller as? TemplatesCapableEventController else {
             return nil
         }
+        return { c.showTemplatesSheet = true }
     }
     
     func fetchEventIfPossible() async {
         
-        guard self.eventState.taskShouldRun else {
+        guard let c = self.controller as? UpdateCapableEventController else {
             return
         }
         guard case .update(let eventId) = mode else {
             return
         }
-        
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            await self.fetchEvent {
-                await vm.fetchEvent(eventId: eventId)
-            }
-        case .termin(let vm):
-            await self.fetchEvent {
-                await vm.fetchEvent(eventId: eventId)
-            }
-        case .multipleAktivitaeten(_):
-            break
+        guard self.eventState.taskShouldRun else {
+            return
         }
-    }
-    
-    private func fetchEvent(fetch: () async -> SeesturmResult<GoogleCalendarEvent, NetworkError>) async {
         
         withAnimation {
             self.eventState = .loading(subState: .loading)
         }
         
-        let result = await fetch()
+        let result = await c.fetchEvent(eventId: eventId)
         
         switch result {
         case .error(let e):
@@ -298,27 +239,14 @@ class ManageEventViewModel {
         switch self.mode {
         case .insert:
             await executeInsertOrUpdate {
-                switch self.subViewModel {
-                case .aktivitaet(let vm):
-                    await vm.addEvent(event: self.eventForPublishing)
-                case .multipleAktivitaeten(let vm):
-                    await vm.addEvent(event: self.eventForPublishing)
-                case .termin(let vm):
-                    await vm.addEvent(event: self.eventForPublishing)
-                }
+                await self.controller.addEvent(event: self.eventForPublishing)
             }
         case .update(let eventId):
-            switch self.subViewModel {
-            case .aktivitaet(let vm):
-                await executeInsertOrUpdate {
-                    await vm.updateEvent(eventId: eventId, event: self.eventForPublishing)
-                }
-            case .termin(let vm):
-                await executeInsertOrUpdate {
-                    await vm.updateEvent(eventId: eventId, event: self.eventForPublishing)
-                }
-            case .multipleAktivitaeten(_):
+            guard let c = self.controller as? UpdateCapableEventController else {
                 break
+            }
+            await executeInsertOrUpdate {
+                await c.updateEvent(eventId: eventId, event: self.eventForPublishing)
             }
         }
     }
@@ -362,34 +290,17 @@ class ManageEventViewModel {
     }
     
     func observeTemplatesIfPossible() async {
-        
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            await vm.observeTemplates()
-        case .multipleAktivitaeten(let vm):
-            await vm.observeTemplates()
-        case .termin(_):
-            break
+        guard let c = self.controller as? TemplatesCapableEventController else {
+            return
         }
+        await c.observeTemplates()
     }
     
     func useTemplateIfPossible(_ template: AktivitaetTemplate) {
-        
-        switch self.subViewModel {
-        case .aktivitaet(let vm):
-            self.description = template.description
-            vm.showTemplatesSheet = false
-        case .multipleAktivitaeten(let vm):
-            self.description = template.description
-            vm.showTemplatesSheet = false
-        case .termin(_):
-            break
+        guard let c = self.controller as? TemplatesCapableEventController else {
+            return
         }
+        self.description = template.description
+        c.showTemplatesSheet = false
     }
-}
-
-private enum ManageEventSubViewModelType {
-    case aktivitaet(vm: ManageAktivitaetViewModel)
-    case multipleAktivitaeten(vm: ManageAktivitaetenViewModel)
-    case termin(vm: ManageTerminViewModel)
 }

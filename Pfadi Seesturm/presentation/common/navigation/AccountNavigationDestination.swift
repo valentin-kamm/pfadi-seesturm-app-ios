@@ -105,13 +105,7 @@ private struct AccountNavigationDestinations: ViewModifier {
                     user: user
                 )
             case .manageEvent(let type):
-                ManageEventView(
-                    viewModel: ManageEventViewModel(
-                        stufenbereichService: accountModule.stufenbereichService,
-                        anlaesseService: wordpressModule.anlaesseService,
-                        eventType: type
-                    )
-                )
+                ManageEventView(eventType: type)
             case .templates(let stufe):
                 TemplateEditListView(
                     viewModel: TemplateViewModel(

@@ -9,7 +9,7 @@ import Observation
 
 @Observable
 @MainActor
-class ManageAktivitaetViewModel {
+class ManageAktivitaetViewModel: EventManagementController, PushNotificationCapableEventController, TemplatesCapableEventController, UpdateCapableEventController {
     
     var templatesState: UiState<[AktivitaetTemplate]> = .loading(subState: .idle)
     var sendPushNotification: Bool = true
@@ -24,6 +24,10 @@ class ManageAktivitaetViewModel {
     ) {
         self.service = service
         self.stufe = stufe
+    }
+    
+    var eventPreviewType: EventPreviewType {
+        .aktivitaet(stufe: self.stufe)
     }
     
     func validateEvent(event: CloudFunctionEventPayload, isAllDay: Bool, trimmedDescription: String, mode: EventManagementMode) -> EventValidationStatus {
