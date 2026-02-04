@@ -64,13 +64,7 @@ class StufenbereichService: WordpressService {
         ).map(transformAktivitaetTemplateString)
     }
     func observeAktivitaetTemplates(stufe: SeesturmStufe) -> AsyncStream<SeesturmResult<[AktivitaetTemplate], RemoteDatabaseError>> {
-        return firestoreRepository.observeCollection(
-            type: AktivitaetTemplateDto.self,
-            collection: .aktivitaetTemplates,
-            filter: { query in
-                query.whereField("stufenId", isEqualTo: stufe.id)
-            }
-        ).map(transformAktivitaetTemplateString)
+        return observeAktivitaetTemplates(stufen: Set([stufe]))
     }
     private func transformAktivitaetTemplateString(_ input: SeesturmResult<[AktivitaetTemplateDto], RemoteDatabaseError>) -> SeesturmResult<[AktivitaetTemplate], RemoteDatabaseError> {
         
@@ -88,7 +82,7 @@ class StufenbereichService: WordpressService {
         }
     }
     
-    func addMultipleAktivitaeten(
+    func addAktivitaeten(
         event: CloudFunctionEventPayload,
         stufen: Set<SeesturmStufe>,
         withNotification: Bool
@@ -119,26 +113,12 @@ class StufenbereichService: WordpressService {
         }
     }
     
-    func addNewAktivitaet(
+    func addAktivitaet(
         event: CloudFunctionEventPayload,
         stufe: SeesturmStufe,
         withNotification: Bool
     ) async -> SeesturmResult<Void, CloudFunctionsError> {
-        
-        do {
-            let payload = try event.toCloudFunctionEventPayloadDto()
-            try await addAktivitaet(payload: payload, stufe: stufe, withNotification: withNotification)
-            return .success(())
-        }
-        catch _ as EncodingError {
-            return .error(.invalidPayload)
-        }
-        catch _ as DecodingError {
-            return .error(.invalidResponse)
-        }
-        catch {
-            return .error(.unknown(message: error.localizedDescription))
-        }
+        return await addAktivitaeten(event: event, stufen: Set([stufe]), withNotification: withNotification)
     }
     
     private func addAktivitaet(payload: CloudFunctionEventPayloadDto, stufe: SeesturmStufe, withNotification: Bool) async throws {
@@ -148,7 +128,7 @@ class StufenbereichService: WordpressService {
         }
     }
     
-    func updateExistingAktivitaet(
+    func updateAktivitaet(
         eventId: String,
         event: CloudFunctionEventPayload,
         stufe: SeesturmStufe,

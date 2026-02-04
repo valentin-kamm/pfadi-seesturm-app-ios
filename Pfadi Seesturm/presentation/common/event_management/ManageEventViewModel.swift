@@ -108,7 +108,9 @@ class ManageEventViewModel<C: EventManagementController> {
         switch self.publishingValidationStatus {
         case .valid:
             switch self.eventType {
-            case .aktivitaet(_, _), .multipleAktivitaeten:
+            case .aktivitaet(let stufe, _):
+                return "Die \(stufe.aktivitaetDescription) wird \(self.sendPushNotification ? "mit" : "ohne") Push-Nachricht \(self.mode.verbPassiv)."
+            case .multipleAktivitaeten:
                 return "Die Aktivität wird \(self.sendPushNotification ? "mit" : "ohne") Push-Nachricht \(self.mode.verbPassiv)."
             case .termin(_, _):
                 return "Möchtest du den Anlass wirklich \(self.mode.verb)?"
@@ -179,10 +181,10 @@ class ManageEventViewModel<C: EventManagementController> {
     
     func fetchEventIfPossible() async {
         
-        guard let c = self.controller as? UpdateCapableEventController else {
+        guard case .update(let eventId) = mode else {
             return
         }
-        guard case .update(let eventId) = mode else {
+        guard let c = self.controller as? UpdateCapableEventController else {
             return
         }
         guard self.eventState.taskShouldRun else {

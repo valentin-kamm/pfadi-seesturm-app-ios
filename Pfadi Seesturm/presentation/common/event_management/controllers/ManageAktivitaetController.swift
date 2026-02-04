@@ -1,5 +1,5 @@
 //
-//  ManageAktivitaetViewModel.swift
+//  ManageAktivitaetController.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 15.01.2026.
@@ -9,14 +9,14 @@ import Observation
 
 @Observable
 @MainActor
-class ManageAktivitaetViewModel: EventManagementController, PushNotificationCapableEventController, TemplatesCapableEventController, UpdateCapableEventController {
+class ManageAktivitaetController: EventManagementController, PushNotificationCapableEventController, TemplatesCapableEventController, UpdateCapableEventController {
     
     var templatesState: UiState<[AktivitaetTemplate]> = .loading(subState: .idle)
     var sendPushNotification: Bool = true
     var showTemplatesSheet: Bool = false
     
     private let service: StufenbereichService
-    let stufe: SeesturmStufe
+    private let stufe: SeesturmStufe
     
     init(
         service: StufenbereichService,
@@ -61,7 +61,7 @@ class ManageAktivitaetViewModel: EventManagementController, PushNotificationCapa
     }
     
     func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await service.addNewAktivitaet(event: event, stufe: self.stufe, withNotification: self.sendPushNotification)
+        return await service.addAktivitaet(event: event, stufe: self.stufe, withNotification: self.sendPushNotification)
     }
     
     func fetchEvent(eventId: String) async -> SeesturmResult<GoogleCalendarEvent, NetworkError> {
@@ -69,7 +69,7 @@ class ManageAktivitaetViewModel: EventManagementController, PushNotificationCapa
     }
     
     func updateEvent(eventId: String, event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await service.updateExistingAktivitaet(eventId: eventId, event: event, stufe: self.stufe, withNotification: self.sendPushNotification)
+        return await service.updateAktivitaet(eventId: eventId, event: event, stufe: self.stufe, withNotification: self.sendPushNotification)
     }
     
     func observeTemplates() async {

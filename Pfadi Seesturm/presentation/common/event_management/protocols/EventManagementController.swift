@@ -8,7 +8,7 @@
 @MainActor
 protocol EventManagementController: AnyObject {
     
-    var eventPreviewType: EventPreviewType { get }
     func validateEvent(event: CloudFunctionEventPayload, isAllDay: Bool, trimmedDescription: String, mode: EventManagementMode) -> EventValidationStatus
     func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError>
+    var eventPreviewType: EventPreviewType { get }
 }

@@ -1,5 +1,5 @@
 //
-//  ManageTerminViewModel.swift
+//  ManageTerminController.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 15.01.2026.
@@ -9,10 +9,10 @@ import Observation
 
 @Observable
 @MainActor
-class ManageTerminViewModel: EventManagementController, UpdateCapableEventController {
+class ManageTerminController: EventManagementController, UpdateCapableEventController {
     
     private let service: AnlaesseService
-    let calendar: SeesturmCalendar
+    private let calendar: SeesturmCalendar
     
     init(
         service: AnlaesseService,

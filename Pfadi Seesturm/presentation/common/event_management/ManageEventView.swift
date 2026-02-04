@@ -25,7 +25,7 @@ struct ManageEventView: View {
             ManageEventDIView(
                 viewModel: ManageEventViewModel(
                     eventType: eventType,
-                    controller: ManageAktivitaetViewModel(
+                    controller: ManageAktivitaetController(
                         service: accountModule.stufenbereichService,
                         stufe: stufe
                     )
@@ -35,7 +35,7 @@ struct ManageEventView: View {
             ManageEventDIView(
                 viewModel: ManageEventViewModel(
                     eventType: eventType,
-                    controller: ManageAktivitaetenViewModel(
+                    controller: ManageAktivitaetenController(
                         service: accountModule.stufenbereichService
                     )
                 )
@@ -44,7 +44,7 @@ struct ManageEventView: View {
             ManageEventDIView(
                 viewModel: ManageEventViewModel(
                     eventType: eventType,
-                    controller: ManageTerminViewModel(
+                    controller: ManageTerminController(
                         service: wordpressModule.anlaesseService,
                         calendar: calendar
                     )
@@ -267,7 +267,7 @@ private struct ManageEventContentView: View {
                             case .aktivitaet(_, _), .multipleAktivitaeten:
                                 Text("Treffpunkt am Anfang der Aktivität")
                             case .termin(_, _):
-                                Text("Treffpunkt am Anfang des Anlass")
+                                Text("Treffpunkt am Anfang des Anlasses")
                             }
                         }
                         

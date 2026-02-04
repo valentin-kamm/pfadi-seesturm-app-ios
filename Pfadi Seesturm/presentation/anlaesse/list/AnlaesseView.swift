@@ -35,10 +35,10 @@ struct AnlaesseView: View {
                     navigationDestination: { event in
                         AccountNavigationDestination.anlassDetail(inputType: .object(object: event))
                     },
-                    onManageEvent: { mode in
+                    onAddEvent: {
                         appState.appendToNavigationPath(
                             tab: .account,
-                            destination: AccountNavigationDestination.manageEvent(type: .termin(calendar: calendar, mode: mode))
+                            destination: AccountNavigationDestination.manageEvent(type: .termin(calendar: calendar, mode: .insert))
                         )
                     }
                 )
@@ -52,17 +52,16 @@ struct AnlaesseView: View {
                         navigationDestination: { event in
                             AnlaesseNavigationDestination.detail(inputType: .object(object: event))
                         },
-                        onManageEvent: { mode in
+                        onAddEvent: {
                             appState.appendToNavigationPath(
                                 tab: .anlässe,
-                                destination: AnlaesseNavigationDestination.manageTermin(calendar: calendar, mode: mode)
+                                destination: AnlaesseNavigationDestination.manageTermin(mode: .insert)
                             )
                         }
                     )
                     .anlaesseNavigationDestinations(
                         appState: appState,
                         wordpressModule: wordpressModule,
-                        accountModule: accountModule,
                         calendar: calendar
                     )
                 }
@@ -77,20 +76,20 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
     private let calendar: SeesturmCalendar
     private let canEditEvents: Bool
     private let navigationDestination: (GoogleCalendarEvent) -> N
-    private let onManageEvent: (EventManagementMode) -> Void
+    private let onAddEvent: () -> Void
     
     init(
         viewModel: AnlaesseViewModel,
         calendar: SeesturmCalendar,
         canEditEvents: Bool,
         navigationDestination: @escaping (GoogleCalendarEvent) -> N,
-        onManageEvent: @escaping (EventManagementMode) -> Void
+        onAddEvent: @escaping () -> Void
     ) {
         self.viewModel = viewModel
         self.calendar = calendar
         self.canEditEvents = canEditEvents
         self.navigationDestination = navigationDestination
-        self.onManageEvent = onManageEvent
+        self.onAddEvent = onAddEvent
     }
     
     var body: some View {
@@ -111,7 +110,7 @@ private struct AnlaesseIntermediateView<N: NavigationDestination>: View {
                 }
             },
             canEditEvents: canEditEvents,
-            onManageEvent: onManageEvent
+            onAddEvent: onAddEvent
             
         )
         .task {
@@ -137,7 +136,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
     private let eventsLastUpdated: String
     private let onFetchMoreEvents: () -> Void
     private let canEditEvents: Bool
-    private let onManageEvent: (EventManagementMode) -> Void
+    private let onAddEvent: () -> Void
     
     init(
         eventsState: InfiniteScrollUiState<[GoogleCalendarEvent]>,
@@ -148,7 +147,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         eventsLastUpdated: String,
         onFetchMoreEvents: @escaping () -> Void,
         canEditEvents: Bool,
-        onManageEvent: @escaping (EventManagementMode) -> Void
+        onAddEvent: @escaping () -> Void
     ) {
         self.eventsState = eventsState
         self.calendar = calendar
@@ -158,7 +157,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
         self.eventsLastUpdated = eventsLastUpdated
         self.onFetchMoreEvents = onFetchMoreEvents
         self.canEditEvents = canEditEvents
-        self.onManageEvent = onManageEvent
+        self.onAddEvent = onAddEvent
     }
     
     var body: some View {
@@ -275,7 +274,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             if canEditEvents {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        onManageEvent(.insert)
+                        onAddEvent()
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(calendar.isLeitungsteam ? Color.SEESTURM_RED : Color.SEESTURM_GREEN)
@@ -297,7 +296,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
             canEditEvents: false,
-            onManageEvent: { _ in }
+            onAddEvent: { }
         )
     }
 }
@@ -312,7 +311,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
             canEditEvents: false,
-            onManageEvent: { _ in }
+            onAddEvent: { }
         )
     }
 }
@@ -327,7 +326,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
             canEditEvents: false,
-            onManageEvent: { _ in }
+            onAddEvent: { }
         )
     }
 }
@@ -350,7 +349,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
             canEditEvents: false,
-            onManageEvent: { _ in }
+            onAddEvent: { }
         )
     }
 }
@@ -373,7 +372,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
             canEditEvents: true,
-            onManageEvent: { _ in }
+            onAddEvent: { }
         )
     }
 }
@@ -396,7 +395,7 @@ private struct AnlaesseContentView<N: NavigationDestination>: View {
             eventsLastUpdated: "",
             onFetchMoreEvents: {},
             canEditEvents: true,
-            onManageEvent: { _ in }
+            onAddEvent: { }
         )
     }
 }

@@ -48,7 +48,7 @@ enum EventToManageType: Hashable {
         case .multipleAktivitaeten:
             "Titel der Aktivität"
         case .termin(_, _):
-            "Titel des Anlass"
+            "Titel des Anlasses"
         }
     }
         

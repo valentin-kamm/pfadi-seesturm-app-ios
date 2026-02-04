@@ -8942,8 +8942,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "265"
-            endingLineNumber = "265"
+            startingLineNumber = "245"
+            endingLineNumber = "245"
             landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8958,8 +8958,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "266"
-            endingLineNumber = "266"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8974,8 +8974,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -13399,22 +13399,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "677FF851-7650-40AC-A7B5-9AE17DF511CC"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "addNewAktivitaet(event:stufe:withNotification:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "F88D9916-B680-4CE2-BB77-8ED9B11453E8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -13422,9 +13406,9 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
-            landmarkName = "updateExistingAktivitaet(eventId:event:stufe:withNotification:)"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "updateAktivitaet(eventId:event:stufe:withNotification:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -1,5 +1,5 @@
 //
-//  ManageAktivitaetenViewModel.swift
+//  ManageAktivitaetenController.swift
 //  Pfadi Seesturm
 //
 //  Created by Valentin Kamm on 15.01.2026.
@@ -9,7 +9,7 @@ import Observation
 
 @Observable
 @MainActor
-class ManageAktivitaetenViewModel: EventManagementController, MultiStufenCapableEventController, PushNotificationCapableEventController, TemplatesCapableEventController {
+class ManageAktivitaetenController: EventManagementController, MultiStufenCapableEventController, PushNotificationCapableEventController, TemplatesCapableEventController {
     
     var templatesState: UiState<[AktivitaetTemplate]> = .loading(subState: .idle)
     var selectedStufen: Set<SeesturmStufe> = Set(SeesturmStufe.allCases)
@@ -59,7 +59,7 @@ class ManageAktivitaetenViewModel: EventManagementController, MultiStufenCapable
     }
     
     func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await service.addMultipleAktivitaeten(event: event, stufen: self.selectedStufen, withNotification: self.sendPushNotification)
+        return await service.addAktivitaeten(event: event, stufen: self.selectedStufen, withNotification: self.sendPushNotification)
     }
     
     func observeTemplates() async {
