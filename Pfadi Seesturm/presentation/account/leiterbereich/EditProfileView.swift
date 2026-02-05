@@ -12,7 +12,7 @@ struct EditProfileView: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var authState: AuthViewModel
-    @State private var shouldShowFullscreenProfilePicture: Bool = false
+    @State private var fullscreenProfilePicture: PhotoSliderViewItem? = nil
     
     @State private var viewModel: EditProfileViewModel
     private let user: FirebaseHitobitoUser
@@ -29,22 +29,6 @@ struct EditProfileView: View {
         self.user = user
         self.onSignOut = onSignOut
         self.onDeleteAccount = onDeleteAccount
-    }
-    
-    private var fullscreenProfilePicture: Binding<PhotoSliderViewItem?> {
-        Binding(
-            get: {
-                if shouldShowFullscreenProfilePicture && user.profilePictureUrl != nil {
-                    PhotoSliderViewItem(from: user)
-                }
-                else {
-                    nil
-                }
-            },
-            set: { picture in
-                shouldShowFullscreenProfilePicture = picture != nil
-            }
-        )
     }
     
     var body: some View {
@@ -66,7 +50,7 @@ struct EditProfileView: View {
                     deleteProfilePicture()
                 },
                 onOpenFullscreenProfilePicture: {
-                    shouldShowFullscreenProfilePicture = true
+                    fullscreenProfilePicture = PhotoSliderViewItem(from: user)
                 }
             )
             .navigationTitle("Account")
@@ -91,7 +75,7 @@ struct EditProfileView: View {
             }
             .ignoresSafeArea()
         }
-        .fullScreenCover(item: fullscreenProfilePicture) { item in
+        .fullScreenCover(item: $fullscreenProfilePicture) { item in
             PhotoSliderView(mode: .single(image: item))
         }
         .actionSnackbar(

@@ -10,21 +10,42 @@ import RichText
 
 struct AnlassCardView: View {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     private let event: GoogleCalendarEvent
     private let calendar: SeesturmCalendar
+    private let isInSheet: Bool
     
     init(
         event: GoogleCalendarEvent,
-        calendar: SeesturmCalendar
+        calendar: SeesturmCalendar,
+        isInSheet: Bool = false
     ) {
         self.event = event
         self.calendar = calendar
+        self.isInSheet = isInSheet
+    }
+    
+    private var cardAccentColor: Color {
+        if isInSheet {
+            switch colorScheme {
+            case .light:
+                .seesturmGray
+            case .dark:
+                Color(UIColor.systemBackground)
+            @unknown default:
+                .seesturmGray
+            }
+        }
+        else {
+            .seesturmGray
+        }
     }
     
     var body: some View {
         CustomCardView(shadowColor: .seesturmGreenCardViewShadowColor) {
             HStack(alignment: .center, spacing: 16) {
-                CustomCardView(shadowColor: .clear, backgroundColor: .seesturmGray) {
+                CustomCardView(shadowColor: .clear, backgroundColor: cardAccentColor) {
                     VStack(alignment: .center, spacing: 8) {
                         if let endDate = event.endDateFormatted {
                             Text("\(event.startDayFormatted) \(event.startMonthFormatted)")
@@ -107,7 +128,8 @@ struct AnlassCardView: View {
         )
         AnlassCardView(
             event: DummyData.allDayOneDayEvent,
-            calendar: .termineLeitungsteam
+            calendar: .termineLeitungsteam,
+            isInSheet: true
         )
     }
     .frame(maxWidth: .infinity)

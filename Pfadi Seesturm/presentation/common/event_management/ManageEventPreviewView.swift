@@ -122,7 +122,8 @@ private struct ManageTerminPreviewView: View {
             NavigationLink(value: ManageEventPreviewViewNavigationDestination.anlassDetail(calendar: calendar)) {
                 AnlassCardView(
                     event: event,
-                    calendar: calendar
+                    calendar: calendar,
+                    isInSheet: true
                 )
             }
             .padding(.top)
