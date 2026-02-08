@@ -114,8 +114,4 @@ enum SeesturmHTMLToolbarAction: Int, CaseIterable, Identifiable {
     var icon: UIImage {
         UIImage(systemName: iconName)!
     }
-    
-    var buttonTint: UIColor {
-        UIColor(Color.SEESTURM_GREEN)
-    }
 }

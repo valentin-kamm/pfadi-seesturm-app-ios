@@ -12,6 +12,7 @@ import Combine
 final class LegacySeesturmHTMLEditorToolbar: UIView {
     
     private let textAttributes: TextAttributes
+    private let buttonTint: UIColor
     private let onToolbarAction: (SeesturmHTMLToolbarAction) -> Void
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
@@ -22,9 +23,11 @@ final class LegacySeesturmHTMLEditorToolbar: UIView {
     
     init(
         textAttributes: TextAttributes,
+        buttonTint: UIColor,
         onToolbarAction: @escaping (SeesturmHTMLToolbarAction) -> Void
     ) {
         self.textAttributes = textAttributes
+        self.buttonTint = buttonTint
         self.onToolbarAction = onToolbarAction
         super.init(frame: .zero)
         setupViews()
@@ -84,7 +87,7 @@ final class LegacySeesturmHTMLEditorToolbar: UIView {
         button.setImage(action.icon, for: .normal)
         button.tag = action.rawValue
         button.isSelected = action.isSelected(textAttributes)
-        button.tintColor = action.buttonTint
+        button.tintColor = buttonTint
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             button.heightAnchor.constraint(equalToConstant: 40),
@@ -138,6 +141,7 @@ private struct LegacyToolbarPreview: UIViewRepresentable {
     func makeUIView(context: Context) -> LegacySeesturmHTMLEditorToolbar {
         let view = LegacySeesturmHTMLEditorToolbar(
             textAttributes: TextAttributes(),
+            buttonTint: UIColor.cyan,
             onToolbarAction: { _ in }
         )
         view.translatesAutoresizingMaskIntoConstraints = true

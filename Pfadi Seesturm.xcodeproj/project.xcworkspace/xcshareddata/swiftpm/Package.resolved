@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
-        "revision" : "4e62da1e5e6baf61674d3f5ae23d6d60c19f9c4a",
-        "version" : "12.0.0"
+        "revision" : "9b3aed4fa6226125305b82d4d86c715bef250785",
+        "version" : "12.9.0"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/googleads/google-ads-on-device-conversion-ios-sdk",
       "state" : {
-        "revision" : "428d8bb138e00f9a3f4f61cc6cd8863607524f65",
-        "version" : "2.1.0"
+        "revision" : "35b601a60fbbea2de3ea461f604deaaa4d8bbd0c",
+        "version" : "3.2.0"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "63c18311aac00032f15f5ce431c9e83ada96c386",
-        "version" : "12.0.0"
+        "revision" : "2ffd220823f3716904733162e9ae685545c276d1",
+        "version" : "12.8.0"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
-        "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
-        "version" : "8.5.0"
+        "revision" : "d30a5fad881137e2267f96a8e3fc35c58999bb94",
+        "version" : "8.6.2"
       }
     },
     {
@@ -141,17 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/NuPlay/RichText.git",
       "state" : {
-        "revision" : "ec3469ee47c17e0f90e4b43f23d7e19bc42e069b",
-        "version" : "2.7.0"
-      }
-    },
-    {
-      "identity" : "swift-protobuf",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-protobuf.git",
-      "state" : {
-        "revision" : "102a647b573f60f73afdce5613a51d71349fe507",
-        "version" : "1.30.0"
+        "revision" : "50ab84fd9df8afad2060bc11d4fc8a41d8459cc6",
+        "version" : "3.0.2"
       }
     },
     {
@@ -159,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Infomaniak/swift-rich-html-editor.git",
       "state" : {
-        "revision" : "53f400840ca3afb3ed16676715f1b69e4abe4f6b",
-        "version" : "2.1.0"
+        "revision" : "a220c80e55768e59081efcbfc7a95447197ea6c2",
+        "version" : "3.0.0"
       }
     }
   ],

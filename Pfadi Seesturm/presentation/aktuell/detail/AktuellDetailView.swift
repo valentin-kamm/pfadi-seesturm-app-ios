@@ -124,7 +124,7 @@ private struct AktuellDetailContentView<D: NavigationDestination>: View {
                             .foregroundStyle(Color.secondary)
                             .labelStyle(.titleAndIcon)
                         RichText(html: post.content)
-                            .transition(.none)
+                            .loadingTransition(.none)
                             .linkOpenType(.SFSafariView())
                             .placeholder(content: {
                                 Text(Constants.PLACEHOLDER_TEXT)

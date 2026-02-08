@@ -13,17 +13,20 @@ struct SeesturmHTMLEditor: View {
     private let html: Binding<String>
     private let scrollable: Bool
     private let disabled: Bool
+    private let buttonTint: Color
     @State private var showAddLinkSheet: Bool
     
     init(
         html: Binding<String>,
         scrollable: Bool,
         disabled: Bool,
+        buttonTint: Color = .SEESTURM_GREEN,
         showAddLinkSheet: Bool = false
     ) {
         self.html = html
         self.scrollable = scrollable
         self.disabled = disabled
+        self.buttonTint = buttonTint
         self.showAddLinkSheet = showAddLinkSheet
     }
     
@@ -32,7 +35,8 @@ struct SeesturmHTMLEditor: View {
             textAttributes: textAttributes,
             html: html,
             scrollable: scrollable,
-            disabled: disabled
+            disabled: disabled,
+            buttonTint: buttonTint
         ) { action in
                 switch action {
                 case .dismissKeyboard:
@@ -79,6 +83,7 @@ private struct SeesturmHTMLEditorView: View {
     private let html: Binding<String>
     private let scrollable: Bool
     private let disabled: Bool
+    private let buttonTint: Color
     private let onToolbarAction: (SeesturmHTMLToolbarAction) -> Void
     
     init(
@@ -86,16 +91,19 @@ private struct SeesturmHTMLEditorView: View {
         html: Binding<String>,
         scrollable: Bool,
         disabled: Bool,
+        buttonTint: Color,
         onToolbarAction: @escaping (SeesturmHTMLToolbarAction) -> Void
     ) {
         self.textAttributes = textAttributes
         self.html = html
         self.scrollable = scrollable
         self.disabled = disabled
+        self.buttonTint = buttonTint
         self.onToolbarAction = onToolbarAction
         if #available(iOS 26.0, *) {
             let toolbar = SeesturmHTMLEditorToolbar(
                 textAttributes: textAttributes,
+                buttonTint: buttonTint,
                 onToolbarAction: onToolbarAction
             )
             toolbar.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -104,6 +112,7 @@ private struct SeesturmHTMLEditorView: View {
         else {
             self.toolbar = LegacySeesturmHTMLEditorToolbar(
                 textAttributes: textAttributes,
+                buttonTint: UIColor(buttonTint),
                 onToolbarAction: onToolbarAction
             )
         }

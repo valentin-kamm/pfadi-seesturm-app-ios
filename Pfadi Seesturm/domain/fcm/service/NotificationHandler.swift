@@ -114,7 +114,7 @@ final class NotificationHandler: NSObject, UNUserNotificationCenterDelegate, Mes
                 case .error(_):
                     return
                 case .success(let user):
-                    let _ = await schoepflialarmService.sendSchoepflialarmReaction(user: user, reaction: reaction)
+                    let _ = await schoepflialarmService.sendSchoepflialarmReaction(user: user, reaction: reaction, runInParallel: true)
                 }
             }
         case UNNotificationDefaultActionIdentifier:

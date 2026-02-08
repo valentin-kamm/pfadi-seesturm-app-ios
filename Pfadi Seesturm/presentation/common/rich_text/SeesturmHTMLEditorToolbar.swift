@@ -14,13 +14,16 @@ private struct SeesturmHTMLEditorToolbarView: View {
     @Namespace private var toolbarNamespace
     
     @ObservedObject private var textAttributes: TextAttributes
+    private let buttonTint: Color
     let onToolbarAction: (SeesturmHTMLToolbarAction) -> Void
     
     init(
         textAttributes: TextAttributes,
+        buttonTint: Color,
         onToolbarAction: @escaping (SeesturmHTMLToolbarAction) -> Void
     ) {
         self.textAttributes = textAttributes
+        self.buttonTint = buttonTint
         self.onToolbarAction = onToolbarAction
     }
     
@@ -38,7 +41,7 @@ private struct SeesturmHTMLEditorToolbarView: View {
                                         if action.isSelected(textAttributes) {
                                             Label(action.title, systemImage: action.iconName)
                                                 .bold()
-                                                .foregroundStyle(Color.SEESTURM_GREEN)
+                                                .foregroundStyle(buttonTint)
                                         }
                                         else {
                                             Label(action.title, systemImage: action.iconName)
@@ -71,16 +74,20 @@ final class SeesturmHTMLEditorToolbar: UIView {
     
     private let hostingController: UIHostingController<SeesturmHTMLEditorToolbarView>
     private let textAttributes: TextAttributes
+    private let buttonTint: Color
     
     private var textAttributesObservation: AnyCancellable?
     
     init(
         textAttributes: TextAttributes,
+        buttonTint: Color,
         onToolbarAction: @escaping (SeesturmHTMLToolbarAction) -> Void
     ) {
         self.textAttributes = textAttributes
+        self.buttonTint = buttonTint
         let swiftUIView = SeesturmHTMLEditorToolbarView(
             textAttributes: textAttributes,
+            buttonTint: buttonTint,
             onToolbarAction: onToolbarAction
         )
         self.hostingController = UIHostingController(rootView: swiftUIView)
@@ -147,6 +154,7 @@ final class SeesturmHTMLEditorToolbar: UIView {
     private func refreshToolbar() {
         self.hostingController.rootView = SeesturmHTMLEditorToolbarView(
             textAttributes: textAttributes,
+            buttonTint: buttonTint,
             onToolbarAction: hostingController.rootView.onToolbarAction
         )
         invalidateIntrinsicContentSize()
@@ -161,6 +169,7 @@ final class SeesturmHTMLEditorToolbar: UIView {
 #Preview {
     SeesturmHTMLEditorToolbarView(
         textAttributes: TextAttributes(),
+        buttonTint: .SEESTURM_RED,
         onToolbarAction: { _ in }
     )
 }

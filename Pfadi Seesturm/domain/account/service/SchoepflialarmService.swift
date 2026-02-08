@@ -91,14 +91,17 @@ class SchoepflialarmService {
     
     func sendSchoepflialarmReaction(
         user: FirebaseHitobitoUser,
-        reaction: SchoepflialarmReactionType
+        reaction: SchoepflialarmReactionType,
+        runInParallel: Bool = false
     ) async -> SeesturmResult<Void, RemoteDatabaseError> {
         
         do {
         
             // check that user does not have a reaction yet
-            let currentReactions: [SchoepflialarmReactionDto] = try await firestoreRepository.readCollection(collection: .schopflialarmReactions, filter: nil)
-            guard !currentReactions.map({$0.userId}).contains(user.userId) else {
+            let existingReactions: [SchoepflialarmReactionDto] = try await firestoreRepository.readCollection(collection: .schopflialarmReactions, filter: { query in
+                query.whereField("userId", isEqualTo: user.userId)
+            })
+            guard existingReactions.isEmpty else {
                 return .error(.savingError)
             }
             
@@ -108,9 +111,17 @@ class SchoepflialarmService {
                 userId: user.userId,
                 reaction: reaction.rawValue
             )
-        
-            let _ = try await fcfRepository.sendPushNotification(type: .schoepflialarmReactionGeneric(userName: user.displayNameShort, type: reaction))
-            try await firestoreRepository.insertDocument(object: payload, collection: .schopflialarmReactions)
+            
+            if runInParallel {
+                async let pushTask: CloudFunctionPushNotificationResponseDto = fcfRepository.sendPushNotification(type: .schoepflialarmReactionGeneric(userName: user.displayNameShort, type: reaction))
+                async let dbTask: Void = firestoreRepository.insertDocument(object: payload, collection: .schopflialarmReactions)
+                let (_, _) = try await (pushTask, dbTask)
+            }
+            else {
+                let _ = try await fcfRepository.sendPushNotification(type: .schoepflialarmReactionGeneric(userName: user.displayNameShort, type: reaction))
+                try await firestoreRepository.insertDocument(object: payload, collection: .schopflialarmReactions)
+            }
+            
             return .success(())
         }
         catch {

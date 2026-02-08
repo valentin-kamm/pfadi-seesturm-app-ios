@@ -129,7 +129,7 @@ private struct TermineDetailContentView: View {
                     }
                     if let description = event.description {
                         RichText(html: description)
-                            .transition(.none)
+                            .loadingTransition(.none)
                             .linkOpenType(.SFSafariView())
                             .placeholder(content: {
                                 Text(Constants.PLACEHOLDER_TEXT + Constants.PLACEHOLDER_TEXT + Constants.PLACEHOLDER_TEXT)

@@ -286,7 +286,8 @@ private struct ManageEventContentView: View {
                             SeesturmHTMLEditor(
                                 html: description,
                                 scrollable: true,
-                                disabled: eventState.isLoading || publishEventState.isLoading
+                                disabled: eventState.isLoading || publishEventState.isLoading,
+                                buttonTint: eventType.accentColor
                             )
                             .frame(maxWidth: .infinity)
                             .frame(height: 150)

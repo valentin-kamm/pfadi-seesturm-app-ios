@@ -77,7 +77,7 @@ struct TemplateListView: View {
                     ForEach(sortedTemplates) { template in
                         ZStack {
                             RichText(html: template.description)
-                                .transition(.none)
+                                .loadingTransition(.none)
                                 .linkOpenType(.none)
                                 .placeholder(content: {
                                     Text(Constants.PLACEHOLDER_TEXT)
@@ -101,7 +101,7 @@ struct TemplateListView: View {
                     ForEach(data.sorted { $0.created > $1.created }) { template in
                         ZStack {
                             RichText(html: template.description)
-                                .transition(.none)
+                                .loadingTransition(.none)
                                 .linkOpenType(.none)
                                 .placeholder(content: {
                                     Text(Constants.PLACEHOLDER_TEXT)

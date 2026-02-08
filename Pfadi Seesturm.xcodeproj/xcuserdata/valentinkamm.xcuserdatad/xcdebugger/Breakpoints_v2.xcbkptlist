@@ -11223,38 +11223,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C2503D76-A5A2-4016-9AF2-D4524469A54D"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/account/service/SchoepflialarmService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "sendSchoepflialarmReaction(user:reaction:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8A204189-6DA6-45B4-B6A5-9C6F5FA93616"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pfadi Seesturm/domain/account/service/SchoepflialarmService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "sendSchoepflialarmReaction(user:reaction:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "AC7B19C6-77CA-4E1B-AAC9-3C45E2345E22"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -11262,9 +11230,9 @@
             filePath = "Pfadi Seesturm/domain/account/service/SchoepflialarmService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "sendSchoepflialarmReaction(user:reaction:)"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "sendSchoepflialarmReaction(user:reaction:runInParallel:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -13262,8 +13230,8 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditorToolbar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
             landmarkName = "startObservingChangesInTextAttributes()"
             landmarkType = "7">
          </BreakpointContent>
@@ -13278,9 +13246,9 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditorToolbar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "refreshButtons()"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "refreshToolbar()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -13294,8 +13262,8 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditorToolbar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -13310,8 +13278,8 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditorToolbar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -13326,8 +13294,8 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditorToolbar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "intrinsicContentSize"
             landmarkType = "24">
          </BreakpointContent>
@@ -13342,8 +13310,8 @@
             filePath = "Pfadi Seesturm/presentation/common/rich_text/SeesturmHTMLEditorToolbar.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
             landmarkName = "safeAreaInsets"
             landmarkType = "24">
          </BreakpointContent>
@@ -13502,8 +13470,8 @@
             filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "391"
-            endingLineNumber = "391"
+            startingLineNumber = "392"
+            endingLineNumber = "392"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

@@ -119,7 +119,7 @@ struct AktivitaetDetailCardView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         RichText(html: beschreibung)
-                            .transition(.none)
+                            .loadingTransition(.none)
                             .linkOpenType(.SFSafariView())
                             .placeholder {
                                 Text(Constants.PLACEHOLDER_TEXT + Constants.PLACEHOLDER_TEXT + Constants.PLACEHOLDER_TEXT)
