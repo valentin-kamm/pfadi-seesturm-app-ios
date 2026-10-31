@@ -10,18 +10,23 @@ import Kingfisher
 
 struct CircleProfilePictureView: View {
     
+    @State private var fullscreenPicture: PhotoSliderViewItem? = nil
+    
     private let type: CircleProfilePictureViewType
     private let size: CGFloat
     private let showEditBadge: Bool
+    private let tapAction: CircleProfilePictureTapAction?
     
     init(
         type: CircleProfilePictureViewType,
         size: CGFloat,
-        showEditBadge: Bool = false
+        showEditBadge: Bool = false,
+        tapAction: CircleProfilePictureTapAction?
     ) {
         self.type = type
         self.size = size
         self.showEditBadge = showEditBadge
+        self.tapAction = tapAction
     }
     
     var borderColor: Color {
@@ -36,10 +41,9 @@ struct CircleProfilePictureView: View {
     var body: some View {
         ZStack {
             Group {
-                
                 switch type {
-                case .idle(let user):
-                    if let imageUrl = user?.profilePictureUrl {
+                case .idle(let u):
+                    if let user = u, let imageUrl = user.profilePictureUrl {
                         KFImage(imageUrl)
                             .placeholder {
                                 Rectangle()
@@ -50,6 +54,16 @@ struct CircleProfilePictureView: View {
                                     .clipped()
                             }
                             .resizable()
+                            .onTapGesture {
+                                if let action = tapAction {
+                                    switch action {
+                                    case .fullscreenPicture:
+                                        fullscreenPicture = PhotoSliderViewItem(from: user)
+                                    case .custom(let action):
+                                        action()
+                                    }
+                                }
+                            }
                     }
                     else {
                         Image("SeesturmLogo")
@@ -92,6 +106,9 @@ struct CircleProfilePictureView: View {
                     .offset(x: size / 2.5, y: size / 2.5)
             }
         }
+        .fullScreenCover(item: $fullscreenPicture) { item in
+            PhotoSliderView(mode: .single(image: item))
+        }
     }
 }
 
@@ -100,27 +117,36 @@ enum CircleProfilePictureViewType {
     case loading
 }
 
+enum CircleProfilePictureTapAction {
+    case fullscreenPicture
+    case custom(action: () -> Void)
+}
+
 #Preview {
     VStack {
         CircleProfilePictureView(
             type: .idle(user: DummyData.user1),
             size: 60,
-            showEditBadge: false
+            showEditBadge: false,
+            tapAction: .fullscreenPicture
         )
         CircleProfilePictureView(
             type: .idle(user: DummyData.user3),
             size: 60,
-            showEditBadge: false
+            showEditBadge: false,
+            tapAction: .fullscreenPicture
         )
         CircleProfilePictureView(
             type: .idle(user: DummyData.user3),
             size: 60,
-            showEditBadge: true
+            showEditBadge: true,
+            tapAction: .fullscreenPicture
         )
         CircleProfilePictureView(
             type: .loading,
             size: 60,
-            showEditBadge: true
+            showEditBadge: true,
+            tapAction: .fullscreenPicture
         )
     }
 }

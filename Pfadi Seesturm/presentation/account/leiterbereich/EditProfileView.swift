@@ -12,7 +12,6 @@ struct EditProfileView: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var authState: AuthViewModel
-    @State private var fullscreenProfilePicture: PhotoSliderViewItem? = nil
     
     @State private var viewModel: EditProfileViewModel
     private let user: FirebaseHitobitoUser
@@ -48,9 +47,6 @@ struct EditProfileView: View {
                 },
                 onDeleteProfilePicture: {
                     deleteProfilePicture()
-                },
-                onOpenFullscreenProfilePicture: {
-                    fullscreenProfilePicture = PhotoSliderViewItem(from: user)
                 }
             )
             .navigationTitle("Account")
@@ -74,9 +70,6 @@ struct EditProfileView: View {
                 }
             }
             .ignoresSafeArea()
-        }
-        .fullScreenCover(item: $fullscreenProfilePicture) { item in
-            PhotoSliderView(mode: .single(image: item))
         }
         .actionSnackbar(
             action: $viewModel.imageDeleteState,
@@ -160,7 +153,6 @@ private struct EditProfileContentView: View {
     private let onSignOut: () -> Void
     private let onDeleteAccount: () -> Void
     private let onDeleteProfilePicture: () -> Void
-    private let onOpenFullscreenProfilePicture: () -> Void
     
     init(
         user: FirebaseHitobitoUser,
@@ -169,8 +161,7 @@ private struct EditProfileContentView: View {
         imageUploadState: ProgressActionState<Void>,
         onSignOut: @escaping () -> Void,
         onDeleteAccount: @escaping () -> Void,
-        onDeleteProfilePicture: @escaping () -> Void,
-        onOpenFullscreenProfilePicture: @escaping () -> Void
+        onDeleteProfilePicture: @escaping () -> Void
     ) {
         self.user = user
         self.profilePictureType = profilePictureType
@@ -179,7 +170,6 @@ private struct EditProfileContentView: View {
         self.onSignOut = onSignOut
         self.onDeleteAccount = onDeleteAccount
         self.onDeleteProfilePicture = onDeleteProfilePicture
-        self.onOpenFullscreenProfilePicture = onOpenFullscreenProfilePicture
     }
     
     var body: some View {
@@ -189,13 +179,9 @@ private struct EditProfileContentView: View {
                     VStack(alignment: .center, spacing: 8) {
                         CircleProfilePictureView(
                             type: profilePictureType,
-                            size: 120
+                            size: 120,
+                            tapAction: .fullscreenPicture
                         )
-                        .onTapGesture {
-                            if user.profilePictureUrl != nil {
-                                onOpenFullscreenProfilePicture()
-                            }
-                        }
                         .padding(.bottom, 4)
                         Text(user.displayNameFull)
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -293,8 +279,7 @@ private struct EditProfileContentView: View {
             imageUploadState: .idle,
             onSignOut: {},
             onDeleteAccount: {},
-            onDeleteProfilePicture: {},
-            onOpenFullscreenProfilePicture: {}
+            onDeleteProfilePicture: {}
         )
         .navigationTitle("Account")
         .navigationBarTitleDisplayMode(.inline)
@@ -310,8 +295,7 @@ private struct EditProfileContentView: View {
             imageUploadState: .loading(action: (), progress: 0.66),
             onSignOut: {},
             onDeleteAccount: {},
-            onDeleteProfilePicture: {},
-            onOpenFullscreenProfilePicture: {}
+            onDeleteProfilePicture: {}
         )
         .navigationTitle("Account")
         .navigationBarTitleDisplayMode(.inline)

@@ -16,7 +16,7 @@ struct SchoepflialarmLoadingCardView: View {
                     Circle()
                         .fill(Color.skeletonPlaceholderColor)
                         .loadingBlinking()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 40, height: 40)
                     Text("Vorname Nachname Pfadiname")
                         .font(.callout)
                         .lineLimit(1)

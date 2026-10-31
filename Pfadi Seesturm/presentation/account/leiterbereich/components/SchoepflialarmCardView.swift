@@ -29,7 +29,8 @@ struct SchoepflialarmCardView: View {
                 HStack(alignment: .center, spacing: 16) {
                     CircleProfilePictureView(
                         type: .idle(user: schoepflialarm.user),
-                        size: 30
+                        size: 40,
+                        tapAction: .fullscreenPicture
                     )
                     Text(schoepflialarm.user?.displayNameShort ?? "Unbekannter Benutzer")
                         .font(.callout)

@@ -106,7 +106,7 @@ struct SchoepflialarmSheet: View {
                                     HStack(alignment: .center, spacing: 16) {
                                         Circle()
                                             .fill(Color.skeletonPlaceholderColor)
-                                            .frame(width: 30, height: 30)
+                                            .frame(width: 40, height: 40)
                                             .loadingBlinking()
                                         Text(Constants.PLACEHOLDER_TEXT)
                                             .font(.callout)
@@ -157,12 +157,12 @@ struct SchoepflialarmSheet: View {
                             .padding(.top)
                         case .success(let schoepflialarm):
                             Section {
-                                
                                 VStack(alignment: .leading, spacing: 16) {
                                     HStack(alignment: .center, spacing: 16) {
                                         CircleProfilePictureView(
                                             type: .idle(user: schoepflialarm.user),
-                                            size: 30
+                                            size: 40,
+                                            tapAction: .fullscreenPicture
                                         )
                                         Text(schoepflialarm.user?.displayNameShort ?? "Unbekannter Benutzer")
                                             .font(.callout)
@@ -198,7 +198,8 @@ struct SchoepflialarmSheet: View {
                                             HStack(alignment: .center, spacing: 16) {
                                                 CircleProfilePictureView(
                                                     type: .idle(user: reaction.user),
-                                                    size: 20
+                                                    size: 30,
+                                                    tapAction: .fullscreenPicture
                                                 )
                                                 Text(reaction.user?.displayNameShort ?? "Unbekannter Benutzer")
                                                     .font(.subheadline)

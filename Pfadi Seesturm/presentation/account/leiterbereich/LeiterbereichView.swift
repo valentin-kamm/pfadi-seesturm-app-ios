@@ -262,12 +262,12 @@ private struct LeiterbereichContentView: View {
                         CircleProfilePictureView(
                             type: isEditAccountButtonLoading ? .loading : .idle(user: user),
                             size: 60,
-                            showEditBadge: true
+                            showEditBadge: true,
+                            tapAction: .custom(action: {
+                                showEditProfileSheet.wrappedValue = true
+                            })
                         )
                         .padding(.bottom, 4)
-                        .onTapGesture {
-                            showEditProfileSheet.wrappedValue = true
-                        }
                         Text("Willkommen, \(user.displayNameShort)!")
                             .frame(maxWidth: .infinity, alignment: .center)
                             .multilineTextAlignment(.center)

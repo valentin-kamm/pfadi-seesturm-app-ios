@@ -55,7 +55,7 @@ class AuthApiImpl: AuthApi {
     func resumeExternalUserAgentFlow(url: URL) {
         
         if let session = userAgentSession {
-            session.resumeExternalUserAgentFlow(with: url)
+            try? session.resumeExternalUserAgentFlow(url)
             userAgentSession = nil
         }
     }
