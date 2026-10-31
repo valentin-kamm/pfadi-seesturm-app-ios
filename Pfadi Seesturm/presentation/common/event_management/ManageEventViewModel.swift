@@ -20,6 +20,7 @@ class ManageEventViewModel<C: EventManagementController> {
     var isAllDay: Bool = false
     var showConfirmationDialog: Bool = false
     var showPreviewSheet: Bool = false
+    var disableForm: Bool = false
     var description: String = "" {
         didSet {
             trimmedDescription = description.htmlTrimmed
@@ -28,30 +29,27 @@ class ManageEventViewModel<C: EventManagementController> {
     @ObservationIgnored
     private var trimmedDescription = ""
     
-    let eventType: EventToManageType
+    private let initialEventType: EventToManageType
+    var eventType: EventToManageType
     private let controller: C
-    let mode: EventManagementMode
     
     init(
         eventType: EventToManageType,
         controller: C
     ) {
-        self.eventType = eventType
+        self.initialEventType = eventType
         self.controller = controller
         
-        switch self.eventType {
-        case .aktivitaet(let stufe, let mode):
-            self.mode = mode
+        switch self.initialEventType {
+        case .aktivitaet(let stufe, _):
             self.title = stufe.aktivitaetDescription
             self.start = DateTimeUtil.shared.nextSaturday(at: 14, timeZone: TimeZone(identifier: "Europe/Zurich")!)
             self.end = DateTimeUtil.shared.nextSaturday(at: 16, timeZone: TimeZone(identifier: "Europe/Zurich")!)
         case .multipleAktivitaeten:
-            self.mode = .insert
             self.title = ""
             self.start = DateTimeUtil.shared.nextSaturday(at: 14, timeZone: TimeZone(identifier: "Europe/Zurich")!)
             self.end = DateTimeUtil.shared.nextSaturday(at: 16, timeZone: TimeZone(identifier: "Europe/Zurich")!)
-        case .termin(_, let mode):
-            self.mode = mode
+        case .termin(_, _):
             self.title = ""
             let calendar = Calendar.current
             let now = Date()
@@ -61,12 +59,14 @@ class ManageEventViewModel<C: EventManagementController> {
             self.end = inTwoHours
         }
         
-        switch self.mode {
+        switch self.initialEventType.mode {
         case .insert:
             self.eventState = .success(data: ())
         case .update(_):
             self.eventState = .loading(subState: .idle)
         }
+        
+        self.eventType = initialEventType
     }
     
     private var eventForPublishing: CloudFunctionEventPayload {
@@ -83,7 +83,7 @@ class ManageEventViewModel<C: EventManagementController> {
         try? self.eventForPublishing.toGoogleCalendarEvent()
     }
     private var publishingValidationStatus: EventValidationStatus {
-        controller.validateEvent(event: self.eventForPublishing, isAllDay: self.isAllDay, trimmedDescription: self.trimmedDescription, mode: self.mode)
+        controller.validateEvent(event: self.eventForPublishing, isAllDay: self.isAllDay, trimmedDescription: self.trimmedDescription, mode: self.eventType.mode)
     }
     
     var eventPreviewType: EventPreviewType {
@@ -109,11 +109,11 @@ class ManageEventViewModel<C: EventManagementController> {
         case .valid:
             switch self.eventType {
             case .aktivitaet(let stufe, _):
-                return "Die \(stufe.aktivitaetDescription) wird \(self.sendPushNotification ? "mit" : "ohne") Push-Nachricht \(self.mode.verbPassiv)."
+                return "Die \(stufe.aktivitaetDescription) wird \(self.sendPushNotification ? "mit" : "ohne") Push-Nachricht \(self.eventType.mode.verbPassiv)."
             case .multipleAktivitaeten:
-                return "Die Aktivität wird \(self.sendPushNotification ? "mit" : "ohne") Push-Nachricht \(self.mode.verbPassiv)."
+                return "Die Aktivität wird \(self.sendPushNotification ? "mit" : "ohne") Push-Nachricht \(self.eventType.mode.verbPassiv)."
             case .termin(_, _):
-                return "Möchtest du den Anlass wirklich \(self.mode.verb)?"
+                return "Möchtest du den Anlass wirklich \(self.eventType.mode.verb)?"
             }
         case .warning(let message), .error(let message):
             return message
@@ -122,9 +122,9 @@ class ManageEventViewModel<C: EventManagementController> {
     var confirmationDialogConfirmButtonText: String {
         switch self.publishingValidationStatus {
         case .valid:
-            return self.mode.nomen
+            return self.eventType.mode.nomen
         case .warning(_), .error(_):
-            return "Trotzdem \(self.mode.verb)"
+            return "Trotzdem \(self.eventType.mode.verb)"
         }
     }
     
@@ -181,7 +181,7 @@ class ManageEventViewModel<C: EventManagementController> {
     
     func fetchEventIfPossible() async {
         
-        guard case .update(let eventId) = mode else {
+        guard case .update(let eventId) = self.eventType.mode else {
             return
         }
         guard let c = self.controller as? UpdateCapableEventController else {
@@ -238,55 +238,66 @@ class ManageEventViewModel<C: EventManagementController> {
     
     func submit() async {
         
-        switch self.mode {
+        let result: SeesturmResult<AddEventSubsequentAction, CloudFunctionsError>
+        
+        switch self.eventType.mode {
         case .insert:
-            await executeInsertOrUpdate {
-                await self.controller.addEvent(event: self.eventForPublishing)
+            withAnimation {
+                self.publishEventState = .loading(action: ())
             }
+            result = await self.controller.addEvent(event: self.eventForPublishing)
         case .update(let eventId):
             guard let c = self.controller as? UpdateCapableEventController else {
-                break
+                return
             }
-            await executeInsertOrUpdate {
-                await c.updateEvent(eventId: eventId, event: self.eventForPublishing)
+            withAnimation {
+                self.publishEventState = .loading(action: ())
+            }
+            let r = await c.updateEvent(eventId: eventId, event: self.eventForPublishing)
+            switch r {
+            case .error(let e):
+                result = .error(e)
+            case .success(_):
+                result = .success(.none)
             }
         }
-    }
-    
-    private func executeInsertOrUpdate(execute: () async -> SeesturmResult<Void, CloudFunctionsError>) async {
-        
-        withAnimation {
-            self.publishEventState = .loading(action: ())
-        }
-        
-        let result = await execute()
         
         switch result {
         case .error(let e):
             let message: String
             switch self.eventType {
             case .aktivitaet(let stufe, _):
-                message = "Beim \(self.mode.nomen) der \(stufe.aktivitaetDescription) \(self.sendPushNotification ? "oder beim Senden der Push-Nachricht " : "")ist ein Fehler aufgetreten. \(e.defaultMessage)"
+                message = "Beim \(self.eventType.mode.nomen) der \(stufe.aktivitaetDescription) \(self.sendPushNotification ? "oder beim Senden der Push-Nachricht " : "")ist ein Fehler aufgetreten. \(e.defaultMessage)"
             case .multipleAktivitaeten:
-                message = "Beim \(self.mode.nomen) der Aktivitäten \(self.sendPushNotification ? "oder beim Senden der Push-Nachrichten " : "")ist ein Fehler aufgetreten. \(e.defaultMessage)"
+                message = "Beim \(self.eventType.mode.nomen) der Aktivitäten \(self.sendPushNotification ? "oder beim Senden der Push-Nachrichten " : "")ist ein Fehler aufgetreten. \(e.defaultMessage)"
             case .termin(_, _):
-                message = "Beim \(self.mode.nomen) des Anlasses \(self.sendPushNotification ? "oder beim Senden der Push-Nachricht " : "")ist ein Fehler aufgetreten. \(e.defaultMessage)"
+                message = "Beim \(self.eventType.mode.nomen) des Anlasses \(self.sendPushNotification ? "oder beim Senden der Push-Nachricht " : "")ist ein Fehler aufgetreten. \(e.defaultMessage)"
             }
             withAnimation {
                 self.publishEventState = .error(action: (), message: message)
             }
-        case .success(_):
+        case .success(let action):
             let message: String
             switch self.eventType {
             case .aktivitaet(let stufe, _):
-                message = "\(stufe.aktivitaetDescription) erfolgreich \(self.mode.verbPassiv).\(self.sendPushNotification ? " Push-Nachricht gesendet." : "")"
+                message = "\(stufe.aktivitaetDescription) erfolgreich \(self.eventType.mode.verbPassiv).\(self.sendPushNotification ? " Push-Nachricht gesendet." : "")"
             case .multipleAktivitaeten:
-                message = "Aktivitäten erfolgreich \(self.mode.verbPassiv).\(self.sendPushNotification ? " Push-Nachrichten gesendet." : "")"
+                message = "Aktivitäten erfolgreich \(self.eventType.mode.verbPassiv).\(self.sendPushNotification ? " Push-Nachrichten gesendet." : "")"
             case .termin(_, _):
-                message = "Anlass erfolgreich \(self.mode.verbPassiv).\(self.sendPushNotification ? " Push-Nachricht gesendet." : "")"
+                message = "Anlass erfolgreich \(self.eventType.mode.verbPassiv).\(self.sendPushNotification ? " Push-Nachricht gesendet." : "")"
             }
             withAnimation {
                 self.publishEventState = .success(action: (), message: message)
+            }
+            
+            // um zu vermeiden, dass Events aus Versehen mehrfach veröffentlich werden, wird bei Bedarf der Modus auf Update geändert oder die Bearbeitung ganz gesperrt
+            switch action {
+            case .switchToUpdateMode(let newEventId):
+                self.eventType = self.eventType.with(newMode: .update(eventId: newEventId))
+            case .lock:
+                self.disableForm = true
+            case .none:
+                break
             }
         }
     }

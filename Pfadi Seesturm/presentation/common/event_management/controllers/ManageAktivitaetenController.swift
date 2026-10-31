@@ -58,8 +58,14 @@ class ManageAktivitaetenController: EventManagementController, MultiStufenCapabl
         return .valid
     }
     
-    func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await service.addAktivitaeten(event: event, stufen: self.selectedStufen, withNotification: self.sendPushNotification)
+    func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<AddEventSubsequentAction, CloudFunctionsError> {
+        let result = await service.addAktivitaeten(event: event, stufen: self.selectedStufen, withNotification: self.sendPushNotification)
+        switch result {
+        case .error(let e):
+            return .error(e)
+        case .success(_):
+            return .success(.lock)
+        }
     }
     
     func observeTemplates() async {

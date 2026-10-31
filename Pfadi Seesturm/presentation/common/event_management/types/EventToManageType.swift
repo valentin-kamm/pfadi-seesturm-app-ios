@@ -12,6 +12,17 @@ enum EventToManageType: Hashable {
     case multipleAktivitaeten
     case termin(calendar: SeesturmCalendar, mode: EventManagementMode)
     
+    var mode: EventManagementMode {
+        switch self {
+        case .aktivitaet(_, let mode):
+            mode
+        case .multipleAktivitaeten:
+            .insert
+        case .termin(_, let mode):
+            mode
+        }
+    }
+    
     var templatesNavigationTitle: String {
         switch self {
         case .aktivitaet(let stufe, _):
@@ -51,7 +62,7 @@ enum EventToManageType: Hashable {
             "Titel des Anlasses"
         }
     }
-        
+    
     var navigationTitle: String {
         switch self {
         case .aktivitaet(let stufe, let mode):
@@ -70,6 +81,17 @@ enum EventToManageType: Hashable {
             case .update(_):
                 "Anlass bearbeiten"
             }
+        }
+    }
+    
+    func with(newMode: EventManagementMode) -> EventToManageType {
+        switch self {
+        case .aktivitaet(let stufe, _):
+            .aktivitaet(stufe: stufe, mode: newMode)
+        case .multipleAktivitaeten:
+            .multipleAktivitaeten
+        case .termin(let calendar, _):
+            .termin(calendar: calendar, mode: newMode)
         }
     }
 }

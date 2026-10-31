@@ -53,8 +53,14 @@ class ManageTerminController: EventManagementController, UpdateCapableEventContr
         return .valid
     }
     
-    func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await service.addEvent(event: event, calendar: self.calendar)
+    func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<AddEventSubsequentAction, CloudFunctionsError> {
+        let result = await service.addEvent(event: event, calendar: self.calendar)
+        switch result {
+        case .error(let e):
+            return .error(e)
+        case .success(let newEventId):
+            return .success(.switchToUpdateMode(newEventId: newEventId))
+        }
     }
     
     func fetchEvent(eventId: String) async -> SeesturmResult<GoogleCalendarEvent, NetworkError> {

@@ -8942,8 +8942,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "245"
-            endingLineNumber = "245"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
             landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8958,8 +8958,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "262"
+            endingLineNumber = "262"
             landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -8974,8 +8974,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
             landmarkName = "deleteAktivitaetTemplates(ids:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -13374,8 +13374,8 @@
             filePath = "Pfadi Seesturm/domain/account/service/StufenbereichService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "updateAktivitaet(eventId:event:stufe:withNotification:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -13474,6 +13474,326 @@
             endingLineNumber = "392"
             landmarkName = "body"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2DC426C5-4291-4294-B054-4AEA7D87A4A5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "submit()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2DC426C5-4291-4294-B054-4AEA7D87A4A5 - bfade0f52a8e520d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "296"
+                  endingLineNumber = "296">
+               </Location>
+               <Location
+                  uuid = "2DC426C5-4291-4294-B054-4AEA7D87A4A5 - ef1be88e7efbdaf1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "296"
+                  endingLineNumber = "296">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "24C8F4C7-832F-47EB-8A41-4C6FEAEE9DA8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "294"
+            endingLineNumber = "294"
+            landmarkName = "submit()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "24C8F4C7-832F-47EB-8A41-4C6FEAEE9DA8 - bfade0f52a8e52cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "294"
+                  endingLineNumber = "294">
+               </Location>
+               <Location
+                  uuid = "24C8F4C7-832F-47EB-8A41-4C6FEAEE9DA8 - bfade0f52a8e52cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "294"
+                  endingLineNumber = "294">
+               </Location>
+               <Location
+                  uuid = "24C8F4C7-832F-47EB-8A41-4C6FEAEE9DA8 - ef1be88e7efbda37"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "294"
+                  endingLineNumber = "294">
+               </Location>
+               <Location
+                  uuid = "24C8F4C7-832F-47EB-8A41-4C6FEAEE9DA8 - ef1be88e7efbda37"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "294"
+                  endingLineNumber = "294">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B0D1C2EC-97AD-4574-8338-E7273E195B70"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "280"
+            endingLineNumber = "280"
+            landmarkName = "submit()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B0D1C2EC-97AD-4574-8338-E7273E195B70 - bfade0f52a8e503c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "281"
+                  endingLineNumber = "281">
+               </Location>
+               <Location
+                  uuid = "B0D1C2EC-97AD-4574-8338-E7273E195B70 - ef1be88e7efbd8c0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "281"
+                  endingLineNumber = "281">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1FB09D8C-EF6F-4FDE-A55A-D6216CB8CA5C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/types/EventToManageType.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "with(newMode:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "894027F5-26E5-4C05-B213-903838D4BC6B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/types/EventToManageType.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "with(newMode:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7007EEE0-6028-4C83-A2C1-13C8C7744F0A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/types/EventToManageType.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "with(newMode:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "06DC1583-E8BA-4ACD-B037-372DACCBED61"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "submit()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "06DC1583-E8BA-4ACD-B037-372DACCBED61 - bfade0f52a8e524f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "298"
+                  endingLineNumber = "298">
+               </Location>
+               <Location
+                  uuid = "06DC1583-E8BA-4ACD-B037-372DACCBED61 - ef1be88e7efbdab3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "298"
+                  endingLineNumber = "298">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E5469AA8-3928-4BAD-A787-6D617878D711"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pfadi Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
+            landmarkName = "submit()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E5469AA8-3928-4BAD-A787-6D617878D711 - 4c3f983ce640cbf7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "302"
+                  endingLineNumber = "302">
+               </Location>
+               <Location
+                  uuid = "E5469AA8-3928-4BAD-A787-6D617878D711 - bfade0f52a8e53f3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "302"
+                  endingLineNumber = "302">
+               </Location>
+               <Location
+                  uuid = "E5469AA8-3928-4BAD-A787-6D617878D711 - ef1be88e7efbdb0f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Pfadi_Seesturm.ManageEventViewModel.submit() async -&gt; ()"
+                  moduleName = "Pfadi Seesturm.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/valentinkamm/Documents/PfadiSeesturmApp/iOS/Pfadi%20Seesturm/presentation/common/event_management/ManageEventViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "302"
+                  endingLineNumber = "302">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -91,7 +91,7 @@ class StufenbereichService: WordpressService {
         do {
             let payload = try event.toCloudFunctionEventPayloadDto()
             
-            try await withThrowingTaskGroup(of: Void.self) { group in
+            try await withThrowingTaskGroup(of: String.self) { group in
                 for stufe in stufen {
                     group.addTask {
                         try await self.addAktivitaet(payload: payload, stufe: stufe, withNotification: withNotification)
@@ -99,7 +99,6 @@ class StufenbereichService: WordpressService {
                 }
                 for try await _ in group { }
             }
-            
             return .success(())
         }
         catch _ as EncodingError {
@@ -117,15 +116,31 @@ class StufenbereichService: WordpressService {
         event: CloudFunctionEventPayload,
         stufe: SeesturmStufe,
         withNotification: Bool
-    ) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await addAktivitaeten(event: event, stufen: Set([stufe]), withNotification: withNotification)
+    ) async -> SeesturmResult<String, CloudFunctionsError> {
+        
+        do {
+            let payload = try event.toCloudFunctionEventPayloadDto()
+            let newEventId = try await addAktivitaet(payload: payload, stufe: stufe, withNotification: withNotification)
+            return .success(newEventId)
+        }
+        catch _ as EncodingError {
+            return .error(.invalidPayload)
+        }
+        catch _ as DecodingError {
+            return .error(.invalidResponse)
+        }
+        catch {
+            return .error(.unknown(message: error.localizedDescription))
+        }
     }
     
-    private func addAktivitaet(payload: CloudFunctionEventPayloadDto, stufe: SeesturmStufe, withNotification: Bool) async throws {
-        let eventResponse = try await cloudFunctionsRepository.addEvent(calendar: stufe.calendar, event: payload)
+    private func addAktivitaet(payload: CloudFunctionEventPayloadDto, stufe: SeesturmStufe, withNotification: Bool) async throws -> String {
+        let response = try await cloudFunctionsRepository.addEvent(calendar: stufe.calendar, event: payload)
+        let newEventId = response.eventId
         if withNotification {
-            let _ = try await cloudFunctionsRepository.sendPushNotification(type: .aktivitaetNew(stufe: stufe, eventId: eventResponse.eventId))
+            let _ = try await cloudFunctionsRepository.sendPushNotification(type: .aktivitaetNew(stufe: stufe, eventId: newEventId))
         }
+        return newEventId
     }
     
     func updateAktivitaet(

@@ -53,12 +53,12 @@ class AnlaesseService: WordpressService {
     func addEvent(
         event: CloudFunctionEventPayload,
         calendar: SeesturmCalendar
-    ) async -> SeesturmResult<Void, CloudFunctionsError> {
+    ) async -> SeesturmResult<String, CloudFunctionsError> {
         
         do {
             let payload = try event.toCloudFunctionEventPayloadDto()
-            let _ = try await cloudFunctionsRepository.addEvent(calendar: calendar, event: payload)
-            return .success(())
+            let result = try await cloudFunctionsRepository.addEvent(calendar: calendar, event: payload)
+            return .success(result.eventId)
         }
         catch _ as EncodingError {
             return .error(.invalidPayload)

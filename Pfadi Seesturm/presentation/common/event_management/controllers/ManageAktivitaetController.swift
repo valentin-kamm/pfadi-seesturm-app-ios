@@ -60,8 +60,14 @@ class ManageAktivitaetController: EventManagementController, PushNotificationCap
         return .valid
     }
     
-    func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<Void, CloudFunctionsError> {
-        return await service.addAktivitaet(event: event, stufe: self.stufe, withNotification: self.sendPushNotification)
+    func addEvent(event: CloudFunctionEventPayload) async -> SeesturmResult<AddEventSubsequentAction, CloudFunctionsError> {
+        let result = await service.addAktivitaet(event: event, stufe: self.stufe, withNotification: self.sendPushNotification)
+        switch result {
+        case .error(let e):
+            return .error(e)
+        case .success(let newEventId):
+            return .success(.switchToUpdateMode(newEventId: newEventId))
+        }
     }
     
     func fetchEvent(eventId: String) async -> SeesturmResult<GoogleCalendarEvent, NetworkError> {

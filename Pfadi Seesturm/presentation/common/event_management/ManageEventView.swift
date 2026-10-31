@@ -67,7 +67,6 @@ private struct ManageEventDIView<C: EventManagementController>: View {
     var body: some View {
         ManageEventContentView(
             eventType: viewModel.eventType,
-            mode: viewModel.mode,
             eventState: viewModel.eventState,
             publishEventState: viewModel.publishEventState,
             start: $viewModel.start,
@@ -82,6 +81,7 @@ private struct ManageEventDIView<C: EventManagementController>: View {
             showConfirmationDialog: $viewModel.showConfirmationDialog,
             confirmationDialogTitle: viewModel.confirmationDialogTitle,
             confirmationDialogConfirmButtonText: viewModel.confirmationDialogConfirmButtonText,
+            disableForm: viewModel.disableForm,
             onEventRetry: {
                 await viewModel.fetchEventIfPossible()
             },
@@ -144,7 +144,6 @@ private struct ManageEventDIView<C: EventManagementController>: View {
 private struct ManageEventContentView: View {
     
     private let eventType: EventToManageType
-    private let mode: EventManagementMode
     private let eventState: UiState<Void>
     private let publishEventState: ActionState<Void>
     private let start: Binding<Date>
@@ -159,6 +158,7 @@ private struct ManageEventContentView: View {
     private let showConfirmationDialog: Binding<Bool>
     private let confirmationDialogTitle: String
     private let confirmationDialogConfirmButtonText: String
+    private let disableForm: Bool
     private let onEventRetry: () async -> Void
     private let onShowTemplateSheet: (() -> Void)?
     private let onShowPreviewSheet: () -> Void
@@ -167,7 +167,6 @@ private struct ManageEventContentView: View {
     
     init(
         eventType: EventToManageType,
-        mode: EventManagementMode,
         eventState: UiState<Void>,
         publishEventState: ActionState<Void>,
         start: Binding<Date>,
@@ -182,6 +181,7 @@ private struct ManageEventContentView: View {
         showConfirmationDialog: Binding<Bool>,
         confirmationDialogTitle: String,
         confirmationDialogConfirmButtonText: String,
+        disableForm: Bool,
         onEventRetry: @escaping () async -> Void,
         onShowTemplateSheet: (() -> Void)?,
         onShowPreviewSheet: @escaping () -> Void,
@@ -189,7 +189,6 @@ private struct ManageEventContentView: View {
         onSubmit: @escaping () -> Void
     ) {
         self.eventType = eventType
-        self.mode = mode
         self.eventState = eventState
         self.publishEventState = publishEventState
         self.start = start
@@ -204,6 +203,7 @@ private struct ManageEventContentView: View {
         self.showConfirmationDialog = showConfirmationDialog
         self.confirmationDialogTitle = confirmationDialogTitle
         self.confirmationDialogConfirmButtonText = confirmationDialogConfirmButtonText
+        self.disableForm = disableForm
         self.onEventRetry = onEventRetry
         self.onShowTemplateSheet = onShowTemplateSheet
         self.onShowPreviewSheet = onShowPreviewSheet
@@ -345,14 +345,14 @@ private struct ManageEventContentView: View {
                                     .tint(eventType.accentColor)
                             }
                         } header: {
-                            Text(mode.nomen)
+                            Text(eventType.mode.nomen)
                         }
                         
                         Section {
                             SeesturmButton(
                                 type: .primary,
                                 action: .sync(action: onTrySubmit),
-                                title: mode.nomen,
+                                title: eventType.mode.nomen,
                                 colors: .custom(contentColor: eventType.onAccentColor, buttonColor: eventType.accentColor),
                                 isLoading: publishEventState.isLoading,
                                 disabled: eventState.isLoading || publishEventState.isLoading
@@ -373,7 +373,7 @@ private struct ManageEventContentView: View {
                             }
                         }
                     }
-                    .disabled(eventState.isLoading || publishEventState.isLoading)
+                    .disabled(eventState.isLoading || publishEventState.isLoading || disableForm)
                 }
             }
             .navigationTitle(eventType.navigationTitle)
@@ -433,17 +433,6 @@ private struct ManageEventContentViewForPreview: View {
         self.type = type
     }
     
-    private var mode: EventManagementMode {
-        switch type {
-        case .aktivitaet(_, let mode):
-            return mode
-        case .multipleAktivitaeten:
-            return .insert
-        case .termin(_, let mode):
-            return mode
-        }
-    }
-    
     private var uiState: UiState<Void> {
         switch state {
         case .error:
@@ -497,7 +486,6 @@ private struct ManageEventContentViewForPreview: View {
         NavigationStack {
             ManageEventContentView(
                 eventType: type,
-                mode: mode,
                 eventState: uiState,
                 publishEventState: actionState,
                 start: .constant(Date()),
@@ -512,6 +500,7 @@ private struct ManageEventContentViewForPreview: View {
                 showConfirmationDialog: .constant(false),
                 confirmationDialogTitle: "",
                 confirmationDialogConfirmButtonText: "",
+                disableForm: false,
                 onEventRetry: {},
                 onShowTemplateSheet: showTemplateSheet,
                 onShowPreviewSheet: {},
