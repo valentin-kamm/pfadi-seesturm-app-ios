@@ -26,7 +26,6 @@
 		A7D5C02F2D1A9DD700377D0F /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C02E2D1A9DD700377D0F /* FirebaseFunctions */; };
 		A7D5C0312D1A9DD700377D0F /* FirebaseFunctionsCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0302D1A9DD700377D0F /* FirebaseFunctionsCombine-Community */; };
 		A7D5C0352D1A9DD700377D0F /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0342D1A9DD700377D0F /* FirebaseInstallations */; };
-		A7D5C0372D1A9DD700377D0F /* FirebaseMLModelDownloader in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0362D1A9DD700377D0F /* FirebaseMLModelDownloader */; };
 		A7D5C0392D1A9DD700377D0F /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C0382D1A9DD700377D0F /* FirebaseMessaging */; };
 		A7D5C03B2D1A9DD700377D0F /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C03A2D1A9DD700377D0F /* FirebasePerformance */; };
 		A7D5C03D2D1A9DD700377D0F /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = A7D5C03C2D1A9DD700377D0F /* FirebaseRemoteConfig */; };
@@ -91,7 +90,6 @@
 				A7D5C0152D1A9DD700377D0F /* FirebaseAnalytics in Frameworks */,
 				A7D5C02B2D1A9DD700377D0F /* FirebaseFirestore in Frameworks */,
 				A7D5C0252D1A9DD700377D0F /* FirebaseCrashlytics in Frameworks */,
-				A7D5C0372D1A9DD700377D0F /* FirebaseMLModelDownloader in Frameworks */,
 				A72F3F572D21D56F00B46CD4 /* InfomaniakRichHTMLEditor in Frameworks */,
 				A7B4CFE92D0DF5950077561F /* AppAuthTV in Frameworks */,
 				A7D5C0352D1A9DD700377D0F /* FirebaseInstallations in Frameworks */,
@@ -188,7 +186,6 @@
 				A7D5C02E2D1A9DD700377D0F /* FirebaseFunctions */,
 				A7D5C0302D1A9DD700377D0F /* FirebaseFunctionsCombine-Community */,
 				A7D5C0342D1A9DD700377D0F /* FirebaseInstallations */,
-				A7D5C0362D1A9DD700377D0F /* FirebaseMLModelDownloader */,
 				A7D5C0382D1A9DD700377D0F /* FirebaseMessaging */,
 				A7D5C03A2D1A9DD700377D0F /* FirebasePerformance */,
 				A7D5C03C2D1A9DD700377D0F /* FirebaseRemoteConfig */,
@@ -850,11 +847,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A7D5C0132D1A9DD700377D0F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseInstallations;
-		};
-		A7D5C0362D1A9DD700377D0F /* FirebaseMLModelDownloader */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A7D5C0132D1A9DD700377D0F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMLModelDownloader;
 		};
 		A7D5C0382D1A9DD700377D0F /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
