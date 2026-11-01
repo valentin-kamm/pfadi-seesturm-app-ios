@@ -54,16 +54,6 @@ struct CircleProfilePictureView: View {
                                     .clipped()
                             }
                             .resizable()
-                            .onTapGesture {
-                                if let action = tapAction {
-                                    switch action {
-                                    case .fullscreenPicture:
-                                        fullscreenPicture = PhotoSliderViewItem(from: user)
-                                    case .custom(let action):
-                                        action()
-                                    }
-                                }
-                            }
                     }
                     else {
                         Image("SeesturmLogo")
@@ -104,6 +94,18 @@ struct CircleProfilePictureView: View {
                             .frame(width: 22, height: 22)
                     )
                     .offset(x: size / 2.5, y: size / 2.5)
+            }
+        }
+        .onTapGesture {
+            if let action = tapAction {
+                switch action {
+                case .fullscreenPicture:
+                    if case .idle(let u) = type, let user = u {
+                        fullscreenPicture = PhotoSliderViewItem(from: user)
+                    }
+                case .custom(let action):
+                    action()
+                }
             }
         }
         .fullScreenCover(item: $fullscreenPicture) { item in
